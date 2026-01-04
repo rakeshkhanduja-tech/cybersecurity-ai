@@ -1,0 +1,64 @@
+{
+    "llms": [
+        {
+            "name": "Gemini Flash",
+            "provider": "gemini",
+            "model_id": "gemini-1.5-flash",
+            "cost_per_token": 0.00001,
+            "capabilities": [
+                "general",
+                "reasoning",
+                "security"
+            ]
+        },
+        {
+            "name": "Gemini Pro",
+            "provider": "gemini",
+            "model_id": "gemini-1.5-pro",
+            "cost_per_token": 0.00005,
+            "capabilities": [
+                "reasoning",
+                "security",
+                "complex_analysis"
+            ]
+        },
+        {
+            "name": "Mock Security LLM",
+            "provider": "mock",
+            "model_id": "mock-security",
+            "cost_per_token": 0.0,
+            "capabilities": [
+                "general",
+                "security"
+            ]
+        }
+    ],
+    "vector_db": {
+        "path": "./chroma_db",
+        "collection_name": "evident_security",
+        "embedding_model": "all-MiniLM-L6-v2"
+    },
+    "graph_db": {
+        "type": "neo4j",
+        "uri": "bolt://localhost:7687",
+        "database": "neo4j"
+    },
+    "ingestion": {
+        "data_path": "./data",
+        "sources": [
+            "cves",
+            "assets",
+            "logs",
+            "cloud_configs",
+            "signin_logs",
+            "user_roles",
+            "role_permissions"
+        ]
+    },
+    "agent": {
+        "max_context_length": 8000,
+        "retrieval_top_k": 5,
+        "graph_traversal_depth": 3,
+        "enable_reasoning_trace": true
+    }
+}

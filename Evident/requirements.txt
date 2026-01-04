@@ -1,0 +1,33 @@
+# LLM Integration
+google-generativeai>=0.3.0
+
+# Vector Database
+chromadb>=0.4.0
+
+# Graph Database
+neo4j>=5.14.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Schema Validation
+pydantic>=2.0.0
+
+# Web Framework
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Embeddings
+sentence-transformers>=2.2.0
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Utilities
+tqdm>=4.66.0
+requests>=2.31.0
