@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident - Security Intelligence Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🛡️</div>
+                <h1>Evident</h1>
+                <span class="subtitle">Security Intelligence Agent</span>
+            </div>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="status-text">Ready</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Signal Sources Panel -->
+            <aside class="sources-panel">
+                <h2>Signal Sources</h2>
+                <div id="sources-list" class="sources-list">
+                    <div class="loading">Loading sources...</div>
+                </div>
+
+                <div class="stats-section">
+                    <h3>Intelligence Stats</h3>
+                    <div id="stats-content" class="stats-content">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Entities:</span>
+                            <span class="stat-value" id="stat-entities">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Vector DB Docs:</span>
+                            <span class="stat-value" id="stat-vectors">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Graph Nodes:</span>
+                            <span class="stat-value" id="stat-nodes">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Graph Edges:</span>
+                            <span class="stat-value" id="stat-edges">-</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Interface -->
+            <main class="chat-container">
+                <div class="chat-header">
+                    <h2>Security Investigation Console</h2>
+                    <p class="chat-subtitle">Ask questions about vulnerabilities, assets, access controls, events, and
+                        cloud security</p>
+                </div>
+
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message agent-message">
+                        <div class="message-icon">🤖</div>
+                        <div class="message-content">
+                            <p><strong>Evident:</strong> Hello! I'm your security intelligence assistant. I have access
+                                to:</p>
+                            <ul>
+                                <li>CVE vulnerability data</li>
+                                <li>Asset inventory</li>
+                                <li>Security event logs</li>
+                                <li>Cloud configurations</li>
+                                <li>Sign-in logs</li>
+                                <li>User roles and permissions</li>
+                            </ul>
+                            <p>What would you like to investigate?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="example-queries">
+                        <button class="example-query"
+                            onclick="askQuestion('Which assets are affected by critical CVEs?')">
+                            Critical CVEs
+                        </button>
+                        <button class="example-query"
+                            onclick="askQuestion('What permissions does user john.doe have?')">
+                            User Permissions
+                        </button>
+                        <button class="example-query" onclick="askQuestion('Show me failed login attempts')">
+                            Failed Logins
+                        </button>
+                        <button class="example-query"
+                            onclick="askQuestion('Which cloud resources have security misconfigurations?')">
+                            Cloud Misconfigs
+                        </button>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea id="question-input" placeholder="Ask a security question..." rows="1"
+                            onkeydown="handleKeyPress(event)"></textarea>
+                        <button id="send-button" onclick="sendQuestion()">
+                            <span>Send</span>
+                            <span class="send-icon">→</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>

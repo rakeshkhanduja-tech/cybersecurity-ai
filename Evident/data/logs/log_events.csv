@@ -1,0 +1,26 @@
+event_id,timestamp,source,event_type,severity,user,asset_id,description,raw_log
+EVT-001,2024-01-04 08:15:23,Windows Security,failed_login,medium,john.doe,AST-013,Failed login attempt - incorrect password,EventID 4625: An account failed to log on
+EVT-002,2024-01-04 08:15:45,Windows Security,failed_login,medium,john.doe,AST-013,Failed login attempt - incorrect password,EventID 4625: An account failed to log on
+EVT-003,2024-01-04 08:16:12,Windows Security,successful_login,info,john.doe,AST-013,Successful user login,EventID 4624: An account was successfully logged on
+EVT-004,2024-01-04 09:22:10,Apache Access Log,web_access,info,anonymous,AST-001,HTTP GET request to /api/users,10.1.1.50 - - [04/Jan/2024:09:22:10] GET /api/users HTTP/1.1 200
+EVT-005,2024-01-04 09:23:45,Apache Access Log,web_access,high,anonymous,AST-001,HTTP POST request with SQL injection attempt,10.5.5.5 - - [04/Jan/2024:09:23:45] POST /login?id=1' OR '1'='1 HTTP/1.1 403
+EVT-006,2024-01-04 10:05:33,MySQL Audit,database_access,info,jane.smith,AST-020,SELECT query on users table,QUERY: SELECT * FROM users WHERE id=123
+EVT-007,2024-01-04 10:15:22,MySQL Audit,privilege_escalation,high,mike.johnson,AST-020,Attempted GRANT ALL PRIVILEGES command,QUERY: GRANT ALL PRIVILEGES ON *.* TO 'user'@'%'
+EVT-008,2024-01-04 11:30:15,Windows Security,file_access,medium,robert.brown,AST-018,Access to sensitive financial file,File: C:\Finance\Payroll_2024.xlsx accessed
+EVT-009,2024-01-04 12:45:00,Firewall,blocked_connection,high,external,AST-009,Blocked connection from known malicious IP,SRC: 45.142.212.61 DST: 10.0.1.10 PROTO: TCP PORT: 22 ACTION: DENY
+EVT-010,2024-01-04 13:10:55,Firewall,blocked_connection,high,external,AST-009,Multiple port scan attempts detected,SRC: 185.220.101.45 DST: 10.0.0.0/16 PROTO: TCP PORTS: 1-1024 ACTION: DENY
+EVT-011,2024-01-04 14:20:30,Active Directory,account_created,medium,admin,AST-007,New user account created,Account: temp_admin created by admin
+EVT-012,2024-01-04 14:25:18,Active Directory,group_membership_change,high,admin,AST-007,User added to Domain Admins group,User: temp_admin added to Domain Admins by admin
+EVT-013,2024-01-04 15:00:00,Jenkins,build_failed,low,john.doe,AST-024,Build job failed due to test failures,Job: production-deploy Build: #145 Status: FAILED
+EVT-014,2024-01-04 15:30:22,Docker,container_started,info,mike.johnson,AST-026,Docker container started,Container: webapp-prod Image: webapp:v2.1.0 Status: running
+EVT-015,2024-01-04 16:05:45,Kubernetes,pod_created,info,mike.johnson,AST-027,New pod created in production namespace,Pod: webapp-7d9f8c-xyz Namespace: production Status: running
+EVT-016,2024-01-04 16:45:10,VPN,vpn_connection,medium,emily.davis,AST-030,VPN connection from unusual location,User: emily.davis IP: 203.0.113.45 Location: Romania
+EVT-017,2024-01-04 17:20:33,GitLab,repository_access,info,john.doe,AST-025,Repository cloned,Repo: company/backend-api Action: clone User: john.doe
+EVT-018,2024-01-04 18:10:15,Windows Security,process_creation,high,system,AST-005,Suspicious PowerShell execution detected,Process: powershell.exe Args: -EncodedCommand <base64> Parent: cmd.exe
+EVT-019,2024-01-04 18:15:22,Antivirus,malware_detected,critical,lisa.anderson,AST-018,Malware detected and quarantined,File: invoice.pdf.exe Threat: Trojan.Generic Action: Quarantined
+EVT-020,2024-01-04 19:05:40,Windows Security,successful_logout,info,john.doe,AST-013,User logged out,EventID 4634: An account was logged off
+EVT-021,2024-01-03 22:30:15,Windows Security,failed_login,high,admin,AST-005,Multiple failed admin login attempts,EventID 4625: Failed login count: 5 in 2 minutes
+EVT-022,2024-01-03 23:15:00,Firewall,allowed_connection,info,john.doe,AST-009,Outbound HTTPS connection allowed,SRC: 10.1.1.50 DST: 93.184.216.34 PROTO: TCP PORT: 443 ACTION: ALLOW
+EVT-023,2024-01-04 01:00:00,Backup System,backup_completed,info,system,AST-003,Database backup completed successfully,Database: prod_db Size: 45GB Duration: 23min Status: SUCCESS
+EVT-024,2024-01-04 03:30:22,Patch Management,patch_installed,info,system,AST-001,Security patches installed,Patches: 12 critical 8 important Status: Reboot required
+EVT-025,2024-01-04 07:00:00,Vulnerability Scanner,scan_completed,medium,system,AST-001,Vulnerability scan found 3 high-risk issues,Scanner: Nessus Findings: 3 high 7 medium 15 low

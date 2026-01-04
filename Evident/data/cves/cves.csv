@@ -1,0 +1,26 @@
+cve_id,severity,cvss_score,description,affected_products,published_date,remediation_status
+CVE-2024-0001,critical,9.8,"Remote code execution vulnerability in Apache HTTP Server allowing unauthenticated attackers to execute arbitrary code","Apache HTTP Server 2.4.x",2024-01-15,patched
+CVE-2024-0002,high,8.1,"SQL injection vulnerability in MySQL database allowing privilege escalation","MySQL 8.0.x, MySQL 5.7.x",2024-01-18,open
+CVE-2024-0003,critical,10.0,"Zero-day authentication bypass in Cisco ASA firewall","Cisco ASA 9.x",2024-01-20,workaround
+CVE-2024-0004,medium,6.5,"Cross-site scripting (XSS) vulnerability in WordPress core","WordPress 6.4.x",2024-01-22,patched
+CVE-2024-0005,high,7.8,"Local privilege escalation in Windows kernel","Windows 10, Windows 11, Windows Server 2019",2024-01-25,patched
+CVE-2024-0006,critical,9.1,"Deserialization vulnerability in Java Spring Framework","Spring Framework 5.x, Spring Framework 6.x",2024-01-28,patched
+CVE-2024-0007,high,8.6,"Buffer overflow in OpenSSL allowing remote code execution","OpenSSL 3.0.x, OpenSSL 1.1.1",2024-02-01,patched
+CVE-2024-0008,medium,5.9,"Information disclosure in Docker Engine","Docker Engine 24.x",2024-02-03,open
+CVE-2024-0009,critical,9.9,"Command injection in VMware vCenter Server","VMware vCenter 7.x, VMware vCenter 8.x",2024-02-05,patched
+CVE-2024-0010,high,7.5,"Path traversal vulnerability in nginx web server","nginx 1.24.x, nginx 1.25.x",2024-02-08,open
+CVE-2024-0011,low,3.7,"Denial of service in Redis cache server","Redis 7.x",2024-02-10,open
+CVE-2024-0012,critical,9.8,"Remote code execution in Microsoft Exchange Server","Exchange Server 2019, Exchange Server 2016",2024-02-12,patched
+CVE-2024-0013,high,8.8,"Authentication bypass in Fortinet FortiGate","FortiGate 7.x",2024-02-15,workaround
+CVE-2024-0014,medium,6.1,"CSRF vulnerability in Jenkins automation server","Jenkins 2.x",2024-02-18,patched
+CVE-2024-0015,high,7.2,"Privilege escalation in Linux kernel","Linux Kernel 5.x, Linux Kernel 6.x",2024-02-20,patched
+CVE-2024-0016,critical,9.0,"SQL injection in Oracle Database","Oracle Database 19c, Oracle Database 21c",2024-02-22,patched
+CVE-2024-0017,medium,5.3,"XML external entity (XXE) injection in SAP NetWeaver","SAP NetWeaver 7.5",2024-02-25,open
+CVE-2024-0018,high,8.4,"Remote code execution in Adobe Acrobat Reader","Adobe Acrobat Reader DC",2024-02-28,patched
+CVE-2024-0019,critical,9.6,"Authentication bypass in Palo Alto Networks PAN-OS","PAN-OS 10.x, PAN-OS 11.x",2024-03-01,workaround
+CVE-2024-0020,low,4.3,"Information disclosure in PostgreSQL database","PostgreSQL 15.x, PostgreSQL 16.x",2024-03-03,open
+CVE-2023-9001,critical,9.8,"Remote code execution in Log4j library","Log4j 2.x",2023-12-10,patched
+CVE-2023-9002,high,8.2,"Server-side request forgery (SSRF) in GitLab","GitLab CE/EE 16.x",2023-12-12,patched
+CVE-2023-9003,medium,6.8,"Insecure deserialization in Jenkins plugins","Jenkins Plugin Ecosystem",2023-12-15,open
+CVE-2023-9004,critical,9.4,"Authentication bypass in SonicWall VPN","SonicWall SMA 100 Series",2023-12-18,patched
+CVE-2023-9005,high,7.9,"Directory traversal in Apache Tomcat","Apache Tomcat 9.x, Apache Tomcat 10.x",2023-12-20,patched
