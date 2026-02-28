@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident — Security Investigation Console</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Page-level overrides for full-screen chat */
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-page-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Slim header */
+        .chat-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 28px;
+            background: rgba(26, 35, 81, 0.9);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+        }
+
+        .chat-page-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-page-logo .logo-icon {
+            font-size: 1.6rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .chat-page-logo h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+
+        .chat-page-logo .subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .chat-page-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        /* Full-height chat panel */
+        .chat-page-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 28px 16px;
+            gap: 0;
+        }
+
+        /* Reuse .chat-container but full-height */
+        .chat-page-body .chat-container {
+            flex: 1;
+            min-height: 0;
+            border-radius: 16px;
+        }
+
+        /* Wider message area */
+        .chat-page-body .chat-messages {
+            gap: 18px;
+            padding: 20px 28px;
+        }
+
+        .chat-page-body .message {
+            max-width: 78%;
+        }
+
+        /* Context status bar */
+        .chat-context-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(79, 195, 247, 0.05);
+            border: 1px solid rgba(79, 195, 247, 0.15);
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .ctx-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: blink 2s infinite;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-page-wrapper">
+        <!-- Header -->
+        <header class="chat-page-header">
+            <div class="chat-page-logo">
+                <div class="logo-icon">🛡️</div>
+                <div>
+                    <h1>Security Investigation Console</h1>
+                    <span class="subtitle">Powered by Evident AI</span>
+                </div>
+            </div>
+            <div class="chat-page-controls">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="chat-status-text">Agent Ready</span>
+                </div>
+                <a href="/" class="btn-back">← Back to Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Body -->
+        <div class="chat-page-body">
+            <!-- Context bar -->
+            <div class="chat-context-bar">
+                <div class="ctx-dot"></div>
+                <span>Evident has access to: Vulnerabilities · Assets · Events · Cloud Configs · Sign-in Logs · User
+                    Roles</span>
+            </div>
+
+            <!-- Chat panel (reuses all existing CSS) -->
+            <main class="chat-container" id="chat-panel">
+                <div id="chat-messages" class="chat-messages">
+                    <div class="message agent-message">
+                        <div class="message-icon">🤖</div>
+                        <div class="message-content">
+                            <p><strong>Evident:</strong> Hello! I'm your security intelligence assistant. I have access
+                                to:</p>
+                            <ul>
+                                <li>CVE vulnerability data</li>
+                                <li>Asset inventory</li>
+                                <li>Security event logs</li>
+                                <li>Cloud configurations</li>
+                                <li>Sign-in logs</li>
+                                <li>User roles and permissions</li>
+                            </ul>
+                            <p>What would you like to investigate?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="example-queries">
+                        <button class="example-query"
+                            onclick="askQuestion('Which assets are affected by critical CVEs?')">Critical CVEs</button>
+                        <button class="example-query"
+                            onclick="askQuestion('What permissions does user john.doe have?')">User Permissions</button>
+                        <button class="example-query" onclick="askQuestion('Show me failed login attempts')">Failed
+                            Logins</button>
+                        <button class="example-query"
+                            onclick="askQuestion('Which cloud resources have security misconfigurations?')">Cloud
+                            Misconfigs</button>
+                        <button class="example-query"
+                            onclick="askQuestion('Summarise the top 5 critical vulnerabilities')">Top
+                            Vulnerabilities</button>
+                        <button class="example-query" onclick="askQuestion('Which users have admin privileges?')">Admin
+                            Users</button>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea id="question-input" placeholder="Ask a security question..." rows="1"
+                            onkeydown="handleKeyPress(event)"></textarea>
+                        <button id="send-button" onclick="sendQuestion()">
+                            <span>Send</span>
+                            <span class="send-icon">→</span>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Chat-only JS (no cytoscape needed) -->
+    <script>
+        let isProcessing = false;
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendQuestion();
+            }
+        }
+
+        function askQuestion(question) {
+            document.getElementById('question-input').value = question;
+            sendQuestion();
+        }
+
+        async function sendQuestion() {
+            if (isProcessing) return;
+            const input = document.getElementById('question-input');
+            const question = input.value.trim();
+            if (!question) return;
+
+            input.value = '';
+            input.style.height = 'auto';
+            addMessage(question, 'user');
+            const loadingId = addLoadingMessage();
+            isProcessing = true;
+            document.getElementById('send-button').disabled = true;
+
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+                const data = await response.json();
+                removeMessage(loadingId);
+                if (data.error) {
+                    addMessage(`Error: ${data.error}`, 'agent');
+                } else {
+                    addMessage(data.answer, 'agent', {
+                        sources: data.sources,
+                        model: data.model,
+                        tokens: data.tokens,
+                        cost: data.cost
+                    });
+                }
+            } catch (error) {
+                removeMessage(loadingId);
+                addMessage(`Error: Failed to get response. ${error.message}`, 'agent');
+            } finally {
+                isProcessing = false;
+                document.getElementById('send-button').disabled = false;
+            }
+        }
+
+        function addMessage(text, type, metadata = null) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = `message ${type}-message`;
+
+            const icon = type === 'user' ? '👤' : '🤖';
+            const label = type === 'user' ? 'You' : 'Evident';
+
+            let metaHtml = '';
+            if (metadata) {
+                const parts = [];
+                if (metadata.sources?.length) parts.push(`Sources: ${metadata.sources.join(', ')}`);
+                if (metadata.model) parts.push(`Model: ${metadata.model}`);
+                if (metadata.tokens) parts.push(`Tokens: ${metadata.tokens}`);
+                if (metadata.cost) parts.push(`Cost: $${Number(metadata.cost).toFixed(4)}`);
+                if (parts.length) metaHtml = `<div class="message-meta">${parts.join(' · ')}</div>`;
+            }
+
+            div.innerHTML = `
+                <div class="message-icon">${icon}</div>
+                <div class="message-content">
+                    <p><strong>${label}:</strong> ${formatMessage(text)}</p>
+                    ${metaHtml}
+                </div>`;
+            div.id = `msg-${Date.now()}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div.id;
+        }
+
+        function addLoadingMessage() {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            const id = `loading-${Date.now()}`;
+            div.id = id;
+            div.className = 'message agent-message';
+            div.innerHTML = `
+                <div class="message-icon">🤖</div>
+                <div class="message-content">
+                    <p><strong>Evident:</strong> <span class="loading-indicator"></span> Analyzing security data...</p>
+                </div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function formatMessage(text) {
+            text = text.replace(/^\* (.+)$/gm, '<li>$1</li>');
+            text = text.replace(/^- (.+)$/gm, '<li>$1</li>');
+            text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            text = text.replace(/\n\n/g, '</p><p>');
+            text = text.replace(/\n/g, '<br>');
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            return text;
+        }
+
+        // Auto-grow textarea
+        document.addEventListener('DOMContentLoaded', () => {
+            const ta = document.getElementById('question-input');
+            if (ta) {
+                ta.addEventListener('input', () => {
+                    ta.style.height = 'auto';
+                    ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -29,7 +29,7 @@ class MockGraphStore:
         # Store relationships
         self.relationships.extend(relationships)
         
-        print(f"✓ Stored {len(nodes)} nodes and {len(relationships)} relationships in memory")
+        print(f"[OK] Stored {len(nodes)} nodes and {len(relationships)} relationships in memory")
     
     def query_nodes(self, label: Optional[str] = None, properties: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """
@@ -131,7 +131,7 @@ class MockGraphStore:
         self.nodes = []
         self.relationships = []
         self.node_index = {}
-        print("✓ Cleared graph store")
+        print("[OK] Cleared graph store")
     
     def get_stats(self) -> Dict[str, Any]:
         """Get graph statistics"""

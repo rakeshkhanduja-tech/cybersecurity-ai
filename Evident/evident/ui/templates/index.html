@@ -9,23 +9,46 @@
 </head>
 
 <body>
+    <!-- Loading Overlay (shown until agent is ready) -->
+    <div id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-shield">🛡️</div>
+            <h1 class="loading-title">Evident</h1>
+            <p class="loading-subtitle">Your Security Co-Analyst</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill" id="loading-bar"></div>
+            </div>
+            <p class="loading-message" id="loading-message">Initializing agent...</p>
+            <div class="loading-steps" id="loading-steps"></div>
+        </div>
+    </div>
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <div class="logo">
-                <div class="logo-icon">🛡️</div>
-                <h1>Evident</h1>
-                <span class="subtitle">Security Intelligence Agent</span>
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">🛡️</div>
+                    <div>
+                        <h1>Evident</h1>
+                        <span class="subtitle">Your Security Co-Analyst</span>
+                    </div>
+                </div>
             </div>
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span id="status-text">Ready</span>
+
+            <div class="header-controls">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Agent Ready</span>
+                </div>
+                <button id="btn-ask-evident" class="btn-primary" title="Ask Evident AI">💬 Ask Evident</button>
+                <button id="btn-config" class="btn-icon" title="Agent Configuration">⚙️ Config</button>
+                <button id="btn-history" class="btn-icon" title="Audit History">📜 History</button>
             </div>
         </header>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Signal Sources Panel -->
+            <!-- Left Pane: Signal Sources -->
             <aside class="sources-panel">
                 <h2>Signal Sources</h2>
                 <div id="sources-list" class="sources-list">
@@ -34,85 +57,148 @@
 
                 <div class="stats-section">
                     <h3>Intelligence Stats</h3>
-                    <div id="stats-content" class="stats-content">
-                        <div class="stat-item">
-                            <span class="stat-label">Total Entities:</span>
-                            <span class="stat-value" id="stat-entities">-</span>
+                    <div id="stats-content" class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-entities">-</span>
+                                <span class="stat-label">Total Entities</span>
+                            </div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Vector DB Docs:</span>
-                            <span class="stat-value" id="stat-vectors">-</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">📄</div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-vectors">-</span>
+                                <span class="stat-label">Vector Docs</span>
+                            </div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Graph Nodes:</span>
-                            <span class="stat-value" id="stat-nodes">-</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">🕸️</div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-nodes">-</span>
+                                <span class="stat-label">Graph Nodes</span>
+                            </div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Graph Edges:</span>
-                            <span class="stat-value" id="stat-edges">-</span>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔗</div>
+                            <div class="stat-data">
+                                <span class="stat-value" id="stat-edges">-</span>
+                                <span class="stat-label">Graph Edges</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </aside>
 
-            <!-- Chat Interface -->
-            <main class="chat-container">
-                <div class="chat-header">
-                    <h2>Security Investigation Console</h2>
-                    <p class="chat-subtitle">Ask questions about vulnerabilities, assets, access controls, events, and
-                        cloud security</p>
-                </div>
-
-                <div id="chat-messages" class="chat-messages">
-                    <div class="message agent-message">
-                        <div class="message-icon">🤖</div>
-                        <div class="message-content">
-                            <p><strong>Evident:</strong> Hello! I'm your security intelligence assistant. I have access
-                                to:</p>
-                            <ul>
-                                <li>CVE vulnerability data</li>
-                                <li>Asset inventory</li>
-                                <li>Security event logs</li>
-                                <li>Cloud configurations</li>
-                                <li>Sign-in logs</li>
-                                <li>User roles and permissions</li>
-                            </ul>
-                            <p>What would you like to investigate?</p>
+            <!-- Right Pane: Visualization & Chat -->
+            <div class="right-pane">
+                <!-- Top: Visualization Panel -->
+                <div class="visualization-panel" id="viz-panel">
+                    <div class="viz-header">
+                        <div class="viz-tabs">
+                            <button class="viz-tab active" data-view="table">Details</button>
+                            <button class="viz-tab" data-view="graph">Knowledge Graph</button>
+                        </div>
+                        <div class="viz-controls">
+                            <span id="viz-status">Select a source to view data</span>
+                        </div>
+                    </div>
+                    <div class="viz-content">
+                        <!-- Table View -->
+                        <div id="view-table" class="viz-view active">
+                            <div class="table-container">
+                                <table id="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Select a source on the left to view data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Graph View -->
+                        <div id="view-graph" class="viz-view">
+                            <div id="cy-graph" style="width: 100%; height: 100%;"></div>
+                            <div id="graph-node-info" class="graph-node-info hidden">
+                                <div class="node-info-header">
+                                    <span id="node-info-title"></span>
+                                    <button
+                                        onclick="document.getElementById('graph-node-info').classList.add('hidden')">✕</button>
+                                </div>
+                                <div id="node-info-body" class="node-info-body"></div>
+                            </div>
+                            <div id="graph-empty" class="graph-empty">Select a signal source to explore the Knowledge
+                                Graph</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="chat-input-container">
-                    <div class="example-queries">
-                        <button class="example-query"
-                            onclick="askQuestion('Which assets are affected by critical CVEs?')">
-                            Critical CVEs
-                        </button>
-                        <button class="example-query"
-                            onclick="askQuestion('What permissions does user john.doe have?')">
-                            User Permissions
-                        </button>
-                        <button class="example-query" onclick="askQuestion('Show me failed login attempts')">
-                            Failed Logins
-                        </button>
-                        <button class="example-query"
-                            onclick="askQuestion('Which cloud resources have security misconfigurations?')">
-                            Cloud Misconfigs
-                        </button>
-                    </div>
-                    <div class="input-wrapper">
-                        <textarea id="question-input" placeholder="Ask a security question..." rows="1"
-                            onkeydown="handleKeyPress(event)"></textarea>
-                        <button id="send-button" onclick="sendQuestion()">
-                            <span>Send</span>
-                            <span class="send-icon">→</span>
-                        </button>
-                    </div>
-                </div>
-            </main>
+            </div>
         </div>
     </div>
 
+    <!-- Modals -->
+    <!-- Agent Configuration Modal -->
+    <div id="modal-config" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agent Configuration</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>LLM Provider</label>
+                    <select id="config-provider">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="claude">Anthropic Claude</option>
+                        <option value="openai">OpenAI GPT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>API Key</label>
+                    <input type="password" id="config-api-key" placeholder="Enter API Key">
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <div class="model-select-wrapper">
+                        <select id="config-model" disabled>
+                            <option>Select provider first</option>
+                        </select>
+                        <button id="btn-fetch-models">Fetch Models</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel close-modal-btn">Cancel</button>
+                <button id="btn-save-config" class="btn-primary">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit History Modal -->
+    <div id="modal-history" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Audit History</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body history-layout">
+                <div class="history-list-container">
+                    <ul id="history-list">
+                        <!-- History items populated here -->
+                    </ul>
+                </div>
+                <div class="history-details">
+                    <div id="history-details-content">
+                        <div class="placeholder-text">Select a history item to view details</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 
