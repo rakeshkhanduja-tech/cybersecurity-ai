@@ -1,26 +1,17 @@
 {
     "llms": [
         {
-            "name": "Gemini Flash",
-            "provider": "gemini",
-            "model_id": "gemini-1.5-flash",
-            "cost_per_token": 0.00001,
-            "capabilities": [
-                "general",
-                "reasoning",
-                "security"
-            ]
-        },
-        {
             "name": "Gemini Pro",
             "provider": "gemini",
             "model_id": "gemini-1.5-pro",
-            "cost_per_token": 0.00005,
+            "cost_per_token": 5e-05,
             "capabilities": [
                 "reasoning",
                 "security",
                 "complex_analysis"
-            ]
+            ],
+            "api_key": "your_gemini_api_key_here",
+            "endpoint": null
         },
         {
             "name": "Mock Security LLM",
@@ -30,7 +21,9 @@
             "capabilities": [
                 "general",
                 "security"
-            ]
+            ],
+            "api_key": null,
+            "endpoint": null
         }
     ],
     "vector_db": {
@@ -41,7 +34,9 @@
     "graph_db": {
         "type": "neo4j",
         "uri": "bolt://localhost:7687",
-        "database": "neo4j"
+        "database": "neo4j",
+        "user": "neo4j",
+        "password": "your_neo4j_password_here"
     },
     "ingestion": {
         "data_path": "./data",
