@@ -15,25 +15,34 @@ class VectorStore:
         self.collection_name = collection_name
         
         # Initialize ChromaDB client
-        self.client = chromadb.Client(Settings(
-            persist_directory=persist_directory,
-            anonymized_telemetry=False
-        ))
+        # Initialize ChromaDB client
+        self.client = chromadb.PersistentClient(
+            path=persist_directory,
+            settings=Settings(anonymized_telemetry=False)
+        )
         
         # Get or create collection
         try:
             self.collection = self.client.get_collection(name=collection_name)
-            print(f"✓ Loaded existing collection: {collection_name}")
+            print(f"[OK] Loaded existing collection: {collection_name}")
         except:
             self.collection = self.client.create_collection(
                 name=collection_name,
                 metadata={"description": "Evident security intelligence documents"}
             )
-            print(f"✓ Created new collection: {collection_name}")
+            print(f"[OK] Created new collection: {collection_name}")
         
         # Initialize embedding model
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        print("✓ Loaded embedding model: all-MiniLM-L6-v2")
+        # Explicitly use 'cpu' device to avoid PyTorch meta-tensor errors
+        # with newer torch versions (NotImplementedError: Cannot copy out of meta tensor)
+        try:
+            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+        except TypeError:
+            # Older sentence-transformers versions don't have 'device' parameter
+            import torch
+            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            self.embedding_model = self.embedding_model.cpu()
+        print("[OK] Loaded embedding model: all-MiniLM-L6-v2")
     
     def add_documents(self, documents: List[str], metadatas: List[Dict[str, Any]], ids: List[str]):
         """
@@ -58,7 +67,7 @@ class VectorStore:
             ids=ids
         )
         
-        print(f"✓ Added {len(documents)} documents to vector store")
+        print(f"[OK] Added {len(documents)} documents to vector store")
     
     def search(self, query: str, top_k: int = 5, filter_metadata: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
         """
@@ -103,7 +112,7 @@ class VectorStore:
             name=self.collection_name,
             metadata={"description": "Evident security intelligence documents"}
         )
-        print(f"✓ Cleared collection: {self.collection_name}")
+        print(f"[OK] Cleared collection: {self.collection_name}")
     
     def get_count(self) -> int:
         """Get number of documents in the collection"""

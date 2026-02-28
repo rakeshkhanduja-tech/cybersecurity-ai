@@ -20,7 +20,9 @@ def run_cli():
     print("="*60 + "\n")
     
     # Initialize agent
-    agent = EvidentAgent(use_mock_llm=True, use_mock_graph=True)
+    # Default to False (let LLMFactory decide based on config/env)
+    use_mock = os.getenv("USE_MOCK_LLM", "False").lower() == "true"
+    agent = EvidentAgent(use_mock_llm=use_mock, use_mock_graph=True)
     
     # Ingest data
     agent.ingest_data()
@@ -35,7 +37,7 @@ def run_cli():
     
     while True:
         try:
-            question = input("\n🔍 Your question: ").strip()
+            question = input("\n[QUERY] Your question: ").strip()
             
             if not question:
                 continue
@@ -46,7 +48,7 @@ def run_cli():
             
             if question.lower() == 'stats':
                 stats = agent.get_stats()
-                print("\n📊 Agent Statistics:")
+                print("\n[STATS] Agent Statistics:")
                 print(f"  Total Entities: {stats['total_entities']}")
                 print(f"  Vector DB Docs: {stats['rag_stats'].get('vector_store', {}).get('document_count', 0)}")
                 print(f"  Graph Nodes: {stats['smg_stats'].get('node_count', 0)}")
@@ -56,15 +58,15 @@ def run_cli():
             # Query agent
             response = agent.query(question)
             
-            print(f"\n🤖 Evident: {response['answer']}")
-            print(f"\n📌 Sources: {', '.join(response['sources'])}")
-            print(f"💡 Model: {response['model']} | Tokens: {response['tokens']} | Cost: ${response['cost']:.4f}")
+            print(f"\n[AGENT] Evident: {response['answer']}")
+            print(f"\n[SOURCES] Sources: {', '.join(response['sources'])}")
+            print(f"[INFO] Model: {response['model']} | Tokens: {response['tokens']} | Cost: ${response['cost']:.4f}")
             
         except KeyboardInterrupt:
             print("\n\nGoodbye!")
             break
         except Exception as e:
-            print(f"\n❌ Error: {e}")
+            print(f"\n[ERROR] Error: {e}")
 
 
 def run_web():
@@ -87,7 +89,8 @@ def run_ingest_only():
     print("Evident - Data Ingestion Mode")
     print("="*60 + "\n")
     
-    agent = EvidentAgent(use_mock_llm=True, use_mock_graph=True)
+    use_mock = os.getenv("USE_MOCK_LLM", "False").lower() == "true"
+    agent = EvidentAgent(use_mock_llm=use_mock, use_mock_graph=True)
     agent.ingest_data()
     agent.build_intelligence()
     

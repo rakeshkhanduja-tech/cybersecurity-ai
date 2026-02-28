@@ -19,10 +19,10 @@ class SMGManager:
         # Initialize graph store
         if use_mock:
             self.graph_store = MockGraphStore()
-            print("✓ Using mock graph store")
+            print("[OK] Using mock graph store")
         else:
             # TODO: Initialize real Neo4j store
-            print("⚠️  Neo4j not implemented yet, using mock store")
+            print("[WARN] Neo4j not implemented yet, using mock store")
             self.graph_store = MockGraphStore()
         
         # Initialize builders
@@ -40,16 +40,16 @@ class SMGManager:
         
         # Build nodes
         nodes = self.node_builder.build_nodes(entities)
-        print(f"✓ Built {len(nodes)} nodes")
+        print(f"[OK] Built {len(nodes)} nodes")
         
         # Build relationships
         relationships = self.relationship_builder.build_relationships(entities)
-        print(f"✓ Built {len(relationships)} relationships")
+        print(f"[OK] Built {len(relationships)} relationships")
         
         # Store in graph
         self.graph_store.store_graph(nodes, relationships)
         
-        print(f"✓ Security graph construction complete")
+        print(f"[OK] Security graph construction complete")
     
     def query_graph(self, query_type: str, **params) -> List[Dict[str, Any]]:
         """

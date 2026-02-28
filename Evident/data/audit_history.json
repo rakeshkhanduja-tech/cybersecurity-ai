@@ -1,0 +1,1313 @@
+[
+  {
+    "id": "477403e7-2a7d-4db5-8fa1-3570dc8697dc",
+    "timestamp": "2026-02-22T11:12:53.568879",
+    "query": "What permissions does user john.doe have?",
+    "response": "Error generating response: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}",
+    "model": "gemini-2.5-pro",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-22T11:12:50.925709"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-22T11:12:50.938107"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-22T11:12:52.826718"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-22T11:12:52.826957"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-22T11:12:52.844049"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-22T11:12:52.846581"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-22T11:12:53.567402"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "dc6c3dfa-2c83-4e79-bd6f-8a503f06ac90",
+    "timestamp": "2026-02-21T17:15:32.257562",
+    "query": "Show me failed login attempts",
+    "response": "Error generating response: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}",
+    "model": "gemini-2.5-pro",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Show me failed login attempts",
+        "timestamp": "2026-02-21T17:15:31.509727"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T17:15:31.510247"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T17:15:31.553568"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T17:15:31.553932"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T17:15:31.554504"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T17:15:31.554820"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T17:15:32.257355"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-021: Multiple failed admin login attempts\nType: failed_login\nSeverity: high\nSource: Windows Security\nUser: admin\nAsset: A..."
+  },
+  {
+    "id": "d0b8dc79-9f31-46f3-808e-55c37c232922",
+    "timestamp": "2026-02-21T17:15:01.917648",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "gemini-2.0-flash",
+    "tokens": 1030,
+    "cost": 0.0103,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T17:15:00.427763"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T17:15:00.428459"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T17:15:00.591504"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T17:15:00.591634"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T17:15:00.594412"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T17:15:00.594648"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T17:15:01.917518"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "b5f73167-b757-451d-9b35-d15700d5f075",
+    "timestamp": "2026-02-21T16:55:55.843157",
+    "query": "What permissions does user john.doe have?",
+    "response": "Error generating response: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\nPlease retry in 4.070674608s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '4s'}]}}",
+    "model": "gemini-2.0-flash",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T16:55:55.267941"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T16:55:55.268342"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T16:55:55.421154"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T16:55:55.421349"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T16:55:55.424207"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T16:55:55.425159"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T16:55:55.843040"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "3b5861a6-644a-4d16-8179-80d1cde13b12",
+    "timestamp": "2026-02-21T16:38:02.752208",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1030,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T16:38:01.069204"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T16:38:01.070836"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T16:38:01.267854"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T16:38:01.268187"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T16:38:01.272473"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T16:38:01.272732"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T16:38:02.752003"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "dd257890-953e-4df1-b633-5d5684d1fd97",
+    "timestamp": "2026-02-21T15:20:54.317650",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the Security Intelligence Graph and Vector Database results, here are the permissions for user `john.doe`:\n\n### Direct and Reasoned Answer\n\nUser `john.doe` possesses a comprehensive set of permissions, particularly concerning code development and deployment systems. These permissions span multiple resources and scopes.\n\n### Cited Evidence\n\nFrom the **Security Graph Results**, the identified permissions for user `john.doe` are:\n\n*   **code_repository (team scope):**\n    *   read\n    *   write\n*   **build_system (team scope):**\n    *   execute\n*   **code_repository (global scope):**\n    *   read\n    *   write\n    *   approve_pr\n*   **infrastructure (global scope):**\n    *   read\n\n*(Note: Duplicate entries for 'read' and 'write' on 'code_repository (Scope: team)' and 'execute' on 'build_system (Scope: team)' have been consolidated for clarity, as they represent the same permission.)*\n\nThe Vector Database results (Source 1 & 2) confirm `john.doe`'s active status and a risk score of 0.0, but do not directly list his specific permissions. Permissions PERM-013, PERM-022, and PERM-010 listed in the Vector Database (Source 3, 4, 5) are associated with specific roles (ROLE-005, ROLE-008, ROLE-004) and resources (hr_system, user_accounts) and are not directly linked to `john.doe` in the provided context.\n\n### Risk Assessment\n\nThe permissions held by `john.doe` introduce a **high level of risk** due to their scope and the criticality of the affected assets:\n\n1.  **Global Write and PR Approval on `code_repository`**: This is a critical risk. `john.doe` can directly modify code at a global level and approve pull requests, potentially introducing malicious code, backdoors, or critical vulnerabilities into production systems. This bypasses typical code review processes if not properly managed, or allows a single user to both write and approve changes.\n2.  **Global Read on `infrastructure`**: While read access might seem benign, global access to infrastructure configurations could expose sensitive network layouts, system configurations, credentials, or vulnerabilities that could be exploited for further lateral movement or privilege escalation.\n3.  **Execute on `build_system` (team scope)**: This allows `john.doe` to trigger builds and deployments. Combined with global write access to the code repository, this creates a powerful chain where `john.doe` could potentially write malicious code, approve it, and then deploy it.\n4.  **Team Write on `code_repository`**: While scoped to a team, this still represents a significant ability to alter source code.\n\nThe combination of global write access and PR approval on the code repository, along with execution rights on the build system, grants `john.doe` a significant level of control over the organization's software development lifecycle and potentially its deployed applications. This represents a single point of failure and a high-impact target for attackers.\n\n### Recommendations\n\n1.  **Immediate Permission Review**: Conduct an urgent review of `john.doe`'s roles and responsibilities to determine if the global `write` and `approve_pr` permissions on `code_repository`, `execute` on `build_system`, and global `read` on `infrastructure` are absolutely necessary for his current role.\n2.  **Implement Principle of Least Privilege**:\n    *   **Revoke Global Write/Approve PR**: Unless absolutely essential, global write and `approve_pr` permissions on the `code_repository` should be revoked or significantly restricted. Code review and approval processes should ideally involve multiple individuals.\n    *   **Scope Down Permissions**: If `john.doe` requires access, narrow the scope of permissions to the absolute minimum necessary (e.g., specific repositories, branches, or environments) and consider time-bound access for highly sensitive actions.\n    *   **Separate Duties**: Ensure there is a clear separation of duties, especially between code authorship, code review, and deployment. A single user should ideally not have global write, global approve, and build execution rights.\n3.  **Enhance Monitoring & Alerting**: Implement enhanced logging and alerting for any actions performed by `john.doe` using these high-privilege permissions, especially changes to global code repositories, PR approvals, and build system executions.\n4.  **Multi-Factor Authentication (MFA) & Just-In-Time (JIT) Access**: Ensure MFA is enforced for all accounts, especially those with high privileges. Consider implementing JIT access for critical permissions, requiring explicit approval for temporary elevation of privileges.\n5.  **Audit Trail**: Verify that a robust audit trail is in place for all actions on `code_repository`, `build_system`, and `infrastructure` to ensure accountability and detect anomalous behavior.",
+    "model": "gemini-2.5-flash (auto-switched)",
+    "tokens": 2013,
+    "cost": 0.020130000000000002,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T15:20:46.325264"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T15:20:46.325704"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T15:20:46.474087"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T15:20:46.474667"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T15:20:46.478996"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T15:20:46.479455"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T15:20:54.317586"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "bb10970e-e8d6-4989-9d23-f07a342ba95b",
+    "timestamp": "2026-02-21T15:13:18.380940",
+    "query": "What permissions does user john.doe have?",
+    "response": "Critical Error: Model gemini-1.0-pro failed and no suitable fallback found. No models supporting 'generateContent' found for this API key.",
+    "model": "gemini-1.0-pro",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T15:13:17.850991"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T15:13:17.851642"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T15:13:17.967568"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T15:13:17.967731"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T15:13:17.970169"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T15:13:17.970368"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T15:13:18.380887"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "abdd901a-6b6b-4600-a283-51ec699b9379",
+    "timestamp": "2026-02-21T15:09:55.528868",
+    "query": "What permissions does user john.doe have?",
+    "response": "Critical Error: Model gemini-1.5-flash failed and no suitable fallback found. No models supporting 'generateContent' found for this API key.",
+    "model": "gemini-1.5-flash",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T15:09:54.965276"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T15:09:54.965641"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T15:09:55.081675"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T15:09:55.081804"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T15:09:55.083907"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T15:09:55.084310"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T15:09:55.528711"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "b7409303-b788-4813-9445-8f1d5f6d102b",
+    "timestamp": "2026-02-21T15:06:45.467778",
+    "query": "What permissions does user john.doe have?",
+    "response": "Critical Error: Primary (gemini-1.0-pro) and Fallback (gemini-1.5-flash) failed. 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+    "model": "gemini-1.0-pro",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T15:06:44.895118"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T15:06:44.895559"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T15:06:45.032073"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T15:06:45.032264"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T15:06:45.034493"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T15:06:45.034828"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T15:06:45.467709"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "fc6f1740-6d1c-4c1a-ac8d-e9bb3648d7f1",
+    "timestamp": "2026-02-21T15:00:47.601646",
+    "query": "What permissions does user john.doe have?",
+    "response": "Error generating response: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+    "model": "gemini-1.5-flash",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T15:00:47.205762"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T15:00:47.206493"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T15:00:47.245866"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T15:00:47.246368"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T15:00:47.249058"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Gemini Flash...",
+        "timestamp": "2026-02-21T15:00:47.249521"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T15:00:47.601538"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "093cf89d-4dd2-4838-8fc0-79ca0e2b2401",
+    "timestamp": "2026-02-21T14:59:38.413690",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1030,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T14:59:37.271135"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T14:59:37.272384"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T14:59:37.413189"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T14:59:37.413298"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T14:59:37.415139"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T14:59:37.415421"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T14:59:38.413453"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "597946f0-ad66-4887-b4b2-11fa8a2f5736",
+    "timestamp": "2026-02-21T14:53:05.338928",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1030,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T14:53:04.244408"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T14:53:04.245224"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T14:53:04.319684"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T14:53:04.319910"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T14:53:04.322429"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T14:53:04.323349"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T14:53:05.338403"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "86dac2fa-2be1-44f1-be60-087f1a0cec89",
+    "timestamp": "2026-02-21T13:15:58.539060",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1030,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T13:15:57.635769"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T13:15:57.636323"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T13:15:57.715886"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T13:15:57.716374"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T13:15:57.720963"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T13:15:57.721333"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T13:15:58.538782"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "5c4209a5-f1b6-4c14-a37a-9162ee9b103e",
+    "timestamp": "2026-02-21T13:13:08.644595",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1030,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T13:13:07.161766"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T13:13:07.162114"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T13:13:07.326620"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T13:13:07.326893"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T13:13:07.329396"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T13:13:07.329571"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T13:13:08.644543"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "8fd9c4e4-aeb2-4d43-a742-d89a399343da",
+    "timestamp": "2026-02-21T13:07:58.560571",
+    "query": "Show me failed login attempts",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-021: Multiple failed admin login attempts\nType: failed_login\nSeverity: high\nSource: Windows Security\nUser: admin\nAsset: AST-005\nTimestamp: 2024-01-03 22:30:15\nRaw Log: EventID 4625: Failed login count: 5 in 2 minutes\n\n[Source 2: event from logs]\nSecurity Event EVT-003: Successful user login\nType: successful_login\nSeveri...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1117,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Show me failed login attempts",
+        "timestamp": "2026-02-21T13:07:57.223979"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T13:07:57.224317"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T13:07:57.248703"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T13:07:57.248818"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T13:07:57.248964"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T13:07:57.249047"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T13:07:58.560514"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-021: Multiple failed admin login attempts\nType: failed_login\nSeverity: high\nSource: Windows Security\nUser: admin\nAsset: A..."
+  },
+  {
+    "id": "d74311a5-120b-440e-bddc-e72ec9c09422",
+    "timestamp": "2026-02-21T13:07:42.576146",
+    "query": "What permissions does user john.doe have?",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: permission from role_permissions]\nPermission PERM-013\nRole: ROLE-005\nResource: hr_system\nAction: read\nScope: departme...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1030,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T13:07:41.783362"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T13:07:41.783816"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T13:07:41.920927"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T13:07:41.921066"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T13:07:41.924981"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T13:07:41.925593"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T13:07:42.576077"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "8e981129-8393-4af5-8200-5485617801a6",
+    "timestamp": "2026-02-21T13:02:00.298282",
+    "query": "Analyze the permissions for user john.doe across our infrastructure.",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: A...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1037,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Analyze the permissions for user john.doe across our infrastructure.",
+        "timestamp": "2026-02-21T13:01:59.142524"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T13:01:59.143032"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T13:01:59.179940"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T13:01:59.180143"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T13:01:59.181670"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T13:01:59.181922"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T13:02:00.298216"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user f..."
+  },
+  {
+    "id": "17154bdd-0112-4ed2-8bdf-5d0027438e5f",
+    "timestamp": "2026-02-21T13:01:45.259430",
+    "query": "Analyze the permissions for user john.doe across our infrastructure.",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: A...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1037,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Analyze the permissions for user john.doe across our infrastructure.",
+        "timestamp": "2026-02-21T13:01:44.521583"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T13:01:44.522109"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T13:01:44.700472"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T13:01:44.700914"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T13:01:44.705775"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T13:01:44.705921"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T13:01:45.259305"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user f..."
+  },
+  {
+    "id": "2eee5a11-c134-4f0e-816b-6f11db5ecf66",
+    "timestamp": "2026-02-21T12:57:09.480656",
+    "query": "Analyze the permissions for user john.doe across our infrastructure.",
+    "response": "Based on the security data analysis:\n\n**Security Context Summary:**\n=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 3: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: A...\n\n**Critical Findings:**\n- Potential vulnerabilities detected in the identified assets/CVEs.\n- Cross-source correlation suggests exposures on sensitive infrastructure.\n- Immediate assessment of the provided context is recommended.\n\n**Recommendations:**\n1. Patch affected assets according to the context provided.\n2. Verify isolation of mission-critical systems.\n3. Review associated security logs for indicators of compromise.",
+    "model": "mock-security",
+    "tokens": 1037,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Analyze the permissions for user john.doe across our infrastructure.",
+        "timestamp": "2026-02-21T12:57:07.943600"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:57:07.944089"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:57:08.088136"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:57:08.088260"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:57:08.090739"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:57:08.091043"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:57:09.480561"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user f..."
+  },
+  {
+    "id": "2d3cfbe3-30f1-4e17-b08e-9177133fc76d",
+    "timestamp": "2026-02-21T12:52:48.048697",
+    "query": "Analyze the permissions for user john.doe across our infrastructure.",
+    "response": "I found several vulnerabilities in the system. Please provide more specific criteria to narrow down the search.",
+    "model": "mock-security",
+    "tokens": 517,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Analyze the permissions for user john.doe across our infrastructure.",
+        "timestamp": "2026-02-21T12:52:46.627636"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:52:46.628289"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:52:46.685490"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:52:46.685609"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:52:46.689758"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:52:46.692965"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:52:48.048404"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: permission from role_permissions]\nPermission PERM-008\nRole: ROLE-003\nResource: infrastructure\nAction: write\nScope: global\nRisk Level: high\n\n[Source 2: user f..."
+  },
+  {
+    "id": "eb9c0ccb-309e-4351-83d1-8769122ac317",
+    "timestamp": "2026-02-21T12:51:52.307170",
+    "query": "Which assets are affected by critical CVEs?",
+    "response": "I found several vulnerabilities in the system. Please provide more specific criteria to narrow down the search.",
+    "model": "mock-security",
+    "tokens": 533,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Which assets are affected by critical CVEs?",
+        "timestamp": "2026-02-21T12:51:50.949334"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:51:50.949862"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:51:50.977231"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:51:50.977481"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:51:50.977901"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:51:50.978384"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:51:52.307119"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: vulnerability from cves]\nVulnerability CVE-2024-0020: Information disclosure in PostgreSQL database\nSeverity: low (CVSS: 4.3)\nAffected Products: PostgreSQL 1..."
+  },
+  {
+    "id": "76d7fa08-ae23-4391-9235-ade5879e9b04",
+    "timestamp": "2026-02-21T12:51:30.560093",
+    "query": "Show me failed login attempts",
+    "response": "I found several vulnerabilities in the system. Please provide more specific criteria to narrow down the search.",
+    "model": "mock-security",
+    "tokens": 553,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Show me failed login attempts",
+        "timestamp": "2026-02-21T12:51:29.025115"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:51:29.025475"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:51:29.130294"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:51:29.130497"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:51:29.131447"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:51:29.131623"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:51:30.559949"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-021: Multiple failed admin login attempts\nType: failed_login\nSeverity: high\nSource: Windows Security\nUser: admin\nAsset: A..."
+  },
+  {
+    "id": "6a4c90b7-e278-45a4-b27d-c8f036aa5e2b",
+    "timestamp": "2026-02-21T12:47:36.595298",
+    "query": "What permissions does user john.doe have?",
+    "response": "Error generating response: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/gemini-1.5-pro is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}",
+    "model": "gemini-1.5-pro",
+    "tokens": 0,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T12:47:36.242234"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:47:36.242624"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:47:36.411155"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:47:36.411455"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:47:36.415526"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using gemini-gemini-1.5-pro...",
+        "timestamp": "2026-02-21T12:47:36.416239"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:47:36.595098"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "27e6ff7a-6b40-480b-9a19-f4ea8b8f3f8a",
+    "timestamp": "2026-02-21T12:43:50.440479",
+    "query": "how many failed logins - AST-013",
+    "response": "I found several vulnerabilities in the system. Please provide more specific criteria to narrow down the search.",
+    "model": "mock-security",
+    "tokens": 545,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: how many failed logins - AST-013",
+        "timestamp": "2026-02-21T12:43:49.367573"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:43:49.369025"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:43:49.408199"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:43:49.408332"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:43:49.408533"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:43:49.409017"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:43:50.440423"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-021: Multiple failed admin login attempts\nType: failed_login\nSeverity: high\nSource: Windows Security\nUser: admin\nAsset: A..."
+  },
+  {
+    "id": "99e7aa07-4819-40ae-b785-bc2a782124b9",
+    "timestamp": "2026-02-21T12:43:18.815965",
+    "query": "Show me failed login attempts",
+    "response": "I found several vulnerabilities in the system. Please provide more specific criteria to narrow down the search.",
+    "model": "mock-security",
+    "tokens": 553,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: Show me failed login attempts",
+        "timestamp": "2026-02-21T12:43:17.826586"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:43:17.828150"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:43:17.978273"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:43:17.978418"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:43:17.979733"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:43:17.980188"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:43:18.815735"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-021: Multiple failed admin login attempts\nType: failed_login\nSeverity: high\nSource: Windows Security\nUser: admin\nAsset: A..."
+  },
+  {
+    "id": "38b4f380-b072-4de8-8595-212bb083ad6c",
+    "timestamp": "2026-02-21T12:32:00.914080",
+    "query": "What permissions does user john.doe have?",
+    "response": "Access control data is available. Please specify the user or role you want to investigate.",
+    "model": "mock-security",
+    "tokens": 351,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: What permissions does user john.doe have?",
+        "timestamp": "2026-02-21T12:31:59.048531"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T12:31:59.050034"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T12:31:59.740581"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T12:31:59.740708"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T12:31:59.746304"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T12:31:59.750207"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T12:32:00.909246"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: user from user_roles]\nUser john.doe (ID: USR-001)\nEmail: N/A\nDepartment: N/A\nStatus: Active\nRisk Score: 0.0\n\n[Source 2: user from user_roles]\nUser john.doe (..."
+  },
+  {
+    "id": "0e9b85d2-fb2f-4931-aadf-935184fb3829",
+    "timestamp": "2026-02-21T11:34:04.629406",
+    "query": "AST-013",
+    "response": "Asset information is available. Please specify which assets you'd like to investigate.",
+    "model": "mock-security",
+    "tokens": 384,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: AST-013",
+        "timestamp": "2026-02-21T11:34:03.840681"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T11:34:03.841885"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T11:34:03.884724"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T11:34:03.884884"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T11:34:03.885227"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T11:34:04.629299"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: asset from assets]\nAsset AST-003: srv-db-01\nType: server\nIP Address: 10.0.2.10\nOperating System: RedHat Enterprise Linux 8\nOwner: jane.smith\nDepartment: Engi..."
+  },
+  {
+    "id": "ffab84ff-c06e-482d-965c-4cfd7b759242",
+    "timestamp": "2026-02-21T11:33:46.499548",
+    "query": "How many time we see the login failures for asset - AST-013 and from which which user role",
+    "response": "Asset information is available. Please specify which assets you'd like to investigate.",
+    "model": "mock-security",
+    "tokens": 432,
+    "cost": 0.0,
+    "execution_steps": [
+      {
+        "step": "Start Investigation",
+        "description": "Received query: How many time we see the login failures for asset - AST-013 and from which which user role",
+        "timestamp": "2026-02-21T11:33:44.724302"
+      },
+      {
+        "step": "RAG Retrieval",
+        "description": "Querying vector database for similar documents...",
+        "timestamp": "2026-02-21T11:33:44.725231"
+      },
+      {
+        "step": "RAG Retrieval Complete",
+        "description": "Found relevant documents from vector store.",
+        "timestamp": "2026-02-21T11:33:45.136737"
+      },
+      {
+        "step": "Graph Query",
+        "description": "Traversing security memory graph for connected entities...",
+        "timestamp": "2026-02-21T11:33:45.137090"
+      },
+      {
+        "step": "Graph Query Complete",
+        "description": "Found connected entities in security graph.",
+        "timestamp": "2026-02-21T11:33:45.141620"
+      },
+      {
+        "step": "LLM Inference",
+        "description": "Generating response using Mock Security LLM...",
+        "timestamp": "2026-02-21T11:33:45.143195"
+      },
+      {
+        "step": "Complete",
+        "description": "Response generated and formatted.",
+        "timestamp": "2026-02-21T11:33:46.497557"
+      }
+    ],
+    "context_summary": "=== Vector Database Results ===\n[Source 1: event from logs]\nSecurity Event EVT-003: Successful user login\nType: successful_login\nSeverity: info\nSource: Windows Security\nUser: john.doe\nAsset: AST-013\nT..."
+  }
+]
