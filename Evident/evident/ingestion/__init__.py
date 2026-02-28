@@ -50,7 +50,7 @@ class SourceManager:
                 raw_data = source.load()
                 
                 if not raw_data:
-                    print(f"  ⚠️  No data loaded from {source_name}")
+                    print(f"  [WARN] No data loaded from {source_name}")
                     all_entities[source_name] = []
                     continue
                 
@@ -58,10 +58,10 @@ class SourceManager:
                 entities = self.normalizer.normalize(raw_data, source_name)
                 all_entities[source_name] = entities
                 
-                print(f"  ✓ Loaded {len(entities)} entities from {source_name}")
+                print(f"  [OK] Loaded {len(entities)} entities from {source_name}")
                 
             except Exception as e:
-                print(f"  ✗ Error loading {source_name}: {e}")
+                print(f"  [ERROR] Error loading {source_name}: {e}")
                 all_entities[source_name] = []
         
         return all_entities
