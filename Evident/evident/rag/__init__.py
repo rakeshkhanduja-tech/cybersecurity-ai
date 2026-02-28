@@ -35,7 +35,7 @@ class RAGEngine:
             entities: List of SecurityEntity objects to index
         """
         if not entities:
-            print("⚠️  No entities to index")
+            print("[WARN] No entities to index")
             return
         
         print(f"Indexing {len(entities)} entities...")
@@ -46,7 +46,7 @@ class RAGEngine:
         # Add to vector store
         self.vector_store.add_documents(documents, metadatas, ids)
         
-        print(f"✓ Indexed {len(entities)} entities")
+        print(f"[OK] Indexed {len(entities)} entities")
     
     def retrieve_context(self, query: str, top_k: Optional[int] = None, 
                         filter_by: Optional[Dict[str, Any]] = None) -> str:

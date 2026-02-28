@@ -12,6 +12,7 @@ class MockLLM(BaseLLM):
     def __init__(self, config: Any):
         super().__init__(config)
         self.response_templates = self._load_templates()
+        self.fallback_reason = None # Explicit reason why we are in mock mode
     
     def generate(self, prompt: str, context: str = "", **kwargs) -> Dict[str, Any]:
         """Generate mock security response"""
@@ -22,6 +23,12 @@ class MockLLM(BaseLLM):
         # Analyze prompt to generate relevant response
         response_text = self._generate_response(prompt, context)
         
+        # Add fallback disclaimer if reason exists
+        if self.fallback_reason:
+            disclaimer = f"⚠️ **REAL LLM UNAVAILABLE**: {self.fallback_reason}\n"
+            disclaimer += "*Providing reasoning via MockLLM using retrieved security context.*\n\n"
+            response_text = disclaimer + response_text
+
         # Estimate tokens
         tokens_used = (len(prompt) + len(context) + len(response_text)) // 4
         cost = tokens_used * self.config.cost_per_token
@@ -71,27 +78,23 @@ class MockLLM(BaseLLM):
             return self._general_response(prompt, context)
     
     def _vulnerability_response(self, prompt: str, context: str) -> str:
-        if context:
+        if context and "No relevant context found" not in context:
             return f"""Based on the security data analysis:
 
-**Vulnerability Assessment:**
-{context[:500]}...
+**Security Context Summary:**
+{context[:400]}...
 
-**Key Findings:**
-- Multiple critical vulnerabilities detected requiring immediate attention
-- Affected assets have been identified and prioritized by criticality
-- Remediation steps are available for most vulnerabilities
+**Critical Findings:**
+- Potential vulnerabilities detected in the identified assets/CVEs.
+- Cross-source correlation suggests exposures on sensitive infrastructure.
+- Immediate assessment of the provided context is recommended.
 
 **Recommendations:**
-1. Prioritize patching critical vulnerabilities (CVSS > 9.0)
-2. Verify affected assets are properly isolated
-3. Monitor for exploitation attempts in security logs
-4. Schedule maintenance windows for patch deployment
-
-**Next Steps:**
-Review the detailed vulnerability data above and coordinate with asset owners for remediation."""
+1. Patch affected assets according to the context provided.
+2. Verify isolation of mission-critical systems.
+3. Review associated security logs for indicators of compromise."""
         
-        return "I found several vulnerabilities in the system. Please provide more specific criteria to narrow down the search."
+        return "I found several vulnerabilities in the system. Please provide more specific criteria (like a CVE ID or asset name) to narrow down the search."
     
     def _asset_response(self, prompt: str, context: str) -> str:
         if context:

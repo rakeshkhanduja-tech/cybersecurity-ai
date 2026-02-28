@@ -22,30 +22,74 @@ class LLMFactory:
         Returns:
             BaseLLM instance
         """
+        print(f"\n[DEBUG] LLMFactory.create_llm START (force_mock={force_mock})")
         if config is None:
-            # Get default LLM from config
-            if force_mock or config_loader.is_mock_mode("llm"):
+            print("[DEBUG] No config provided, loading from config.json...")
+            
+            # Smart discovery: Try to find a real provider with a key FIRST
+            gemini_cfg = config_loader.get_llm_config(provider="gemini")
+            is_mock_env = config_loader.is_mock_mode("llm")
+            print(f"[DEBUG] is_mock_mode (env): {is_mock_env}")
+            
+            # If we have a Gemini key, we should ALWAYS use it (priority 1)
+            has_gemini_key = gemini_cfg and gemini_cfg.api_key and "your_gemini_api_key" not in gemini_cfg.api_key
+            
+            if has_gemini_key:
+                print("[DEBUG] Found valid Gemini configuration. Using as authoritative source.")
+                config = gemini_cfg
+            elif force_mock:
+                print("[DEBUG] Forced Mock mode active (No real keys found)")
+                config = config_loader.get_llm_config(provider="mock")
+            elif is_mock_env:
+                print("[DEBUG] Environment requested Mock mode, no real keys found. Using Mock.")
                 config = config_loader.get_llm_config(provider="mock")
             else:
-                config = config_loader.get_llm_config(provider="gemini")
-                if not config:
-                    config = config_loader.get_llm_config()  # Get first available
+                print("[DEBUG] Defaulting to Gemini search")
+                config = gemini_cfg or config_loader.get_llm_config()
+        
+        print(f"[DEBUG] Resolved Config - Name: {config.name}, Provider: {config.provider}, Model: {config.model_id}")
         
         if force_mock or config.provider == "mock":
+            print("[DEBUG] Creating MockLLM instance")
             return MockLLM(config)
         
         if config.provider == "gemini":
+            print("[DEBUG] Attempting GeminiLLM initialization...")
             if not GEMINI_AVAILABLE:
-                print("⚠️  Gemini not available, falling back to mock LLM")
+                print("[DEBUG] GEMINI_AVAILABLE is False (import error)")
                 mock_config = config_loader.get_llm_config(provider="mock")
-                return MockLLM(mock_config)
+                mock = MockLLM(mock_config)
+                mock.fallback_reason = "google-genai package not installed or import failed."
+                return mock
             try:
-                return GeminiLLM(config)
+                llm = GeminiLLM(config)
+                print("[DEBUG] GeminiLLM initialized successfully")
+                return llm
             except Exception as e:
-                print(f"⚠️  Failed to initialize Gemini: {e}")
-                print("Falling back to mock LLM")
+                import traceback
+                error_detail = traceback.format_exc()
+                print(f"❌ [DEBUG] GeminiLLM INIT FAILED: {e}")
+                print(f"[DEBUG] Traceback: {error_detail}")
+                
                 mock_config = config_loader.get_llm_config(provider="mock")
-                return MockLLM(mock_config)
+                mock = MockLLM(mock_config)
+                mock.fallback_reason = f"Gemini initialization failed: {str(e)}"
+                return mock
+
+        # Generic handling for other providers
+        try:
+            if config.provider == "openai":
+                from evident.llm.openai_llm import OpenAILLM
+                return OpenAILLM(config)
+            elif config.provider == "claude":
+                from evident.llm.claude_llm import ClaudeLLM
+                return ClaudeLLM(config)
+        except Exception as e:
+            print(f"⚠️ Failed to initialize {config.provider}: {e}")
+            mock_config = config_loader.get_llm_config(provider="mock")
+            mock = MockLLM(mock_config)
+            mock.fallback_reason = f"{config.provider.title()} initialization failed: {str(e)}"
+            return mock
         
         raise ValueError(f"Unsupported LLM provider: {config.provider}")
 
@@ -69,16 +113,20 @@ Always provide:
 
 Be direct and professional. If you don't have enough information, say so clearly."""
     
-    INVESTIGATION_PROMPT = """Context from Security Intelligence Graph:
+    INVESTIGATION_PROMPT = """You are Evident, a cybersecurity AI specialized in threat intelligence.
+Use the following context from our Security Intelligence Graph and Vector Database to answer the investigator's question.
+
+### SECURITY CONTEXT
 {context}
 
-Security Investigator Question: {query}
+### INVESTIGATOR QUESTION
+{query}
 
-Provide a comprehensive security analysis addressing the question. Include:
-1. Direct answer to the question
-2. Supporting evidence from the context
-3. Risk assessment (if applicable)
-4. Recommended actions
+### INSTRUCTIONS
+1. Provide a direct and reasoned answer.
+2. Cite specific evidence from the context above (e.g., mention specific CVEs, assets, or permissions).
+3. Perform a risk assessment based on the criticality of the assets and vulnerabilities involved.
+4. Recommend clear, actionable next steps for remediation or further investigation.
 
 Response:"""
     
@@ -92,9 +140,9 @@ Provide:
 1. Threat assessment
 2. Indicators of compromise (if any)
 3. Affected assets/users
-4. Recommended mitigation steps
+4. Remediation steps
 
-Analysis:"""
+Assessment:"""
     
     COMPLIANCE_PROMPT = """Review the following security configurations and access controls:
 

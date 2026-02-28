@@ -6,8 +6,11 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables using absolute path to ensure discovery from any CWD
+base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+env_path = os.path.join(base_dir, ".env")
+load_dotenv(env_path)
+print(f"[DEBUG] ConfigLoader loaded .env from: {env_path}")
 
 
 class LLMConfig(BaseModel):
@@ -64,7 +67,14 @@ class ConfigLoader:
     """Loads and manages application configuration"""
     
     def __init__(self, config_path: str = "config.json"):
-        self.config_path = config_path
+        # Use absolute path relative to this file to ensure persistence regardless of CWD
+        if not os.path.isabs(config_path):
+            # Move up two levels from evident/config/__init__.py to root
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            self.config_path = os.path.join(base_dir, config_path)
+        else:
+            self.config_path = config_path
+            
         self._config: Optional[AppConfig] = None
     
     def load_config(self) -> AppConfig:
@@ -72,9 +82,14 @@ class ConfigLoader:
         if self._config:
             return self._config
         
+        abs_path = os.path.abspath(self.config_path)
+        print(f"[DEBUG] ConfigLoader.load_config START (Looking for: {abs_path})")
+        
         if not os.path.exists(self.config_path):
+            print(f"[DEBUG] Config file NOT FOUND at {abs_path}. Using defaults.")
             self._config = self._get_default_config()
         else:
+            print(f"[DEBUG] Config file FOUND at {abs_path}. Loading...")
             with open(self.config_path, "r") as f:
                 data = json.load(f)
             self._config = AppConfig(**data)
@@ -89,12 +104,18 @@ class ConfigLoader:
         if not self._config:
             return
         
-        # Override LLM API keys from environment
+        # Override LLM API keys from environment (ignore placeholders)
         gemini_key = os.getenv("GEMINI_API_KEY")
-        if gemini_key:
+        if gemini_key and "your_gemini_api_key" not in gemini_key:
             for llm in self._config.llms:
                 if llm.provider == "gemini":
                     llm.api_key = gemini_key
+        
+        openai_key = os.getenv("OPENAI_API_KEY")
+        if openai_key and "your_openai_api_key" not in openai_key:
+            for llm in self._config.llms:
+                if llm.provider == "openai":
+                    llm.api_key = openai_key
         
         # Override graph DB credentials
         neo4j_uri = os.getenv("NEO4J_URI")
@@ -118,10 +139,11 @@ class ConfigLoader:
         return AppConfig(
             llms=[
                 LLMConfig(
-                    name="Mock Security LLM",
-                    provider="mock",
-                    model_id="mock-security",
-                    cost_per_token=0.0,
+                    name="Google Gemini",
+                    provider="gemini",
+                    model_id="gemini-2.0-flash",
+                    api_key="",
+                    cost_per_token=0.0000001,
                     capabilities=["general", "security"]
                 )
             ],
@@ -161,6 +183,16 @@ class ConfigLoader:
         elif component == "graph":
             return os.getenv("USE_MOCK_GRAPH", "False").lower() == "true"
         return False
+
+    def save_config(self, app_config: AppConfig):
+        """Save configuration to file"""
+        self._config = app_config
+        try:
+            with open(self.config_path, "w") as f:
+                json.dump(app_config.model_dump(), f, indent=4)
+            print(f"[OK] Configuration saved to {self.config_path}")
+        except Exception as e:
+            print(f"Error saving configuration: {e}")
 
 
 # Global config instance
