@@ -42,8 +42,10 @@ class GraphDBConfig(BaseModel):
 
 class IngestionConfig(BaseModel):
     """Configuration for data ingestion"""
+    source_mode: str = Field(default="sample")  # sample, livedata, cloud
     data_path: str = Field(default="./data")
     sources: List[str] = Field(default_factory=list)
+    schema_preference: str = Field(default="evident")
 
 
 class AgentConfig(BaseModel):
@@ -80,6 +82,7 @@ class ConfigLoader:
     def load_config(self) -> AppConfig:
         """Load configuration from file and environment"""
         if self._config:
+            self._update_data_path()
             return self._config
         
         abs_path = os.path.abspath(self.config_path)
@@ -94,11 +97,33 @@ class ConfigLoader:
                 data = json.load(f)
             self._config = AppConfig(**data)
         
+        self._update_data_path()
+
         # Override with environment variables
         self._apply_env_overrides()
         
         return self._config
     
+    def _update_data_path(self):
+        """Update data_path based on source_mode"""
+        if not self._config:
+            return
+            
+        mode = self._config.ingestion.source_mode
+        # Use absolute path resolving up to git root folder (c:\PRODDEV\personal\cybersecurity-ai)
+        # __file__ is c:\PRODDEV\personal\cybersecurity-ai\Evident\evident\config\__init__.py
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+        
+        if mode == "livedata":
+            self._config.ingestion.data_path = os.path.join(base_dir, "Evident", "evident", "data", "livedata", "dataplugs_singnals")
+        elif mode == "cloud":
+            # Cloud storage local cache path
+            self._config.ingestion.data_path = os.path.join(base_dir, "Evident", "evident", "data", "livedata", "dataplugs_singnals")
+        else: # sample
+            self._config.ingestion.data_path = os.path.join(base_dir, "Evident", "data", "sample")
+        
+        print(f"[DEBUG] Effective data_path set to: {self._config.ingestion.data_path} (Mode: {mode})")
+
     def _apply_env_overrides(self):
         """Apply environment variable overrides"""
         if not self._config:
@@ -158,7 +183,8 @@ class ConfigLoader:
                     "signin_logs",
                     "user_roles",
                     "role_permissions"
-                ]
+                ],
+                schema_preference="evident"
             ),
             agent=AgentConfig()
         )
@@ -187,6 +213,7 @@ class ConfigLoader:
     def save_config(self, app_config: AppConfig):
         """Save configuration to file"""
         self._config = app_config
+        self._update_data_path()
         try:
             with open(self.config_path, "w") as f:
                 json.dump(app_config.model_dump(), f, indent=4)

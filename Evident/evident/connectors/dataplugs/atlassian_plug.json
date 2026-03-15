@@ -1,0 +1,38 @@
+{
+    "id": "atlassian",
+    "name": "Atlassian",
+    "base_url": "https://{instance_name}.atlassian.net",
+    "auth": {
+        "type": "api_key"
+    },
+    "apis": [
+        {
+            "id": "audit_logs",
+            "signal": "signin_logs",
+            "description": "Fetch Jira audit logs",
+            "method": "GET",
+            "endpoint": "/rest/api/3/auditing/record",
+            "headers": {
+                "Authorization": "Basic {email}:{api_token}",
+                "Accept": "application/json"
+            },
+            "result_path": "records",
+            "pagination": {
+                "type": "offset",
+                "param": "offset",
+                "limit_param": "limit"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "signin_logs": {
+                "event_id": "id",
+                "timestamp": "created",
+                "event_type": "summary",
+                "user": "author.displayName",
+                "description": "description"
+            }
+        }
+    }
+}

@@ -9,6 +9,7 @@ async function waitForAgent() {
     const overlay = document.getElementById('loading-overlay');
     const msgEl = document.getElementById('loading-message');
     const stepsEl = document.getElementById('loading-steps');
+    const loadingBar = document.getElementById('loading-bar');
     let renderedSteps = [];
 
     while (true) {
@@ -17,35 +18,31 @@ async function waitForAgent() {
             if (res.ok) {
                 const data = await res.json();
 
-                // Render completed steps
-                const log = data.log || [];
-                if (log.length !== renderedSteps.length) {
-                    // Add new steps that aren't rendered yet
-                    for (let i = renderedSteps.length; i < log.length; i++) {
-                        const item = document.createElement('div');
-                        item.className = 'loading-step-item step-done';
-                        item.innerHTML = `<span class="step-icon">✅</span><span>${log[i]}</span>`;
-                        // Mark the previous-last as done before adding new
-                        if (stepsEl.lastChild) {
-                            stepsEl.lastChild.classList.remove('step-current');
-                            stepsEl.lastChild.classList.add('step-done');
-                            stepsEl.lastChild.querySelector('.step-icon').textContent = '✅';
-                        }
-                        stepsEl.appendChild(item);
-                        stepsEl.scrollTop = stepsEl.scrollHeight;
-                    }
-                    renderedSteps = [...log];
+                // Update progress bar
+                const progress = Math.min(95, (data.log.length / 5) * 100); // Assuming 5 steps for 100%
+                if (loadingBar) {
+                    loadingBar.style.width = `${progress}%`;
+                }
+
+                // Update steps log
+                if (data.log && data.log.length > 0) {
+                    stepsEl.innerHTML = ''; // Clear existing steps
+                    data.log.forEach((step, index) => {
+                        const stepItem = document.createElement('div');
+                        const isLast = (index === data.log.length - 1);
+                        stepItem.className = `loading-step-item ${isLast ? 'step-current' : 'step-done'}`;
+                        stepItem.innerHTML = `
+                            <span class="step-icon">${isLast ? '⚙️' : '✓'}</span>
+                            <span class="step-text">${step}</span>
+                        `;
+                        stepsEl.appendChild(stepItem);
+                    });
+                    // Scroll to bottom
+                    stepsEl.scrollTop = stepsEl.scrollHeight;
                 }
 
                 // Show current in-progress step
                 msgEl.textContent = data.step;
-
-                // Mark the last rendered item as "current" (spinner)
-                if (stepsEl.lastChild && !data.ready) {
-                    stepsEl.lastChild.classList.remove('step-done');
-                    stepsEl.lastChild.classList.add('step-current');
-                    stepsEl.lastChild.querySelector('.step-icon').textContent = '⚙️';
-                }
 
                 if (data.ready) {
                     // Mark all as done
@@ -54,6 +51,9 @@ async function waitForAgent() {
                         el.classList.add('step-done');
                         el.querySelector('.step-icon').textContent = '✅';
                     });
+                    if (loadingBar) {
+                        loadingBar.style.width = '100%';
+                    }
                     await new Promise(r => setTimeout(r, 800));
                     overlay.classList.add('hidden');
                     break;
@@ -70,11 +70,6 @@ async function waitForAgent() {
 document.addEventListener('DOMContentLoaded', async function () {
     initializeUI();
 
-    // Add listener for Ask Evident button
-    document.getElementById('btn-ask-evident').addEventListener('click', () => {
-        window.open('/chat', '_blank');
-    });
-
     // Wait for the agent to initialize, then load data
     await waitForAgent();
     loadSources();
@@ -84,36 +79,220 @@ document.addEventListener('DOMContentLoaded', async function () {
 function initializeUI() {
     setupModals();
     setupTabs();
+    setupGraphControls();
+
+    const refreshBtn = document.getElementById('btn-refresh-graph');
+    if (refreshBtn) refreshBtn.addEventListener('click', refreshGraph);
+}
+
+function setupGraphControls() {
+    const layoutBtn = document.getElementById('btn-layout');
+    const centerBtn = document.getElementById('btn-center');
+
+    if (layoutBtn) {
+        layoutBtn.addEventListener('click', () => {
+            if (cy) {
+                const layout = cy.layout({
+                    name: 'cose',
+                    animate: true,
+                    animationDuration: 600,
+                    padding: 30
+                });
+                layout.run();
+            }
+        });
+    }
+
+    if (centerBtn) {
+        centerBtn.addEventListener('click', () => {
+            if (cy) {
+                cy.animate({
+                    fit: {
+                        eles: cy.elements(),
+                        padding: 30
+                    },
+                    duration: 600
+                });
+            }
+        });
+    }
+}
+
+/**
+ * Show a toast notification
+ * @param {string} message - Message to display
+ * @param {string} type - 'success', 'error', or 'info'
+ */
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+        <div class="toast-icon">${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}</div>
+        <div class="toast-message">${message}</div>
+    `;
+
+    // Create container if it doesn't exist
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    container.appendChild(toast);
+
+    // Animate in
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
+// --- View Switching ---
+function switchView(viewId) {
+    console.log(`[UI] Switching to view: ${viewId}`);
+
+    // Hide all view containers
+    document.querySelectorAll('.view-container').forEach(v => v.classList.add('hidden-view'));
+
+    // Show the target view
+    const target = document.getElementById(`view-${viewId}`);
+    if (target) {
+        target.classList.remove('hidden-view');
+    }
+
+    // Update Header
+    const titleEl = document.getElementById('view-name');
+    const iconEl = document.getElementById('view-icon');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    navItems.forEach(item => item.classList.remove('active'));
+
+    const viewMeta = {
+        'signals': { title: 'Active Signals', icon: '🛡️', btnId: 'btn-signals' },
+        'chat': { title: 'Ask Evident', icon: '💬', btnId: 'btn-chat' },
+        'data-plugs': { title: 'Data Plugs', icon: '🔗', btnId: 'btn-data-plugs' },
+        'active-plugs': { title: 'Active Plugs', icon: '🔌', btnId: 'btn-active-plugs' },
+        'active-agents': { title: 'Active Security Agents', icon: '🤖', btnId: 'btn-active-agents' },
+        'agents': { title: 'Security Agents', icon: '🏗️', btnId: 'btn-agents' },
+        'history': { title: 'Audit History', icon: '📜', btnId: 'btn-history' }
+    };
+
+    const meta = viewMeta[viewId];
+    if (meta) {
+        if (titleEl) titleEl.textContent = meta.title;
+        if (iconEl) iconEl.textContent = meta.icon;
+        const btn = document.getElementById(meta.btnId);
+        if (btn) btn.classList.add('active');
+    }
+
+    // Load data for specific view
+    if (viewId === 'active-plugs') loadActivePlugsView();
+    if (viewId === 'history') loadHistoryView();
+    if (viewId === 'active-agents') loadActiveAgentsView();
+    if (viewId === 'agents') loadAllAgentsView();
+    if (viewId === 'signals') {
+        loadSources();
+        loadStats();
+    }
 }
 
 // --- Modals ---
 function setupModals() {
-    const configModal = document.getElementById('modal-config');
-    const historyModal = document.getElementById('modal-history');
+    const settingsModal = document.getElementById('modal-settings');
+    const dataPlugsModal = document.getElementById('modal-data-plugs');
 
-    document.getElementById('btn-config').addEventListener('click', async () => {
-        configModal.classList.add('show');
+    // Sidebar: Active Signals (Home)
+    const btnSignals = document.getElementById('btn-signals');
+    if (btnSignals) {
+        btnSignals.addEventListener('click', () => {
+            switchView('signals');
+        });
+    }
 
-        // Load current config from server to pre-fill
-        try {
-            const response = await fetch('/api/config');
-            const data = await response.json();
+    // Sidebar: Ask Evident
+    const btnChat = document.getElementById('btn-chat');
+    if (btnChat) {
+        btnChat.addEventListener('click', () => {
+            switchView('chat');
+        });
+    }
 
-            document.getElementById('config-provider').value = data.provider;
-            document.getElementById('config-api-key').value = data.api_key;
+    // Sidebar: Active Plugs
+    const btnActivePlugs = document.getElementById('btn-active-plugs');
+    if (btnActivePlugs) {
+        btnActivePlugs.addEventListener('click', () => {
+            switchView('active-plugs');
+        });
+    }
 
-            const modelSelect = document.getElementById('config-model');
-            modelSelect.innerHTML = `<option value="${data.model_id}">${data.model_id}</option>`;
-            modelSelect.disabled = false;
-        } catch (error) {
-            console.error('Error loading config:', error);
+    // Sidebar: Data Plugs (Modal)
+    document.getElementById('btn-data-plugs').addEventListener('click', () => {
+        if (dataPlugsModal) {
+            dataPlugsModal.classList.add('show');
+            loadDataPlugsModal();
         }
     });
 
-    document.getElementById('btn-history').addEventListener('click', () => {
-        historyModal.classList.add('show');
-        loadHistory();
+    // Sidebar: Settings (Modal)
+    document.getElementById('btn-settings').addEventListener('click', () => {
+        settingsModal.classList.add('show');
+        loadSettingsConfig(); // Refactored to separate function
     });
+
+    // Sidebar: Audit History
+    const btnHistory = document.getElementById('btn-history');
+    if (btnHistory) {
+        btnHistory.addEventListener('click', () => {
+            switchView('history');
+        });
+    }
+
+    // Sidebar Placeholder: Active Security Agents
+    const btnActiveAgents = document.getElementById('btn-active-agents');
+    if (btnActiveAgents) {
+        btnActiveAgents.addEventListener('click', () => {
+            switchView('active-agents'); // Future view
+        });
+    }
+
+    // Sidebar Placeholder: Security Agents
+    const btnAgents = document.getElementById('btn-agents');
+    if (btnAgents) {
+        btnAgents.addEventListener('click', () => {
+            switchView('agents');
+        });
+    }
+
+    // Refresh Active Agents
+    const btnRefreshActive = document.getElementById('btn-refresh-active-agents');
+    if (btnRefreshActive) {
+        btnRefreshActive.addEventListener('click', loadActiveAgentsView);
+    }
+
+    // Agent Config Modal Logic
+    const modeSelect = document.getElementById('config-agent-mode');
+    if (modeSelect) {
+        modeSelect.addEventListener('change', () => {
+            const freqGroup = document.getElementById('group-config-frequency');
+            freqGroup.style.display = modeSelect.value === 'autonomous' ? 'block' : 'none';
+        });
+    }
+
+    const btnSaveAgent = document.getElementById('btn-save-agent-config');
+    if (btnSaveAgent) {
+        btnSaveAgent.addEventListener('click', saveAgentProfile);
+    }
+
+    // Logo click goes home
+    const logo = document.querySelector('.sidebar-logo');
+    if (logo) {
+        logo.style.cursor = 'pointer';
+        logo.addEventListener('click', () => switchView('signals'));
+    }
 
     document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -121,74 +300,896 @@ function setupModals() {
             modal.classList.remove('show');
         });
     });
+}
 
-    // Config Modal Logic: Clear fetch context when provider changes
-    document.getElementById('config-provider').addEventListener('change', () => {
-        const modelSelect = document.getElementById('config-model');
-        modelSelect.disabled = true;
-        modelSelect.innerHTML = '<option>Click Fetch Models</option>';
-    });
+// Move settings loading to separate function
+async function loadSettingsConfig() {
+    try {
+        const response = await fetch('/api/config');
+        const data = await response.json();
 
-    document.getElementById('btn-fetch-models').addEventListener('click', async () => {
-        const provider = document.getElementById('config-provider').value;
-        const apiKey = document.getElementById('config-api-key').value;
-        const modelSelect = document.getElementById('config-model');
-        const fetchBtn = document.getElementById('btn-fetch-models');
+        document.getElementById('settings-provider').value = data.provider || 'gemini';
+        document.getElementById('settings-api-key').value = data.api_key || '';
+        const schemaEl = document.getElementById('settings-schema');
+        if (schemaEl) schemaEl.value = data.schema_preference || 'evident';
 
-        if (!provider) return;
-
-        const originalText = fetchBtn.innerText;
-        fetchBtn.innerText = 'Searching...';
-        fetchBtn.disabled = true;
-
-        try {
-            // Note: If apiKey is masked (contains '...'), the backend list_models handles it by using stored key
-            const response = await fetch('/api/models', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ provider, api_key: apiKey })
-            });
-            const data = await response.json();
-
-            if (data.models && data.models.length > 0) {
-                modelSelect.innerHTML = data.models.map(m => `<option value="${m}">${m}</option>`).join('');
-                modelSelect.disabled = false;
-                console.log(`[UI] Discovered ${data.models.length} models via API`);
-            } else {
-                modelSelect.innerHTML = '<option>No models found</option>';
-            }
-        } catch (error) {
-            console.error('Error fetching models:', error);
-            modelSelect.innerHTML = '<option>Error fetching models</option>';
-        } finally {
-            fetchBtn.innerText = originalText;
-            fetchBtn.disabled = false;
+        const sourceModeEl = document.getElementById('settings-source-mode');
+        if (sourceModeEl) {
+            const currentMode = data.source_mode || 'sample';
+            sourceModeEl.value = currentMode;
+            updateSourceBadge(currentMode);
         }
-    });
 
-    document.getElementById('btn-save-config').addEventListener('click', async () => {
-        const provider = document.getElementById('config-provider').value;
-        const apiKey = document.getElementById('config-api-key').value;
-        const modelId = document.getElementById('config-model').value;
-
-        try {
-            const response = await fetch('/api/config', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ provider, api_key: apiKey, model_id: modelId })
-            });
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                alert('Configuration saved!');
-                configModal.classList.remove('show');
-            } else {
-                alert('Error: ' + data.error);
-            }
-        } catch (error) {
-            alert('Failed to save config');
+        const stypeEl = document.getElementById('settings-storage-type');
+        if (stypeEl && data.storage_config) {
+            const s = data.storage_config;
+            stypeEl.value = s.storage_type || 'local';
+            // ... (storage fields population logic)
+            populateStorageFields(s);
         }
+
+        const modelSelect = document.getElementById('settings-model');
+        modelSelect.innerHTML = `<option value="${data.model_id}">${data.model_id}</option>`;
+        modelSelect.disabled = false;
+    } catch (error) {
+        console.error('Error loading config:', error);
+    }
+}
+// Settings Modal Logic: Clear fetch context when provider changes
+document.getElementById('settings-provider').addEventListener('change', () => {
+    const modelSelect = document.getElementById('settings-model');
+    modelSelect.disabled = true;
+    modelSelect.innerHTML = '<option>Click Fetch Models</option>';
+});
+
+document.getElementById('btn-fetch-models').addEventListener('click', async () => {
+    const provider = document.getElementById('settings-provider').value;
+    const apiKey = document.getElementById('settings-api-key').value;
+    const modelSelect = document.getElementById('settings-model');
+    const fetchBtn = document.getElementById('btn-fetch-models');
+
+    if (!provider) return;
+
+    const originalText = fetchBtn.innerText;
+    fetchBtn.innerText = 'Searching...';
+    fetchBtn.disabled = true;
+
+    try {
+        // Note: If apiKey is masked (contains '...'), the backend list_models handles it by using stored key
+        const response = await fetch('/api/models', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider, api_key: apiKey })
+        });
+        const data = await response.json();
+
+        if (data.models && data.models.length > 0) {
+            modelSelect.innerHTML = data.models.map(m => `<option value="${m}">${m}</option>`).join('');
+            modelSelect.disabled = false;
+            console.log(`[UI] Discovered ${data.models.length} models via API`);
+        } else {
+            modelSelect.innerHTML = '<option>No models found</option>';
+        }
+    } catch (error) {
+        console.error('Error fetching models:', error);
+        modelSelect.innerHTML = '<option>Error fetching models</option>';
+    } finally {
+        fetchBtn.innerText = originalText;
+        fetchBtn.disabled = false;
+    }
+});
+
+document.getElementById('btn-save-settings').addEventListener('click', async () => {
+    const provider = document.getElementById('settings-provider').value;
+    const apiKey = document.getElementById('settings-api-key').value;
+    const modelId = document.getElementById('settings-model').value;
+    const schemaId = document.getElementById('settings-schema').value;
+    const sourceMode = document.getElementById('settings-source-mode').value;
+    const storageType = document.getElementById('settings-storage-type').value;
+
+    // Storage specific fields
+    const storageConfig = { storage_type: storageType };
+    if (storageType === 'azure') {
+        storageConfig.azure_account_name = document.getElementById('storage-azure-account').value;
+        storageConfig.azure_container = document.getElementById('storage-azure-container').value;
+        storageConfig.azure_keyvault_url = document.getElementById('storage-azure-vault').value;
+        storageConfig.azure_secret_name = document.getElementById('storage-azure-secret').value;
+    } else if (storageType === 'aws_s3') {
+        storageConfig.aws_s3_bucket = document.getElementById('storage-aws-bucket').value;
+        storageConfig.aws_region = document.getElementById('storage-aws-region').value;
+        storageConfig.aws_secret_name = document.getElementById('storage-aws-secret').value;
+    } else if (storageType === 'gcs') {
+        storageConfig.gcp_project = document.getElementById('storage-gcs-project').value;
+        storageConfig.gcs_bucket = document.getElementById('storage-gcs-bucket').value;
+        storageConfig.gcp_secret_name = document.getElementById('storage-gcs-secret').value;
+    }
+
+    try {
+        // Show loading overlay while agent rebuilds
+        const loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+            document.getElementById('loading-message').textContent = 'Rebuilding intelligence layer for new data source...';
+        }
+
+        await fetch('/api/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                provider,
+                api_key: apiKey,
+                model_id: modelId,
+                schema_preference: schemaId,
+                source_mode: sourceMode,
+                storage_config: storageConfig
+            })
+        });
+
+        // Wait for agent to be ready again (it will be rebuilding in background)
+        await waitForAgent();
+
+        showToast('Configuration saved and intelligence layer rebuilt!', 'success');
+        updateSourceBadge(sourceMode);
+        settingsModal.classList.remove('show');
+        loadStats();
+        loadSources();
+    } catch (error) {
+        console.error(error);
+        alert('Failed to save config');
+    }
+});
+
+function populateStorageFields(s) {
+    if (s.storage_type === 'azure') {
+        document.getElementById('storage-azure-account').value = s.azure_account_name || '';
+        document.getElementById('storage-azure-container').value = s.azure_container || '';
+        document.getElementById('storage-azure-vault').value = s.azure_keyvault_url || '';
+        document.getElementById('storage-azure-secret').value = s.azure_secret_name || '';
+    } else if (s.storage_type === 'aws_s3') {
+        document.getElementById('storage-aws-bucket').value = s.aws_s3_bucket || '';
+        document.getElementById('storage-aws-region').value = s.aws_region || '';
+        document.getElementById('storage-aws-secret').value = s.aws_secret_name || '';
+    } else if (s.storage_type === 'gcs') {
+        document.getElementById('storage-gcs-project').value = s.gcp_project || '';
+        document.getElementById('storage-gcs-bucket').value = s.gcs_bucket || '';
+        document.getElementById('storage-gcs-secret').value = s.gcp_secret_name || '';
+    }
+    toggleStorageFields();
+}
+
+async function loadActivePlugsView() {
+    const listContainer = document.getElementById('view-active-plugs-list');
+
+    listContainer.innerHTML = '<div class="loading">Fetching active plugs...</div>';
+
+    try {
+        const res = await fetch('/api/connectors/active');
+        const data = await res.json();
+        const plugs = data.active || [];
+
+        // Update summary stats
+        const totalRecords = plugs.reduce((sum, p) => sum + (p.records_generated || 0), 0);
+        const runningCount = plugs.filter(p => !p.scheduler_paused).length;
+        const pausedCount = plugs.filter(p => p.scheduler_paused).length;
+        const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+        setEl('ap-stat-total', plugs.length);
+        setEl('ap-stat-records', totalRecords.toLocaleString());
+        setEl('ap-stat-running', runningCount);
+        setEl('ap-stat-paused', pausedCount);
+
+        if (plugs.length === 0) {
+            listContainer.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:200px; opacity:0.5; gap:12px;">
+                    <span style="font-size:2.5rem;">🔌</span>
+                    <p>No active data plugs found. Configure connectors via <strong>Data Plugs</strong>.</p>
+                </div>`;
+            return;
+        }
+
+        listContainer.innerHTML = plugs.map(plug => {
+            const isPaused = plug.scheduler_paused;
+            const statusColor = isPaused ? '#ffca28' : '#66bb6a';
+            const statusLabel = isPaused ? 'Paused' : 'Running';
+            const statusIcon = isPaused ? '⏸️' : '▶️';
+            const lastRun = plug.last_run ? new Date(plug.last_run).toLocaleString() : 'Never';
+            const displayName = plug.connector_id.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+            return `
+            <div class="active-plug-card" style="
+                background: rgba(255,255,255,0.03);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-left: 3px solid ${statusColor};
+                border-radius: 12px;
+                padding: 18px 20px;
+                margin-bottom: 14px;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 16px;
+                align-items: center;
+                transition: background 0.2s;">
+                <!-- Status Icon -->
+                <div style="font-size:1.8rem; width:48px; height:48px; background: rgba(255,255,255,0.04); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                    ${statusIcon}
+                </div>
+                <!-- Info -->
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                        <h4 style="margin:0; font-size:1rem; color:#e8eaf6;">${displayName}</h4>
+                        <span style="font-size:0.7rem; font-weight:600; padding:2px 8px; border-radius:20px; background: ${isPaused ? 'rgba(255,202,40,0.12)' : 'rgba(102,187,106,0.12)'}; color:${statusColor}; border: 1px solid ${statusColor}40;">${statusLabel}</span>
+                    </div>
+                    <div style="display:flex; gap:20px; font-size:0.78rem; color:#9fa8da;">
+                        <span title="Last run time">🕐 ${lastRun}</span>
+                        <span title="Records ingested">📊 ${(plug.records_generated || 0).toLocaleString()} records</span>
+                        <span title="Schedule interval">⏱️ Every ${plug.interval_minutes || '?'}m</span>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div style="display:flex; gap:8px; flex-shrink:0;">
+                    <button onclick="runConnectorNow('${plug.connector_id}')" class="btn-primary" style="padding:7px 14px; font-size:0.78rem;" title="Trigger immediate run">
+                        ▶ Run Now
+                    </button>
+                    ${isPaused
+                    ? `<button onclick="resumeConnector('${plug.connector_id}')" class="btn-secondary" style="padding:7px 14px; font-size:0.78rem;" title="Resume scheduler">▶ Resume</button>`
+                    : `<button onclick="pauseConnector('${plug.connector_id}')" class="btn-secondary" style="padding:7px 14px; font-size:0.78rem;" title="Pause scheduler">⏸ Pause</button>`
+                }
+                    <button onclick="viewConnectorLogs('${plug.connector_id}')" class="btn-secondary" style="padding:7px 14px; font-size:0.78rem;" title="View connector logs">
+                        📋 Logs
+                    </button>
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch (e) {
+        console.error('[UI] Failed to load active plugs:', e);
+        listContainer.innerHTML = '<div class="error-text" style="padding:20px;">Failed to load active plugs. Check server connection.</div>';
+    }
+}
+
+async function pauseConnector(connectorId) {
+    try {
+        await fetch(`/api/connectors/pause/${connectorId}`, { method: 'POST' });
+        showToast(`Paused ${connectorId}`, 'info');
+        loadActivePlugsView(); // Refresh
+    } catch (e) {
+        showToast(`Failed to pause ${connectorId}`, 'error');
+    }
+}
+
+async function resumeConnector(connectorId) {
+    try {
+        await fetch(`/api/connectors/resume/${connectorId}`, { method: 'POST' });
+        showToast(`Resumed ${connectorId}`, 'success');
+        loadActivePlugsView(); // Refresh
+    } catch (e) {
+        showToast(`Failed to resume ${connectorId}`, 'error');
+    }
+}
+
+async function loadHistoryView() {
+    const listContainer = document.getElementById('view-history-list');
+    try {
+        const response = await fetch('/api/history');
+        const data = await response.json();
+
+        if (!data.history || data.history.length === 0) {
+            listContainer.innerHTML = '<li class="history-item">No history yet</li>';
+            return;
+        }
+
+        listContainer.innerHTML = '';
+        data.history.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            if (index === 0) li.classList.add('active'); // Default selection
+            li.innerHTML = `
+                <div class="history-item-header">
+                    <span class="history-item-time">${new Date(item.timestamp).toLocaleString()}</span>
+                    <span class="history-item-schema">${item.schema || 'evident'}</span>
+                </div>
+                <div class="history-item-query">${item.query}</div>
+            `;
+            li.addEventListener('click', () => showHistoryViewDetails(item, li));
+            listContainer.appendChild(li);
+
+            if (index === 0) showHistoryViewDetails(item, li);
+        });
+
+    } catch (error) {
+        listContainer.innerHTML = '<li class="history-item">Error loading history</li>';
+    }
+}
+
+function showHistoryViewDetails(item, element) {
+    document.querySelectorAll('#view-history-list .history-item').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+
+    const detailsContainer = document.getElementById('view-history-details-content');
+
+    let stepsHtml = '';
+    if (item.execution_steps && item.execution_steps.length > 0) {
+        stepsHtml = item.execution_steps.map(step => `
+            <div class="step-card" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                <div class="step-header" style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span class="step-name" style="font-weight: 600; font-size: 0.8rem; color: #4fc3f7;">${step.step}</span>
+                    <span class="step-time" style="font-size: 0.75rem; color: #666;">${new Date(step.timestamp).toLocaleTimeString()}</span>
+                </div>
+                <div class="step-desc" style="font-size: 0.8rem; color: #aaa;">${step.description}</div>
+            </div>
+        `).join('');
+    } else {
+        stepsHtml = '<div class="step-card">No execution steps recorded</div>';
+    }
+
+    detailsContainer.innerHTML = `
+        <h3 style="margin-top: 0;">Interaction Details</h3>
+        <p><strong>Query:</strong> ${item.query}</p>
+        <p><strong>Response:</strong> ${item.response}</p>
+        <div style="margin: 20px 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <h4>Execution Trace</h4>
+            ${stepsHtml}
+        </div>
+        <div style="font-size: 0.85rem; color: #888; background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px;">
+            <p style="margin: 0 0 5px 0;">Tokens: ${item.tokens || 0} | Cost: $${(item.cost || 0).toFixed(4)}</p>
+            <p style="margin: 0;">Context Summary: ${item.context_summary || 'N/A'}</p>
+        </div>
+    `;
+}
+
+window.toggleStorageFields = function () {
+    const typeEl = document.getElementById('settings-storage-type');
+    if (!typeEl) return;
+    const type = typeEl.value;
+    document.querySelectorAll('.storage-optional-fields').forEach(el => el.classList.add('hidden'));
+    const activeGroup = document.getElementById(`storage-fields-${type.replace('_s3', '')}`);
+    if (activeGroup) activeGroup.classList.remove('hidden');
+};
+
+function updateSourceBadge(mode) {
+    const badge = document.getElementById('active-source-badge');
+    if (!badge) return;
+
+    if (mode === 'sample') {
+        badge.innerText = 'SAMPLE DATA';
+        badge.style.color = '#00e5ff';
+        badge.style.borderColor = 'rgba(0, 229, 255, 0.2)';
+    } else if (mode === 'livedata') {
+        badge.innerText = 'LOCAL LIVEDATA';
+        badge.style.color = '#ff9100';
+        badge.style.borderColor = 'rgba(255, 145, 0, 0.2)';
+    } else {
+        badge.innerText = 'CLOUD STORAGE';
+        badge.style.color = '#7c4dff';
+        badge.style.borderColor = 'rgba(124, 77, 255, 0.2)';
+    }
+}
+
+async function refreshGraph() {
+    const btn = document.getElementById('btn-refresh-graph');
+    if (!btn) return;
+
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = '⏳';
+    btn.disabled = true;
+
+    // Use the toast system if available, else alert
+    if (window.showToast) showToast('Regenerating Knowledge Graph...', 'info');
+    else console.log('Regenerating Knowledge Graph...');
+
+    try {
+        const res = await fetch('/api/rebuild-graph', { method: 'POST' });
+        const result = await res.json();
+
+        if (result.status === 'success') {
+            if (window.showToast) showToast(`Graph rebuilt with ${result.entities} entities!`, 'success');
+            else alert(`Graph rebuilt with ${result.entities} entities!`);
+            loadStats();
+            loadSources();
+        } else {
+            if (window.showToast) showToast('Failed to rebuild graph.', 'error');
+            else alert('Failed to rebuild graph.');
+        }
+    } catch (err) {
+        console.error('Error rebuilding graph:', err);
+    } finally {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+    }
+}
+
+async function runConnectorNow(connectorId) {
+    if (window.showToast) showToast(`Triggering ingestion for ${connectorId}...`, 'info');
+    try {
+        const res = await fetch(`/api/connectors/run/${connectorId}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'success') {
+            if (window.showToast) showToast(`Successfully triggered ${connectorId}`, 'success');
+        } else {
+            if (window.showToast) showToast(`Failed to trigger ${connectorId}`, 'error');
+        }
+    } catch (e) {
+        console.error(e);
+        if (window.showToast) showToast('Error triggering connector', 'error');
+    }
+}
+
+function viewConnectorLogs(connectorId) {
+    const logsModal = document.getElementById('modal-logs');
+    if (logsModal) {
+        logsModal.classList.add('show');
+        loadConnectorLogs(connectorId);
+    }
+}
+
+async function loadConnectorLogs(connectorId) {
+    const listEl = document.getElementById('logs-list');
+    const titleEl = document.getElementById('logs-modal-title');
+    const contentEl = document.getElementById('log-content-panel');
+
+    if (titleEl) titleEl.textContent = `Logs: ${connectorId}`;
+    listEl.innerHTML = 'Loading...';
+    contentEl.innerHTML = '<div class="placeholder-text">Select a log file on the left to view contents.</div>';
+
+    try {
+        const res = await fetch(`/api/connectors/logs/${connectorId}`);
+        const data = await res.json();
+
+        if (!data.logs || data.logs.length === 0) {
+            listEl.innerHTML = '<div class="placeholder-text" style="padding: 10px;">No logs found for this connector.</div>';
+            return;
+        }
+
+        listEl.innerHTML = data.logs.map(log => `
+            <div class="history-item" onclick="showLogFileContent('${connectorId}', '${log}')">
+                <div style="font-size: 0.8rem; word-break: break-all;">${log}</div>
+            </div>
+        `).join('');
+
+    } catch (e) {
+        listEl.innerHTML = '<div class="error">Failed to load logs</div>';
+    }
+}
+
+window.showLogFileContent = async function (connectorId, filename) {
+    const contentEl = document.getElementById('log-content-panel');
+    contentEl.innerHTML = '<div class="loading">Reading log file...</div>';
+
+    // Highlight active
+    document.querySelectorAll('#logs-list .history-item').forEach(el => el.classList.remove('active'));
+    // Find the item clicked (this is a bit hacky with onclick strings, but let's assume it works for now)
+
+    try {
+        const res = await fetch(`/api/connectors/logs/${connectorId}/${filename}`);
+        const data = await res.json();
+
+        if (data.content) {
+            contentEl.innerHTML = `<pre style="margin: 0; padding: 20px; font-family: monospace; font-size: 0.85rem; color: #fff; white-space: pre-wrap; background: rgba(0,0,0,0.3); border-radius: 8px;">${data.content}</pre>`;
+        } else {
+            contentEl.innerHTML = '<div class="error">Log file is empty or could not be read.</div>';
+        }
+    } catch (e) {
+        contentEl.innerHTML = '<div class="error">Error reading log file.</div>';
+    }
+};
+
+
+// --- Data Plugs Logic ---
+let _allDataPlugs = [];
+let _dbConfigs = {};
+
+async function loadDataPlugsModal() {
+    const listEl = document.getElementById('connectors-browse-list');
+    listEl.innerHTML = 'Loading...';
+
+    try {
+        // Fetch static plug specs
+        const specsRes = await fetch('/api/connectors');
+        const specsData = await specsRes.json();
+        _allDataPlugs = specsData.connectors || [];
+
+        // Fetch saved configs from DB
+        const configRes = await fetch('/api/connectors/config');
+        const configData = await configRes.json();
+        _dbConfigs = configData.configs || {};
+
+        renderConnectorList();
+
+        // Add search listener
+        const searchInput = document.getElementById('connector-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                renderConnectorList(term);
+            });
+        }
+
+        // Auto-select first connector if list is not empty
+        if (_allDataPlugs.length > 0) {
+            renderPlugConfig(_allDataPlugs[0].id);
+        } else {
+            document.getElementById('connector-config-panel').innerHTML = '<div class="placeholder-text">No plugins defined in data_plugs.json</div>';
+        }
+
+    } catch (e) {
+        listEl.innerHTML = '<div class="error">Failed to load extensions</div>';
+    }
+}
+
+function renderConnectorList(filterTerm = '') {
+    const listEl = document.getElementById('connectors-browse-list');
+
+    let filtered = _allDataPlugs;
+    if (filterTerm) {
+        filtered = _allDataPlugs.filter(c =>
+            c.name.toLowerCase().includes(filterTerm) ||
+            c.category.toLowerCase().includes(filterTerm) ||
+            c.description.toLowerCase().includes(filterTerm)
+        );
+    }
+
+    let grouped = {};
+    filtered.forEach(c => {
+        if (!grouped[c.category]) grouped[c.category] = [];
+        grouped[c.category].push(c);
     });
+
+    let html = '';
+    for (let cat in grouped) {
+        html += `<h4 style="margin: 10px 0 5px 0; color: #4fc3f7; text-transform: uppercase; font-size: 0.8rem;">${cat}</h4>`;
+        grouped[cat].forEach(c => {
+            const isActive = _dbConfigs[c.id] && _dbConfigs[c.id].is_active;
+            const statusDot = isActive ? '<span style="color:#00e676; font-size:12px;">●</span>' : '<span style="color:#ff5252; font-size:12px;">○</span>';
+
+            html += `
+                <div class="history-item" onclick="renderPlugConfig('${c.id}')" style="padding: 8px; margin-bottom: 4px;">
+                     <div style="display:flex; justify-content:space-between; align-items:center;">
+                         <strong>${c.icon} ${c.name}</strong>
+                         ${statusDot}
+                     </div>
+                     <div style="font-size: 0.75rem; color:#888; margin-top:4px;">${c.description}</div>
+                </div>
+            `;
+        });
+    }
+
+    listEl.innerHTML = html || '<div class="placeholder-text" style="padding: 20px;">No connectors found matching your search.</div>';
+}
+
+function renderPlugConfig(plugId) {
+    const plug = _allDataPlugs.find(p => p.id === plugId);
+    if (!plug) return;
+
+    const dbEntry = _dbConfigs[plugId] || { config: {}, is_active: false };
+    const savedConf = dbEntry.config;
+    const isActive = dbEntry.is_active;
+
+    const panel = document.getElementById('connector-config-panel');
+    let html = `
+        <h3 style="margin-top:0;">${plug.icon} ${plug.name}</h3>
+        <p style="font-size:0.85rem; color:#aaa; margin-bottom:15px">${plug.description}</p>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display:flex; align-items:center; cursor:pointer;">
+                <input type="checkbox" id="plug-active-${plug.id}" ${isActive ? 'checked' : ''} style="margin-right:8px;">
+                <span style="font-weight:bold;">Enable Connector</span>
+            </label>
+            <p style="font-size: 0.7rem; color:#888; margin-top:4px; margin-left: 20px;">When enabled, data will be actively ingested during batch cycles.</p>
+        </div>
+        
+        <form id="form-plug-${plug.id}" onsubmit="savePlugConfig(event, '${plug.id}')">
+            
+            <div style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+                <p style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #4fc3f7; font-weight: 600; margin: 0 0 10px 0;">Signals to Fetch</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    ${(plug.supported_signals || []).map(s => {
+        const isChecked = !savedConf.selected_signals || savedConf.selected_signals.includes(s);
+        return `
+                            <label style="display:flex; align-items:center; gap:8px; font-size: 0.85rem; cursor:pointer;">
+                                <input type="checkbox" name="signal-${s}" value="${s}" ${isChecked ? 'checked' : ''}>
+                                ${s.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </label>
+                        `;
+    }).join('')}
+                </div>
+            </div>
+    `;
+
+    // Generate inputs for parameters
+    (plug.parameters || []).forEach(param => {
+        const val = savedConf[param] || '';
+        const isSecret = param.toLowerCase().includes('key') || param.toLowerCase().includes('secret') || param.toLowerCase().includes('password');
+        const inputType = isSecret ? 'password' : 'text';
+
+        html += `
+            <div class="form-group" style="margin-bottom:12px;">
+                <label style="text-transform: capitalize;">${param.replace(/_/g, ' ')}</label>
+                <input type="${inputType}" name="${param}" value="${val}" style="width:100%; padding:8px; border-radius:4px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.3); color:#fff;">
+            </div>
+        `;
+    });
+
+    // Poll Interval
+    const interval = dbEntry.interval_minutes || 5;
+    html += `
+        <div class="form-group" style="margin-bottom:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.05);">
+            <label>Poll Interval (Minutes)</label>
+            <input type="number" id="plug-interval-${plug.id}" value="${interval}" min="1" max="1440" style="width:100%; padding:8px; border-radius:4px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.3); color:#fff;">
+        </div>
+        
+        <div style="margin-top: 20px; display:flex; justify-content:space-between; align-items:center;">
+            <button type="button" onclick="testPlugConnection('${plug.id}')" class="btn-secondary">⚡ Test Connection</button>
+            <button type="submit" class="btn-primary">Save Settings</button>
+        </div>
+    </form>
+    `;
+
+    panel.innerHTML = html;
+}
+
+window.testPlugConnection = async function (plugId) {
+    const form = document.getElementById(`form-plug-${plugId}`);
+    const formData = new FormData(form);
+    const configData = {};
+    for (let [key, value] of formData.entries()) {
+        if (!key.startsWith('signal-')) {
+            configData[key] = value;
+        }
+    }
+
+    const btn = event.currentTarget;
+    const originalText = btn.innerText;
+    btn.innerText = 'Testing...';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch('/api/connectors/test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                connector_id: plugId,
+                config: configData
+            })
+        });
+
+        const data = await res.json();
+        if (data.status === 'success') {
+            showToast(`Connection to ${plugId} successful!`, 'success');
+        } else {
+            showToast(`Connection failed: ${data.message}`, 'error');
+        }
+    } catch (e) {
+        showToast(`Error testing connection: ${e.message}`, 'error');
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
+
+window.savePlugConfig = async function (e, plugId) {
+    e.preventDefault();
+    const form = document.getElementById(`form-plug-${plugId}`);
+    const formData = new FormData(form);
+
+    const configData = {
+        selected_signals: []
+    };
+    for (let [key, value] of formData.entries()) {
+        if (key.startsWith('signal-')) {
+            configData.selected_signals.push(value);
+        } else {
+            configData[key] = value;
+        }
+    }
+
+    const isActive = document.getElementById(`plug-active-${plugId}`).checked;
+    const interval = parseInt(document.getElementById(`plug-interval-${plugId}`).value) || 5;
+
+    try {
+        const res = await fetch('/api/connectors/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                connector_id: plugId,
+                config: configData,
+                is_active: isActive,
+                interval: interval
+            })
+        });
+
+        const resJson = await res.json();
+        if (resJson.status === 'success') {
+            alert('Connector settings saved!');
+            loadDataPlugsModal(); // Refresh list to show active tick
+        } else {
+            alert('Failed: ' + resJson.error);
+        }
+    } catch (e) {
+        alert('Exception saving config.');
+    }
+}
+
+async function loadActivePlugsModal() {
+    const listEl = document.getElementById('active-plugs-list');
+    const schemaEl = document.getElementById('active-plugs-schema');
+    listEl.innerHTML = 'Loading status...';
+
+    try {
+        const [configRes, activeRes] = await Promise.all([
+            fetch('/api/config'),
+            fetch('/api/connectors/active')
+        ]);
+        const currentConf = await configRes.json();
+        const data = await activeRes.json();
+        const active = data.active || [];
+
+        schemaEl.textContent = currentConf.schema_preference ? currentConf.schema_preference.toUpperCase() : 'EVIDENT';
+
+        if (active.length === 0) {
+            listEl.innerHTML = '<div class="placeholder-text" style="display:flex; flex-direction:column; align-items:center; gap:12px; padding: 30px; text-align: center;"><span style="font-size: 1.8rem;">🔌</span><span>No active connections.<br/>Get Data via <strong style="color:#4fc3f7">"Data Plugs"</strong> configuration interface.</span></div>';
+            return;
+        }
+
+        let html = '';
+        active.forEach(c => {
+            const isPaused = c.scheduler_paused;
+            const statusLabel = isPaused ? '<span style="color:#f48fbf; font-size:0.65rem; border:1px solid #f48fbf; padding:1px 4px; border-radius:3px;">PAUSED</span>' : '<span style="color:#00e676; font-size:0.65rem; border:1px solid #00e676; padding:1px 4px; border-radius:3px;">RUNNING</span>';
+
+            html += `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.1); padding: 12px 0;">
+                    <div style="flex: 1;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <strong style="color:#fff;">${c.connector_id}</strong>
+                            ${statusLabel}
+                        </div>
+                        <div style="font-size:0.75rem; color:#888; margin-top:4px;">Last Run: ${c.last_run || 'Never'} • Refresh: ${c.interval_minutes}m</div>
+                    </div>
+                    <div style="text-align:right; margin-right: 20px;">
+                        <span style="font-size: 1.1rem; font-weight:bold; color: #4fc3f7;">${c.records_generated}</span>
+                        <div style="font-size:0.65rem; color:#888;">Records</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="viewLogs('${c.connector_id}')" class="btn-small" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);" title="View execution logs">📋 Logs</button>
+                        <button onclick="runConnectorNow('${c.connector_id}')" class="btn-small btn-run" title="Run manual pull now">⚡ Run</button>
+                        ${isPaused
+                    ? `<button onclick="resumeConnector('${c.connector_id}')" class="btn-small btn-resume">▶ Resume</button>`
+                    : `<button onclick="pauseConnector('${c.connector_id}')" class="btn-small btn-pause">⏸ Pause</button>`
+                }
+                    </div>
+                </div>
+            `;
+        });
+        listEl.innerHTML = html;
+
+    } catch (e) {
+        listEl.innerHTML = '<div class="error">Failed to load active connections.</div>';
+    }
+}
+
+async function pauseConnector(id) {
+    try {
+        await fetch(`/api/connectors/pause/${id}`, { method: 'POST' });
+        loadActivePlugsModal();
+    } catch (e) { console.error(e); }
+}
+
+async function resumeConnector(id) {
+    try {
+        await fetch(`/api/connectors/resume/${id}`, { method: 'POST' });
+        loadActivePlugsModal();
+    } catch (e) { console.error(e); }
+}
+
+async function runConnectorNow(id) {
+    try {
+        const btn = event.target;
+        const original = btn.innerHTML;
+        btn.innerHTML = '...';
+        btn.disabled = true;
+
+        await fetch(`/api/connectors/run/${id}`, { method: 'POST' });
+
+        setTimeout(() => {
+            btn.innerHTML = original;
+            btn.disabled = false;
+            loadActivePlugsModal();
+        }, 1500);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+// --- Logs Logic ---
+async function viewLogs(connectorId) {
+    const modal = document.getElementById('modal-logs');
+    const title = document.getElementById('logs-modal-title');
+    const listEl = document.getElementById('logs-list');
+
+    title.textContent = `Logs: ${connectorId}`;
+    listEl.innerHTML = 'Loading...';
+    modal.classList.add('show');
+
+    try {
+        const res = await fetch(`/api/connectors/logs/${connectorId}`);
+        const data = await res.json();
+        const logs = data.logs || [];
+
+        if (logs.length === 0) {
+            listEl.innerHTML = '<div class="placeholder-text">No logs found.</div>';
+            return;
+        }
+
+        listEl.innerHTML = logs.map(f => `
+            <div class="history-item" onclick="loadLogFile('${f}')">
+                <div style="font-size: 0.85rem;">${f.split('_')[1].substring(0, 2)}:${f.split('_')[1].substring(2, 4)}:${f.split('_')[1].substring(4, 6)}</div>
+                <div style="font-size: 0.7rem; color: #888;">${f.split('_')[0]}</div>
+            </div>
+        `).join('');
+
+        // Auto-load latest
+        loadLogFile(logs[0]);
+    } catch (e) {
+        listEl.innerHTML = 'Error loading logs.';
+    }
+}
+
+async function loadLogFile(filename) {
+    const panel = document.getElementById('log-content-panel');
+    panel.innerHTML = '<div class="placeholder-text">Loading log content...</div>';
+
+    // Highlight active in list
+    document.querySelectorAll('#logs-list .history-item').forEach(el => {
+        if (el.innerText.includes(filename.split('_')[0])) el.classList.add('active');
+        else el.classList.remove('active');
+    });
+
+    try {
+        const res = await fetch(`/api/connectors/logs/view/${filename}`);
+        const data = await res.json();
+
+        if (data.error) {
+            panel.innerHTML = `<div class="error">${data.error}</div>`;
+            return;
+        }
+
+        let html = `
+            <div style="padding: 20px;">
+                <h4 style="margin-top:0; color:#4fc3f7;">File: ${filename}</h4>
+                <div class="table-container" style="background: rgba(0,0,0,0.3); border-radius: 4px;">
+                    <table style="width:100%; border-collapse: collapse; font-size: 0.8rem;">
+                        <thead style="background: rgba(255,255,255,0.05);">
+                            <tr>
+                                <th style="padding:8px; text-align:left; border-bottom:1px solid #444;">Time</th>
+                                <th style="padding:8px; text-align:left; border-bottom:1px solid #444;">Level</th>
+                                <th style="padding:8px; text-align:left; border-bottom:1px solid #444;">Comp</th>
+                                <th style="padding:8px; text-align:left; border-bottom:1px solid #444;">Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+
+        data.data.forEach(row => {
+            const levelColor = row.Level === 'ERROR' ? '#ff5252' : (row.Level === 'WARNING' ? '#ffb74d' : '#fff');
+            html += `
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                    <td style="padding:6px 8px; color:#aaa; white-space:nowrap;">${row.Timestamp.split(' ')[1]}</td>
+                    <td style="padding:6px 8px; color:${levelColor}; font-weight:bold;">${row.Level}</td>
+                    <td style="padding:6px 8px; color:#888;">${row.Component}</td>
+                    <td style="padding:6px 8px;">${row.Message}</td>
+                </tr>
+            `;
+        });
+
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        panel.innerHTML = html;
+
+    } catch (e) {
+        panel.innerHTML = '<div class="error">Failed to load log file.</div>';
+    }
 }
 
 
@@ -217,40 +1218,106 @@ function setupTabs() {
     });
 }
 
+// Mapping of Evident source names → data plug IDs that provide them
+const SOURCE_PLUG_MAP = {
+    'cves': { plugIds: ['crowdstrike'], label: 'Vulnerabilities' },
+    'assets': { plugIds: ['ad-identity', 'okta-identity', 'ms-graph', 'google-workspace', 'aws-cloudtrail'], label: 'Assets' },
+    'logs': { plugIds: ['okta-identity', 'aws-cloudtrail', 'github-audit', 'stripe', 'atlassian', 'google-workspace', 'crowdstrike'], label: 'Security Logs' },
+    'cloud_configs': { plugIds: ['aws-config', 'gcp-config', 'azure-config', 'aws-cloudtrail'], label: 'Cloud Config' },
+    'signin_logs': { plugIds: ['ms-graph', 'okta-identity', 'snowflake'], label: 'Sign-in Logs' },
+    'user_roles': { plugIds: ['ad-identity', 'ms-graph'], label: 'User Roles' },
+    'role_permissions': { plugIds: ['ad-identity', 'ms-graph'], label: 'Permissions' },
+};
+
 // --- Sources & Data ---
 async function loadSources() {
     try {
-        const response = await fetch('/api/sources');
-        const data = await response.json();
+        // Fetch sources, connector configs, schema preference - all in parallel
+        const [sourcesRes, configRes, connPlugsRes, activeRes] = await Promise.all([
+            fetch('/api/sources'),
+            fetch('/api/config'),
+            fetch('/api/connectors'),
+            fetch('/api/connectors/active')
+        ]);
+
+        const sourcesData = await sourcesRes.json();
+        const configData = await configRes.json();
+        const connData = await connPlugsRes.json();
+        const activeData = await activeRes.json();
+
+        const schema = (configData.schema_preference || 'evident').toUpperCase();
+        const sourceMode = configData.source_mode || 'sample';
+        updateSourceBadge(sourceMode);
+
+        const allPlugs = connData.connectors || [];
+        const activePlugIds = new Set((activeData.active || []).map(a => a.connector_id));
+
+        // Build a plug lookup by id
+        const plugById = {};
+        allPlugs.forEach(p => plugById[p.id] = p);
 
         const sourcesList = document.getElementById('sources-list');
         sourcesList.innerHTML = '';
 
-        data.sources.forEach(source => {
+        sourcesData.sources.forEach(source => {
             const sourceItem = document.createElement('div');
             sourceItem.className = 'source-item';
-            sourceItem.dataset.name = source.name; // Store name for click handler
+            sourceItem.dataset.name = source.name;
             sourceItem.onclick = () => {
                 document.querySelectorAll('.source-item').forEach(el => el.classList.remove('active'));
                 sourceItem.classList.add('active');
                 currentSource = source.name;
                 loadSourceData(source.name);
-                // If graph tab is active, reload graph for this source
                 const graphTab = document.querySelector('.viz-tab[data-view="graph"]');
                 if (graphTab && graphTab.classList.contains('active')) {
                     buildSourceGraph(source.name);
                 }
             };
 
+            // Build Data Plug badges for this source
+            const mapping = SOURCE_PLUG_MAP[source.name.toLowerCase()];
+            let plugBadgesHtml = '';
+            if (mapping) {
+                mapping.plugIds.forEach(pid => {
+                    const plug = plugById[pid];
+                    if (!plug) return;
+                    const isActive = activePlugIds.has(pid);
+                    const dot = isActive
+                        ? '<span style="color:#00e676; font-size:9px;">●</span>'
+                        : '<span style="color:#546e7a; font-size:9px;">○</span>';
+                    plugBadgesHtml += `
+                        <span style="display:inline-flex; align-items:center; gap:3px; background:rgba(79,195,247,0.08); border:1px solid rgba(79,195,247,0.2); border-radius:10px; padding:1px 7px; font-size:0.68rem; color:#9fa8da; margin-right:4px;">
+                            ${dot} ${plug.icon} ${plug.name}
+                        </span>`;
+                });
+            }
+
+            // Schema badge
+            const schemaColor = schema === 'OCSF' ? '#66bb6a' : '#4fc3f7';
+            const schemaBadge = `<span style="background:rgba(${schema === 'OCSF' ? '102,187,106' : '79,195,247'},0.12); border:1px solid ${schemaColor}44; border-radius:8px; padding:1px 7px; font-size:0.65rem; font-weight:700; color:${schemaColor}; letter-spacing:0.04em;">${schema}</span>`;
+
             sourceItem.innerHTML = `
-                <div class="source-header">
+                <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
                     <span class="source-name">${source.display_name}</span>
-                    <span class="source-status ${source.status}">✓</span>
+                    <span style="font-size:0.72rem; color:#9fa8da; white-space:nowrap; margin-left:8px;">${source.record_count} records</span>
                 </div>
-                <div class="source-count">${source.record_count} records</div>
+                <div style="margin-bottom:6px;">
+                    <span style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; color:#546e7a; font-weight:600; display:block; margin-bottom:4px;">Data Plugs</span>
+                    <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                        ${plugBadgesHtml || '<span style="font-size:0.7rem; color:#546e7a; font-style:italic;">None configured</span>'}
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.06em; color:#546e7a; font-weight:600;">Schema</span>
+                    ${schemaBadge}
+                </div>
             `;
             sourcesList.appendChild(sourceItem);
         });
+
+        // Auto-select the first source so the table is populated on startup
+        const firstItem = sourcesList.querySelector('.source-item');
+        if (firstItem) firstItem.click();
     } catch (error) {
         console.error('Error loading sources:', error);
         document.getElementById('sources-list').innerHTML =
@@ -1013,4 +2080,223 @@ function formatMessage(text) {
     text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
     return text;
+}
+
+// --- Security Agents Functions ---
+
+async function loadActiveAgentsView() {
+    const listEl = document.getElementById('active-agents-list');
+    if (!listEl) return;
+
+    listEl.innerHTML = '<div class="loading">Fetching active agents...</div>';
+
+    try {
+        const response = await fetch('/api/agents/active');
+        const data = await response.json();
+        renderAgents(data.agents, 'active-agents-list', true);
+    } catch (err) {
+        listEl.innerHTML = '<div class="error">Failed to load active agents</div>';
+    }
+}
+
+async function loadAllAgentsView() {
+    const gridEl = document.getElementById('all-agents-grid');
+    if (!gridEl) return;
+
+    gridEl.innerHTML = '<div class="loading">Loading available security agents...</div>';
+
+    try {
+        const response = await fetch('/api/agents');
+        const data = await response.json();
+        renderAgents(data.agents, 'all-agents-grid', false);
+    } catch (err) {
+        gridEl.innerHTML = '<div class="error">Failed to load security agents</div>';
+    }
+}
+
+function renderAgents(agents, containerId, isActiveView) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (agents.length === 0) {
+        container.innerHTML = '<div class="empty-state">No agents found. Enable them from the Security Agents menu.</div>';
+        return;
+    }
+
+    container.innerHTML = '';
+
+    agents.forEach(agent => {
+        const card = document.createElement('div');
+        card.className = 'agent-card';
+        card.style.cursor = 'pointer';
+
+        // Click on the card body opens the dedicated view
+        card.onclick = (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            window.open(`/agent-view/${agent.id}`, `agent_${agent.id}`, 'width=1200,height=800');
+        };
+
+        const signalsHtml = agent.supported_signals.map(s => `<span class="agent-signal-chip">${s.replace('_', ' ')}</span>`).join('');
+
+        const statusIcon = agent.is_active ? (agent.is_paused ? '⏸' : '●') : '○';
+        const statusText = agent.is_active ? (agent.is_paused ? 'Paused' : 'Active') : 'Disabled';
+        const statusClass = agent.is_active ? (agent.is_paused ? 'paused' : 'active') : '';
+
+        card.innerHTML = `
+            <div class="agent-card-header">
+                <div class="agent-icon">${agent.icon || '🤖'}</div>
+                <div class="agent-title-area">
+                    <div class="agent-category-tag">${agent.category}</div>
+                    <h3>${agent.name}</h3>
+                </div>
+            </div>
+            <p class="agent-description">${agent.description}</p>
+            <div class="agent-meta">
+                ${signalsHtml}
+            </div>
+            <div class="agent-footer" style="flex-direction: column; gap: 12px; align-items: stretch;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="agent-status-badge ${statusClass}">
+                        ${statusIcon} ${statusText}
+                    </div>
+                    <div style="font-size: 0.75rem; color: #888;">Mode: ${agent.active_mode || 'Interactive'}</div>
+                </div>
+                <div class="agent-actions" style="display: flex; gap: 8px;">
+                    <button class="agent-btn-config" style="flex: 1;" onclick="toggleAgent('${agent.id}', ${agent.is_active})">
+                        ${agent.is_active ? 'Disable' : 'Enable'}
+                    </button>
+                    <button class="agent-btn-config" style="flex: 1; border-color: #666; color: #ccc;" onclick="openAgentConfig('${agent.id}')">
+                        ⚙️ Config
+                    </button>
+                    ${agent.is_active ? `
+                        <button class="agent-btn-config" style="border-color: #888;" title="${agent.is_paused ? 'Resume' : 'Pause'}" onclick="toggleAgentPause('${agent.id}', ${agent.is_paused})">
+                            ${agent.is_paused ? '▶' : '⏸'}
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+async function openAgentConfig(agentId) {
+    const modal = document.getElementById('modal-agent-config');
+    if (!modal) return;
+
+    try {
+        const response = await fetch('/api/agents');
+        const data = await response.json();
+        const agent = data.agents.find(a => a.id === agentId);
+
+        if (!agent) return;
+
+        document.getElementById('config-agent-id').value = agentId;
+        document.getElementById('agent-config-title').textContent = `🤖 Configure ${agent.name}`;
+        document.getElementById('config-agent-mode').value = agent.active_mode || agent.profile.mode;
+        document.getElementById('config-agent-frequency').value = agent.active_interval || agent.profile.frequency_minutes;
+        document.getElementById('config-agent-prompt').value = agent.profile.system_prompt;
+        document.getElementById('config-agent-notify').value = agent.profile.notification_method || 'email';
+
+        // Show/hide frequency based on mode
+        const freqGroup = document.getElementById('group-config-frequency');
+        freqGroup.style.display = document.getElementById('config-agent-mode').value === 'autonomous' ? 'block' : 'none';
+
+        // Signals list
+        const signalsContainer = document.getElementById('config-agent-signals-list');
+        signalsContainer.innerHTML = agent.supported_signals.map(s => `
+            <label style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 4px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8rem;">
+                <input type="checkbox" name="agent-signal" value="${s}" checked>
+                ${s.replace('_', ' ')}
+            </label>
+        `).join('');
+
+        modal.classList.add('show');
+    } catch (err) {
+        showToast('Failed to load agent profile', 'error');
+    }
+}
+
+async function saveAgentProfile() {
+    const agentId = document.getElementById('config-agent-id').value;
+    const mode = document.getElementById('config-agent-mode').value;
+    const freq = parseInt(document.getElementById('config-agent-frequency').value);
+    const prompt = document.getElementById('config-agent-prompt').value;
+    const notify = document.getElementById('config-agent-notify').value;
+
+    const signals = Array.from(document.querySelectorAll('input[name="agent-signal"]:checked')).map(cb => cb.value);
+
+    const config = {
+        mode: mode,
+        frequency_minutes: freq,
+        system_prompt: prompt,
+        notification_method: notify,
+        supported_signals: signals
+    };
+
+    try {
+        const response = await fetch('/api/agents/enable', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ agent_id: agentId, config: config })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToast('Configuration saved successfully!');
+            document.getElementById('modal-agent-config').classList.remove('show');
+            loadActiveAgentsView();
+            loadAllAgentsView();
+        }
+    } catch (err) {
+        showToast('Failed to save configuration', 'error');
+    }
+}
+
+async function toggleAgent(agentId, currentStatus) {
+    if (currentStatus) {
+        if (!confirm(`Are you sure you want to disable ${agentId}?`)) return;
+
+        try {
+            const response = await fetch(`/api/agents/disable/${agentId}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.status === 'success') {
+                showToast(`Agent ${agentId} disabled`);
+                loadActiveAgentsView();
+                loadAllAgentsView();
+            }
+        } catch (err) {
+            showToast('Failed to disable agent', 'error');
+        }
+    } else {
+        // Simple enable with current/default config
+        try {
+            const response = await fetch('/api/agents/enable', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ agent_id: agentId, config: {} })
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                showToast(`Agent ${agentId} enabled!`);
+                loadActiveAgentsView();
+                loadAllAgentsView();
+            }
+        } catch (err) {
+            showToast('Failed to enable agent', 'error');
+        }
+    }
+}
+
+async function toggleAgentPause(agentId, isPaused) {
+    const endpoint = isPaused ? 'resume' : 'pause';
+    try {
+        const res = await fetch(`/api/agents/${endpoint}/${agentId}`, { method: 'POST' });
+        if (res.ok) {
+            showToast(`Agent ${agentId} ${isPaused ? 'resumed' : 'paused'}`);
+            loadActiveAgentsView();
+            loadAllAgentsView();
+        }
+    } catch (err) {
+        showToast('Operation failed', 'error');
+    }
 }

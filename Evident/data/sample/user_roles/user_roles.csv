@@ -1,0 +1,21 @@
+assignment_id,user_id,username,role_id,role_name,assigned_date,assigned_by,expiry_date
+ASGN-001,USR-001,john.doe,ROLE-001,Developer,2023-06-01,admin,
+ASGN-002,USR-002,jane.smith,ROLE-002,Senior Developer,2023-06-01,admin,
+ASGN-003,USR-003,mike.johnson,ROLE-003,DevOps Engineer,2023-07-15,admin,
+ASGN-004,USR-004,emily.davis,ROLE-004,HR Manager,2023-08-01,admin,
+ASGN-005,USR-005,robert.brown,ROLE-005,HR Specialist,2023-08-01,admin,
+ASGN-006,USR-006,lisa.anderson,ROLE-006,Finance Manager,2023-09-01,admin,
+ASGN-007,USR-007,david.wilson,ROLE-007,Finance Analyst,2023-09-01,admin,
+ASGN-008,USR-008,sarah.williams,ROLE-008,IT Administrator,2023-05-01,admin,
+ASGN-009,USR-009,admin,ROLE-009,System Administrator,2023-01-01,system,
+ASGN-010,USR-010,temp_admin,ROLE-009,System Administrator,2024-01-04,admin,2024-01-11
+ASGN-011,USR-011,contractor01,ROLE-001,Developer,2023-11-01,admin,2024-02-01
+ASGN-012,USR-012,service_account,ROLE-010,Service Account,2023-10-01,system,
+ASGN-013,USR-001,john.doe,ROLE-011,Code Reviewer,2023-09-15,jane.smith,
+ASGN-014,USR-002,jane.smith,ROLE-012,Tech Lead,2023-10-01,admin,
+ASGN-015,USR-003,mike.johnson,ROLE-013,Security Champion,2023-12-01,sarah.williams,
+ASGN-016,USR-006,lisa.anderson,ROLE-014,Auditor,2023-11-01,admin,
+ASGN-017,USR-008,sarah.williams,ROLE-015,Security Administrator,2023-05-01,admin,
+ASGN-018,USR-013,backup_admin,ROLE-008,IT Administrator,2023-12-15,sarah.williams,
+ASGN-019,USR-014,db_admin,ROLE-016,Database Administrator,2023-07-01,admin,
+ASGN-020,USR-015,network_admin,ROLE-017,Network Administrator,2023-06-15,admin,

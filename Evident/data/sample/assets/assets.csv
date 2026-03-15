@@ -1,0 +1,31 @@
+asset_id,asset_type,hostname,ip_address,os,owner,department,criticality,last_scan_date
+AST-001,server,srv-web-01,10.0.1.10,Ubuntu 22.04 LTS,john.doe,Engineering,critical,2024-01-03
+AST-002,server,srv-web-02,10.0.1.11,Ubuntu 22.04 LTS,john.doe,Engineering,critical,2024-01-03
+AST-003,server,srv-db-01,10.0.2.10,RedHat Enterprise Linux 8,jane.smith,Engineering,critical,2024-01-02
+AST-004,server,srv-db-02,10.0.2.11,RedHat Enterprise Linux 8,jane.smith,Engineering,critical,2024-01-02
+AST-005,server,srv-app-01,10.0.3.10,Windows Server 2022,mike.johnson,Engineering,high,2024-01-03
+AST-006,server,srv-app-02,10.0.3.11,Windows Server 2022,mike.johnson,Engineering,high,2024-01-03
+AST-007,server,srv-mail-01,10.0.4.10,Exchange Server 2019,sarah.williams,IT,high,2024-01-01
+AST-008,server,srv-file-01,10.0.5.10,Windows Server 2019,sarah.williams,IT,medium,2024-01-02
+AST-009,network_device,fw-perimeter-01,10.0.0.1,Cisco ASA 9.18,admin,IT,critical,2024-01-03
+AST-010,network_device,fw-internal-01,10.0.0.2,Palo Alto PAN-OS 11.0,admin,IT,critical,2024-01-03
+AST-011,network_device,sw-core-01,10.0.0.10,Cisco IOS 15.2,admin,IT,high,2024-01-02
+AST-012,network_device,sw-core-02,10.0.0.11,Cisco IOS 15.2,admin,IT,high,2024-01-02
+AST-013,workstation,ws-dev-001,10.1.1.50,Windows 11 Pro,john.doe,Engineering,medium,2024-01-03
+AST-014,workstation,ws-dev-002,10.1.1.51,macOS Sonoma,jane.smith,Engineering,medium,2024-01-03
+AST-015,workstation,ws-dev-003,10.1.1.52,Ubuntu 22.04,mike.johnson,Engineering,medium,2024-01-02
+AST-016,workstation,ws-hr-001,10.1.2.10,Windows 11 Pro,emily.davis,HR,low,2024-01-01
+AST-017,workstation,ws-hr-002,10.1.2.11,Windows 11 Pro,robert.brown,HR,low,2024-01-01
+AST-018,workstation,ws-finance-001,10.1.3.10,Windows 11 Pro,lisa.anderson,Finance,medium,2024-01-03
+AST-019,workstation,ws-finance-002,10.1.3.11,Windows 11 Pro,david.wilson,Finance,medium,2024-01-03
+AST-020,database,db-prod-mysql,10.0.2.20,MySQL 8.0,jane.smith,Engineering,critical,2024-01-03
+AST-021,database,db-prod-postgres,10.0.2.21,PostgreSQL 15,jane.smith,Engineering,critical,2024-01-03
+AST-022,database,db-analytics,10.0.2.30,MongoDB 7.0,mike.johnson,Engineering,high,2024-01-02
+AST-023,database,db-cache-redis,10.0.2.40,Redis 7.2,mike.johnson,Engineering,medium,2024-01-03
+AST-024,server,srv-jenkins-01,10.0.6.10,Ubuntu 22.04 LTS,john.doe,Engineering,high,2024-01-02
+AST-025,server,srv-gitlab-01,10.0.6.20,Ubuntu 22.04 LTS,john.doe,Engineering,high,2024-01-03
+AST-026,server,srv-docker-01,10.0.7.10,Ubuntu 22.04 LTS,mike.johnson,Engineering,high,2024-01-03
+AST-027,server,srv-k8s-master-01,10.0.8.10,Ubuntu 22.04 LTS,mike.johnson,Engineering,critical,2024-01-03
+AST-028,server,srv-k8s-worker-01,10.0.8.11,Ubuntu 22.04 LTS,mike.johnson,Engineering,high,2024-01-03
+AST-029,server,srv-k8s-worker-02,10.0.8.12,Ubuntu 22.04 LTS,mike.johnson,Engineering,high,2024-01-02
+AST-030,server,srv-vpn-01,10.0.9.10,SonicWall SMA 100,admin,IT,critical,2024-01-01

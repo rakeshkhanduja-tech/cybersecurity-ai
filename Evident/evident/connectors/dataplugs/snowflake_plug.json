@@ -1,0 +1,25 @@
+{
+    "id": "snowflake",
+    "name": "Snowflake",
+    "auth": {
+        "type": "database_creds"
+    },
+    "apis": [
+        {
+            "id": "login_history",
+            "signal": "signin_logs",
+            "description": "Fetch Snowflake login history",
+            "query": "SELECT EVENT_ID as id, EVENT_TIMESTAMP as time, USER_NAME as actor_name, REPORTED_CLIENT_TYPE as event_type, IS_SUCCESS as status FROM SNOWFLAKE.ACCOUNT_USAGE.LOGIN_HISTORY WHERE EVENT_TIMESTAMP > DATEADD(hour, -24, CURRENT_TIMESTAMP()) ORDER BY EVENT_TIMESTAMP ASC"
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "signin_logs": {
+                "log_id": "id",
+                "timestamp": "time",
+                "username": "actor_name",
+                "status": "status"
+            }
+        }
+    }
+}

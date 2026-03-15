@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident Agent | {{ agent.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #0a0e27;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .agent-view-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .agent-header {
+            flex-shrink: 0;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .agent-icon-large {
+            font-size: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .agent-tabs {
+            display: flex;
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.2);
+            height: 45px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .agent-tab {
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #888;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .agent-tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ccc;
+        }
+
+        .agent-tab.active {
+            background: rgba(79, 195, 247, 0.1);
+            color: #fff;
+            border-bottom: 2px solid #4fc3f7;
+        }
+
+        .agent-content-area {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .agent-tab-content {
+            position: absolute;
+            inset: 0;
+            display: none;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .agent-tab-content.active {
+            display: block;
+        }
+
+        .log-list {
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 4px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .log-ts {
+            color: #555;
+            white-space: nowrap;
+        }
+
+        .log-level {
+            font-weight: 700;
+            min-width: 60px;
+        }
+
+        .log-level.INFO {
+            color: #4fc3f7;
+        }
+
+        .log-level.WARNING {
+            color: #ffca28;
+        }
+
+        .log-level.ERROR {
+            color: #ef5350;
+        }
+
+        .agent-controls {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="agent-view-layout">
+        <header class="agent-header">
+            <div class="agent-info">
+                <div class="agent-icon-large">{{ agent.icon or '🤖' }}</div>
+                <div>
+                    <h1 style="margin: 0; font-size: 1.25rem;">{{ agent.name }}</h1>
+                    <div style="font-size: 0.75rem; color: #888;">Status: <span id="agent-status-label"
+                            style="color: {{ '#2ecc71' if agent.is_active else '#888' }}">{{ 'Running' if
+                            agent.is_active else 'Disabled' }}</span> | Mode: {{ agent.active_mode|capitalize }}</div>
+                </div>
+            </div>
+            <div class="agent-controls">
+                <button id="btn-agent-pause" class="btn-secondary"
+                    style="{{ 'display:none' if agent.is_paused else '' }}">⏸ Pause Agent</button>
+                <button id="btn-agent-resume" class="btn-primary"
+                    style="{{ 'display:none' if not agent.is_paused else '' }}">▶ Resume Agent</button>
+                <button id="btn-agent-settings" class="btn-secondary">⚙️ Configure</button>
+            </div>
+        </header>
+
+        <div class="agent-tabs">
+            <div class="agent-tab active" data-tab="tab-main">{{ 'Agent Actions' if agent.active_mode == 'autonomous'
+                else 'Interactive Chat' }}</div>
+            <div class="agent-tab" data-tab="tab-activity">Activity Feed</div>
+            <div class="agent-tab" data-tab="tab-logs">Execution Logs</div>
+        </div>
+
+        <div class="agent-content-area">
+            <!-- TAB: MAIN (Chat or Actions) -->
+            <div id="tab-main" class="agent-tab-content active">
+                {% if agent.active_mode == 'autonomous' %}
+                <div class="empty-state">
+                    <h3>Autonomous Operations</h3>
+                    <p>This agent is running autonomously on a schedule of <strong>{{ agent.active_interval }}
+                            minutes</strong>.</p>
+                    <p>Recent observations and findings will appear in the Activity Feed.</p>
+                    <button class="btn-primary" style="margin-top: 20px;"
+                        onclick="window.parent.switchView('chat')">Talk to Agent</button>
+                </div>
+                {% else %}
+                <!-- Reusing Dashboard Chat Logic conceptually -->
+                <div id="agent-chat-container" style="display: flex; flex-direction: column; height: 100%;">
+                    <div id="agent-chat-messages" class="chat-messages"
+                        style="flex: 1; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; background: rgba(0,0,0,0.2); overflow-y: auto;">
+                        <div class="message agent-message">
+                            <div class="message-content">Hello! I am the {{ agent.name }} agent. How can I help you
+                                investigate these signals today?</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area" style="margin-top: 20px; padding: 0;">
+                        <div class="chat-input-wrapper" style="border: 1px solid rgba(79, 195, 247, 0.4);">
+                            <textarea id="agent-chat-input"
+                                placeholder="Type your investigation query or ask for analysis..."></textarea>
+                            <button id="btn-agent-send" class="btn-send">Send</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- TAB: ACTIVITY -->
+            <div id="tab-activity" class="agent-tab-content">
+                <div class="loading">Loading activity feed...</div>
+            </div>
+
+            <!-- TAB: LOGS -->
+            <div id="tab-logs" class="agent-tab-content" style="background: #050714;">
+                <div id="agent-log-list" class="log-list">
+                    <div class="loading">Fetching execution logs...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data needed for script -->
+    <script>
+        const AGENT_ID = "{{ agent.id }}";
+        const AGENT_MODE = "{{ agent.active_mode }}";
+    </script>
+    <script src="{{ url_for('static', filename='agent_view.js') }}"></script>
+</body>
+
+</html>
