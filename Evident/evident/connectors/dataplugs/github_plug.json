@@ -1,0 +1,69 @@
+{
+    "id": "github-audit",
+    "name": "GitHub Events and Logs",
+    "base_url": "https://api.github.com",
+    "auth": {
+        "type": "api_key"
+    },
+    "apis": [
+        {
+            "id": "org_events",
+            "signal": "signin_logs",
+            "description": "Fetch organization-level events",
+            "method": "GET",
+            "endpoint": "/orgs/{org_name}/events",
+            "params": {
+                "per_page": 100
+            },
+            "headers": {
+                "Authorization": "token {pat_token}",
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "Evident-Cloud-Security-App"
+            },
+            "result_path": "$",
+            "pagination": {
+                "type": "link_header",
+                "rel": "next"
+            }
+        },
+        {
+            "id": "repo_events",
+            "signal": "assets",
+            "description": "Fetch public events for a specific repository",
+            "method": "GET",
+            "endpoint": "/repos/{org_name}/{repo_name}/events",
+            "params": {
+                "per_page": 100
+            },
+            "headers": {
+                "Authorization": "token {pat_token}",
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "Evident-Cloud-Security-App"
+            },
+            "result_path": "$",
+            "pagination": {
+                "type": "link_header",
+                "rel": "next"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "signin_logs": {
+                "event_id": "id",
+                "timestamp": "created_at",
+                "event_type": "type",
+                "user": "actor.login"
+            }
+        },
+        "ocsf": {
+            "class_uid": 3001,
+            "class_name": "Account Change",
+            "field_map": {
+                "time": "created_at",
+                "user.name": "actor.display_login",
+                "activity_id": "type"
+            }
+        }
+    }
+}

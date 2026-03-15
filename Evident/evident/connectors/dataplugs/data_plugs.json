@@ -1,0 +1,224 @@
+[
+  {
+    "id": "ad-identity",
+    "name": "Active Directory",
+    "category": "Identity",
+    "icon": "👥",
+    "description": "Pulls user identity schemas and roles directly from Azure/AD sources via Graph API.",
+    "parameters": [
+      "tenant_id",
+      "client_id",
+      "client_secret"
+    ],
+    "supported_signals": [
+      "assets",
+      "user_roles",
+      "role_permissions"
+    ],
+    "plug_file": "ad_plug.json"
+  },
+  {
+    "id": "okta-identity",
+    "name": "Okta Access",
+    "category": "Identity",
+    "icon": "🔑",
+    "description": "Fetches sign-in events and user session lifecycle.",
+    "parameters": [
+      "api_url",
+      "token_url",
+      "audience",
+      "scope",
+      "client_id",
+      "client_secret"
+    ],
+    "supported_signals": [
+      "assets",
+      "signin_logs"
+    ],
+    "plug_file": "okta_plug.json"
+  },
+  {
+    "id": "crowdstrike",
+    "name": "CrowdStrike Falcon",
+    "category": "Threats",
+    "icon": "🦅",
+    "description": "Retrieves endpoint vulnerability detections and real-time security events.",
+    "parameters": [
+      "client_id",
+      "client_secret"
+    ],
+    "supported_signals": [
+      "cves",
+      "assets"
+    ],
+    "plug_file": "crowdstrike_plug.json"
+  },
+  {
+    "id": "aws-cloudtrail",
+    "name": "AWS CloudTrail",
+    "category": "Cloud Logs",
+    "icon": "☁️",
+    "description": "Audits management and governance actions locally.",
+    "parameters": [
+      "aws_access_key",
+      "aws_secret_key",
+      "region"
+    ],
+    "supported_signals": [
+      "signin_logs"
+    ],
+    "plug_file": "aws_cloudtrail_plug.json"
+  },
+  {
+    "id": "github-audit",
+    "name": "GitHub Audit Log",
+    "category": "Identity",
+    "icon": "🐙",
+    "description": "Monitors organization events, member changes, and repository access via GitHub API.",
+    "parameters": [
+      "org_name",
+      "repo_name",
+      "pat_token"
+    ],
+    "supported_signals": [
+      "assets",
+      "signin_logs"
+    ],
+    "plug_file": "github_plug.json"
+  },
+  {
+    "id": "google-workspace",
+    "name": "Google Workspace",
+    "category": "Identity",
+    "icon": "🌏",
+    "description": "Monitors users and administrative audit logs from Google Workspace via Admin SDK.",
+    "parameters": [
+      "customer_id",
+      "access_token"
+    ],
+    "supported_signals": [
+      "assets",
+      "signin_logs"
+    ],
+    "plug_file": "google_workspace_plug.json"
+  },
+  {
+    "id": "ms-graph",
+    "name": "Microsoft Graph",
+    "category": "Identity",
+    "icon": "🟦",
+    "description": "Monitors Azure AD users, sign-ins, and audit logs via Microsoft Graph API.",
+    "parameters": [
+      "tenant_id",
+      "client_id",
+      "client_secret"
+    ],
+    "supported_signals": [
+      "assets",
+      "signin_logs",
+      "role_permissions"
+    ],
+    "plug_file": "ms_graph_plug.json"
+  },
+  {
+    "id": "atlassian",
+    "name": "Atlassian",
+    "category": "SaaS",
+    "icon": "🟦",
+    "description": "Monitors Jira and Confluence audit logs and user activity.",
+    "parameters": [
+      "instance_name",
+      "email",
+      "api_token"
+    ],
+    "supported_signals": [
+      "assets",
+      "signin_logs"
+    ],
+    "plug_file": "atlassian_plug.json"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "category": "Payments",
+    "icon": "🟪",
+    "description": "Monitors payment events and security-related activity via Stripe API.",
+    "parameters": [
+      "secret_key"
+    ],
+    "supported_signals": [
+      "signin_logs"
+    ],
+    "plug_file": "stripe_plug.json"
+  },
+  {
+    "id": "snowflake",
+    "name": "Snowflake",
+    "category": "Database",
+    "icon": "❄️",
+    "description": "Monitors login history and account usage via SQL queries in Snowflake.",
+    "parameters": [
+      "account",
+      "user",
+      "password",
+      "warehouse",
+      "database",
+      "schema"
+    ],
+    "supported_signals": [
+      "signin_logs",
+      "assets"
+    ],
+    "plug_file": "snowflake_plug.json"
+  },
+  {
+    "id": "aws-config",
+    "name": "AWS Config",
+    "category": "Cloud Config",
+    "icon": "☁️",
+    "description": "Inventory of AWS resources and their configuration history.",
+    "parameters": [
+      "aws_access_key",
+      "aws_secret_key",
+      "region"
+    ],
+    "supported_signals": [
+      "assets",
+      "cloud_config"
+    ],
+    "plug_file": "aws_config_plug.json"
+  },
+  {
+    "id": "gcp-config",
+    "name": "GCP Asset Inventory",
+    "category": "Cloud Config",
+    "icon": "☁️",
+    "description": "Cloud Asset API to list and monitor GCP resources.",
+    "parameters": [
+      "project_id",
+      "access_token"
+    ],
+    "supported_signals": [
+      "assets",
+      "cloud_config"
+    ],
+    "plug_file": "gcp_config_plug.json"
+  },
+  {
+    "id": "azure-config",
+    "name": "Azure Resource Graph",
+    "category": "Cloud Config",
+    "icon": "☁️",
+    "description": "Query Azure resources at scale via Resource Graph Explorer API.",
+    "parameters": [
+      "tenant_id",
+      "client_id",
+      "client_secret"
+    ],
+    "supported_signals": [
+      "assets",
+      "cloud_config"
+    ],
+    "plug_file": "azure_config_plug.json"
+  }
+]

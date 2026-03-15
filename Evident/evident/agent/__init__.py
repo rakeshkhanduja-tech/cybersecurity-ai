@@ -6,7 +6,7 @@ from evident.rag import RAGEngine
 from evident.smg import SMGManager
 from evident.llm import LLMFactory, PromptTemplates
 from datetime import datetime
-from evident.config import app_config
+import evident.config
 from evident.agent.audit_logger import audit_logger
 
 
@@ -19,7 +19,7 @@ class EvidentAgent:
         print("="*60)
         
         # Initialize components
-        self.source_manager = SourceManager(data_path=app_config.ingestion.data_path)
+        self.source_manager = SourceManager(data_path=evident.config.app_config.ingestion.data_path)
         self.rag_engine = RAGEngine()
         self.smg_manager = SMGManager(use_mock=use_mock_graph)
         self.llm = LLMFactory.create_llm(force_mock=use_mock_llm)
@@ -40,7 +40,7 @@ class EvidentAgent:
         # Load all data sources
         all_entities = self.source_manager.load_all()
         
-        # Flatten entities
+        # Flatten entities - Reset before extending
         self.entities = []
         for source_name, entities in all_entities.items():
             self.entities.extend(entities)
@@ -49,6 +49,27 @@ class EvidentAgent:
         self.data_loaded = True
         
         return self.entities
+
+    def rebuild_dataset(self):
+        """Re-initialize source manager and rebuild the intelligence layer"""
+        print("\n" + "="*80)
+        print("REBUILDING INTELLIGENCE LAYER")
+        print("="*80)
+        
+        # Reload config to get latest source_mode/data_path
+        from evident.config import config_loader
+        config = config_loader.load_config()
+        
+        # Re-initialize SourceManager with new path
+        self.source_manager = SourceManager(data_path=config.ingestion.data_path)
+        
+        # Re-run ingestion
+        self.ingest_data()
+        
+        # Re-build RAG and SMG
+        self.build_intelligence()
+        
+        return {"status": "success", "entities": len(self.entities)}
     
     def build_intelligence(self):
         """Build RAG index and SMG"""

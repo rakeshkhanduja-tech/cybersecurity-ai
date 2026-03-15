@@ -197,6 +197,38 @@ class SMGManager:
                 events.append(self.graph_store.node_index[event_id])
         
         return events
+
+    def get_signals_of_interest(self, limit: int = 5) -> List[Dict[str, Any]]:
+        """Returns a list of high-risk entities or suspicious paths for the agent to investigate."""
+        # 1. Look for high criticality assets
+        high_risk_assets = self.graph_store.query_nodes(
+            label="Asset",
+            properties={"criticality": "high"}
+        )
+        
+        # 2. Look for Vulnerabilities
+        vulnerabilities = self.graph_store.query_nodes(label="Vulnerability")
+        
+        # 3. Combine and return
+        signals = []
+        for asset in high_risk_assets[:limit]:
+            signals.append({
+                "type": "asset_risk",
+                "label": f"High Risk Asset: {asset['properties'].get('hostname')}",
+                "context": f"Asset {asset['properties'].get('id')} has high criticality and needs monitoring.",
+                "node_id": asset['properties'].get('id')
+            })
+            
+        for vuln in vulnerabilities[:limit]:
+            signals.append({
+                "type": "vulnerability",
+                "label": f"Vulnerability: {vuln['properties'].get('cve_id')}",
+                "context": f"Found {vuln['properties'].get('cve_id')} in the environment. Severity: {vuln['properties'].get('severity')}",
+                "node_id": vuln['properties'].get('id')
+            })
+            
+        return signals[:limit]
+
     
     def clear_graph(self):
         """Clear all graph data"""

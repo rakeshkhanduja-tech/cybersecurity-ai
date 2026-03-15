@@ -22,134 +22,340 @@
             <div class="loading-steps" id="loading-steps"></div>
         </div>
     </div>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-left">
-                <div class="logo">
-                    <div class="logo-icon">🛡️</div>
-                    <div>
-                        <h1>Evident</h1>
-                        <span class="subtitle">Your Security Co-Analyst</span>
-                    </div>
-                </div>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🛡️</div>
+                <h1>Evident</h1>
             </div>
 
-            <div class="header-controls">
+            <nav class="nav-menu">
+                <button id="btn-chat" class="nav-item" title="Ask Evident AI">
+                    <i>💬</i> <span>Ask Evident</span>
+                </button>
+                <button id="btn-signals" class="nav-item active" title="Active Signals Main View">
+                    <i>🛡️</i> <span>Active Signals</span>
+                </button>
+                <button id="btn-data-plugs" class="nav-item" title="Configure Connectors">
+                    <i>🔗</i> <span>Data Plugs</span>
+                </button>
+                <button id="btn-active-plugs" class="nav-item" title="View Active Connector Stats">
+                    <i>🔌</i> <span>Active Plugs</span>
+                </button>
+                <button id="btn-active-agents" class="nav-item" title="Active Security Agents">
+                    <i>🤖</i> <span>Active Security Agents</span>
+                </button>
+                <button id="btn-agents" class="nav-item" title="Security Agents Builder">
+                    <i>🏗️</i> <span>Security Agents</span>
+                </button>
+                <button id="btn-history" class="nav-item" title="Audit History">
+                    <i>📜</i> <span>Audit History</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
                 <div class="status-indicator">
                     <span class="status-dot"></span>
-                    <span id="status-text">Agent Ready</span>
+                    <span id="status-text">Status : Running</span>
                 </div>
-                <button id="btn-ask-evident" class="btn-primary" title="Ask Evident AI">💬 Ask Evident</button>
-                <button id="btn-config" class="btn-icon" title="Agent Configuration">⚙️ Config</button>
-                <button id="btn-history" class="btn-icon" title="Audit History">📜 History</button>
             </div>
-        </header>
+        </aside>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Left Pane: Signal Sources -->
-            <aside class="sources-panel">
-                <h2>Signal Sources</h2>
-                <div id="sources-list" class="sources-list">
-                    <div class="loading">Loading sources...</div>
+        <!-- Main Workspace -->
+
+        <div class="main-view">
+            <header class="view-header">
+                <div class="view-title" id="current-view-title">
+                    <i id="view-icon">🛡️</i> <span id="view-name">Active Signals</span>
                 </div>
-
-                <div class="stats-section">
-                    <h3>Intelligence Stats</h3>
-                    <div id="stats-content" class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon">👥</div>
-                            <div class="stat-data">
-                                <span class="stat-value" id="stat-entities">-</span>
-                                <span class="stat-label">Total Entities</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">📄</div>
-                            <div class="stat-data">
-                                <span class="stat-value" id="stat-vectors">-</span>
-                                <span class="stat-label">Vector Docs</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">🕸️</div>
-                            <div class="stat-data">
-                                <span class="stat-value" id="stat-nodes">-</span>
-                                <span class="stat-label">Graph Nodes</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">🔗</div>
-                            <div class="stat-data">
-                                <span class="stat-value" id="stat-edges">-</span>
-                                <span class="stat-label">Graph Edges</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="view-actions" style="display: flex; gap: 12px; align-items: center;">
+                    <button id="btn-settings" class="btn-icon" title="Settings"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 6px 12px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i>⚙️</i> <span>Settings</span>
+                    </button>
                 </div>
-            </aside>
+            </header>
 
-            <!-- Right Pane: Visualization & Chat -->
-            <div class="right-pane">
-                <!-- Top: Visualization Panel -->
-                <div class="visualization-panel" id="viz-panel">
-                    <div class="viz-header">
-                        <div class="viz-tabs">
-                            <button class="viz-tab active" data-view="table">Details</button>
-                            <button class="viz-tab" data-view="graph">Knowledge Graph</button>
-                        </div>
-                        <div class="viz-controls">
-                            <span id="viz-status">Select a source to view data</span>
-                        </div>
-                    </div>
-                    <div class="viz-content">
-                        <!-- Table View -->
-                        <div id="view-table" class="viz-view active">
-                            <div class="table-container">
-                                <table id="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Select a source on the left to view data</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- Graph View -->
-                        <div id="view-graph" class="viz-view">
-                            <div id="cy-graph" style="width: 100%; height: 100%;"></div>
-                            <div id="graph-node-info" class="graph-node-info hidden">
-                                <div class="node-info-header">
-                                    <span id="node-info-title"></span>
-                                    <button
-                                        onclick="document.getElementById('graph-node-info').classList.add('hidden')">✕</button>
+            <div class="view-viewport">
+                <!-- View: Active Signals (Default) -->
+                <div id="view-signals" class="view-container" style="padding: 24px;">
+                    <div class="enterprise-dashboard">
+                        <!-- Left Pane: Active Signals (Master List) -->
+                        <aside class="sources-panel">
+                            <div
+                                style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Active Signals</h2>
+                                    <span id="active-source-badge"
+                                        style="font-size: 0.65rem; color: #00e5ff; letter-spacing: 0.04em; background: rgba(0, 229, 255, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(0, 229, 255, 0.2); margin-top: 6px; display: inline-block;">SAMPLE
+                                        DATA</span>
                                 </div>
-                                <div id="node-info-body" class="node-info-body"></div>
+                                <button id="btn-refresh-graph" class="btn-icon" title="Refresh Knowledge Graph"
+                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 1rem; padding: 6px 10px; cursor: pointer; transition: background 0.2s;">🔄</button>
                             </div>
-                            <div id="graph-empty" class="graph-empty">Select a signal source to explore the Knowledge
-                                Graph</div>
+
+                            <!-- Search / Filter could go here in the future -->
+
+                            <div id="sources-list" class="sources-list">
+                                <div class="loading" style="padding: 20px; text-align: center; color: #888;">Loading
+                                    sources...</div>
+                            </div>
+
+                            <div class="stats-section">
+                                <h3
+                                    style="font-size: 0.8rem; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Intelligence Context</h3>
+                                <div id="stats-content" class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-blue);">👥</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-entities">-</span>
+                                            <span class="stat-label">Entities</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-green);">📄</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-vectors">-</span>
+                                            <span class="stat-label">Vectors</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-purple);">🕸️</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-nodes">-</span>
+                                            <span class="stat-label">Nodes</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-orange);">🔗</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-edges">-</span>
+                                            <span class="stat-label">Edges</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- Right Pane: Details & Knowledge Graph Tabs -->
+                        <div class="right-pane">
+                            <div class="visualization-panel" id="viz-panel">
+                                <div class="viz-header">
+                                    <div class="viz-tabs">
+                                        <button class="viz-tab active" data-view="table">
+                                            <i style="margin-right: 6px; font-style: normal;">📋</i> Data Explorer
+                                        </button>
+                                        <button class="viz-tab" data-view="graph">
+                                            <i style="margin-right: 6px; font-style: normal;">🕸️</i> Knowledge Graph
+                                        </button>
+                                    </div>
+                                    <div class="viz-controls">
+                                        <span id="viz-status">Select a source to view data...</span>
+                                    </div>
+                                </div>
+                                <div class="viz-content">
+                                    <div id="view-table" class="viz-view active">
+                                        <div class="table-container">
+                                            <table id="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Select an active signal from the left menu to begin
+                                                            analysis.</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="view-graph" class="viz-view">
+                                        <div id="cy-graph" style="width: 100%; height: 100%;"></div>
+                                        <div id="graph-node-info" class="graph-node-info hidden">
+                                            <div class="node-info-header">
+                                                <span id="node-info-title"></span>
+                                                <button
+                                                    onclick="document.getElementById('graph-node-info').classList.add('hidden')">✕</button>
+                                            </div>
+                                            <div id="node-info-body" class="node-info-body"></div>
+                                        </div>
+                                        <div id="graph-empty" class="graph-empty">Select a signal source to explore the
+                                            Knowledge Graph</div>
+                                        <div id="graph-controls">
+                                            <button id="btn-layout" class="btn-secondary"
+                                                style="font-size: 0.8rem; padding: 4px 10px;">Re-layout</button>
+                                            <button id="btn-center" class="btn-secondary"
+                                                style="font-size: 0.8rem; padding: 4px 10px;">Center</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- View: Active Plugs -->
+                <div id="view-active-plugs" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="padding: 0; gap: 0;">
+                        <!-- Stats Strip -->
+                        <div id="view-active-plugs-stats"
+                            style="display: flex; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">🔌</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-total">-</span>
+                                    <span class="stat-label">Active Plugs</span>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">📥</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-records">-</span>
+                                    <span class="stat-label">Total Records</span>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">✅</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-running">-</span>
+                                    <span class="stat-label">Running</span>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">⏸️</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-paused">-</span>
+                                    <span class="stat-label">Paused</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Plug Cards List (scrollable) -->
+                        <div id="view-active-plugs-list" style="flex: 1; overflow-y: auto; padding: 20px 24px;">
+                            <div class="loading">Loading active connections...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Active Security Agents -->
+                <div id="view-active-agents" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="display: flex; flex-direction: column; padding: 0;">
+                        <div
+                            style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Active Security Agents</h2>
+                                <p style="margin: 5px 0 0; color: #888; font-size: 0.85rem;">Currently running
+                                    autonomous and interactive agents.</p>
+                            </div>
+                            <button id="btn-refresh-active-agents" class="btn-secondary">🔄 Refresh</button>
+                        </div>
+                        <div id="active-agents-list" class="agent-grid"
+                            style="flex: 1; overflow-y: auto; padding: 24px;">
+                            <div class="loading">Loading active agents...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Security Agent Builder (Pre-built agents) -->
+                <div id="view-agents" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="display: flex; flex-direction: column; padding: 0;">
+                        <div
+                            style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Security Agents</h2>
+                                <p style="margin: 5px 0 0; color: #888; font-size: 0.85rem;">Select from pre-built
+                                    specialist agents or create your own.</p>
+                            </div>
+                            <button id="btn-create-custom-agent" class="btn-primary" disabled title="Coming Soon">🏗️
+                                Create Custom Agent</button>
+                        </div>
+                        <div id="all-agents-grid" class="agent-grid" style="flex: 1; overflow-y: auto; padding: 24px;">
+                            <div class="loading">Loading available security agents...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Audit History -->
+                <div id="view-history" class="view-container hidden-view">
+                    <div class="full-screen-content history-layout"
+                        style="margin: 0; border: none; background: transparent;">
+                        <div class="history-list-container"
+                            style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px;">
+                            <ul id="view-history-list">
+                                <!-- History items populated here -->
+                            </ul>
+                        </div>
+                        <div class="history-details"
+                            style="background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 12px;">
+                            <div id="view-history-details-content">
+                                <div class="placeholder-text">Select a history item to view details</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Ask Evident (Chat) -->
+                <div id="view-chat" class="view-container hidden-view">
+                    <div class="full-screen-content chat-view"
+                        style="display: flex; flex-direction: column; padding: 0; border: none; border-radius: 0; background: transparent;">
+                        <div id="chat-messages" class="chat-messages" style="flex: 1; overflow-y: auto; padding: 30px;">
+                            <div class="message agent-message">
+                                <div class="message-icon">🤖</div>
+                                <div class="message-content">
+                                    <p><strong>Evident:</strong> Hello! I am your Security Co-Analyst. How can I help
+                                        you investigate your data today?</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Example queries area -->
+                        <div class="chat-example-queries"
+                            style="padding: 0 30px; display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button class="example-query"
+                                onclick="askQuestion('Which assets are affected by critical CVEs?')">Critical
+                                CVEs</button>
+                            <button class="example-query"
+                                onclick="askQuestion('What permissions does user john.doe have?')">User
+                                Permissions</button>
+                            <button class="example-query" onclick="askQuestion('Show me failed login attempts')">Failed
+                                Logins</button>
+                            <button class="example-query"
+                                onclick="askQuestion('Which cloud resources have security misconfigurations?')">Cloud
+                                Misconfigs</button>
+                            <button class="example-query"
+                                onclick="askQuestion('Which users have admin privileges?')">Admin Users</button>
+                        </div>
+                        <div class="chat-input-area"
+                            style="padding: 24px 30px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color);">
+                            <div class="chat-input-wrapper"
+                                style="position: relative; display: flex; gap: 12px; align-items: flex-end; margin: 0 auto; width: 100%;">
+                                <textarea id="question-input"
+                                    placeholder="Ask about your security logs, threats, or configurations..."
+                                    style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 18px; color: #fff; resize: none; min-height: 52px; max-height: 200px; font-family: inherit; font-size: 0.95rem; line-height: 1.5; outline: none; transition: border-color 0.2s;"
+                                    onkeydown="handleKeyPress(event)"></textarea>
+                                <button id="send-button" class="btn-primary" onclick="sendQuestion()"
+                                    style="width: 52px; height: 52px; border-radius: 13px; display: flex; align-items: center; justify-content: center; padding: 0; font-size: 1.25rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0, 229, 255, 0.2);">
+                                    ▲
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Modals -->
     <!-- Agent Configuration Modal -->
-    <div id="modal-config" class="modal">
+    <div id="modal-settings" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Agent Configuration</h2>
+                <h2>Settings</h2>
                 <span class="close-modal">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>LLM Provider</label>
-                    <select id="config-provider">
+                    <select id="settings-provider">
                         <option value="gemini">Google Gemini</option>
                         <option value="claude">Anthropic Claude</option>
                         <option value="openai">OpenAI GPT</option>
@@ -157,43 +363,211 @@
                 </div>
                 <div class="form-group">
                     <label>API Key</label>
-                    <input type="password" id="config-api-key" placeholder="Enter API Key">
+                    <input type="password" id="settings-api-key" placeholder="Enter API Key">
                 </div>
                 <div class="form-group">
                     <label>Model</label>
                     <div class="model-select-wrapper">
-                        <select id="config-model" disabled>
+                        <select id="settings-model" disabled>
                             <option>Select provider first</option>
                         </select>
                         <button id="btn-fetch-models">Fetch Models</button>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel close-modal-btn">Cancel</button>
-                <button id="btn-save-config" class="btn-primary">Save Configuration</button>
+
+                <div class="form-group"
+                    style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <label>Data Source Mode</label>
+                    <select id="settings-source-mode">
+                        <option value="sample">Local (Sample data - /data)</option>
+                        <option value="livedata">Local File System (/data/livedata)</option>
+                        <option value="cloud">Cloud Storage Accounts (Fetch from S3/Blob/GCS)</option>
+                    </select>
+                </div>
+
+                <div class="form-group"
+                    style="padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); margin-top:15px;">
+                    <label>Data Storage Configuration</label>
+                    <select id="settings-storage-type" onchange="toggleStorageFields()" style="margin-bottom: 12px;">
+                        <option value="local">Local Filesystem (data/livedata/)</option>
+                        <option value="azure">Azure ADLS Gen2</option>
+                        <option value="aws_s3">AWS S3 Bucket</option>
+                        <option value="gcs">Google Cloud Storage</option>
+                    </select>
+
+                    <div id="storage-fields-azure" class="storage-optional-fields hidden">
+                        <input type="text" id="storage-azure-account" placeholder="Azure Account Name"
+                            style="margin-bottom: 5px;">
+                        <input type="text" id="storage-azure-container"
+                            placeholder="Container name (default: evident-livedata)" style="margin-bottom: 5px;">
+                        <input type="text" id="storage-azure-vault" placeholder="Key Vault URL"
+                            style="margin-bottom: 5px;">
+                        <input type="text" id="storage-azure-secret" placeholder="Secret name for Connection String"
+                            style="margin-bottom: 5px;">
+                    </div>
+
+                    <div id="storage-fields-aws" class="storage-optional-fields hidden">
+                        <input type="text" id="storage-aws-bucket" placeholder="S3 Bucket Name"
+                            style="margin-bottom: 5px;">
+                        <input type="text" id="storage-aws-region" placeholder="AWS Region (e.g. us-east-1)"
+                            style="margin-bottom: 5px;">
+                        <input type="text" id="storage-aws-secret" placeholder="Secrets Manager Secret Name"
+                            style="margin-bottom: 5px;">
+                    </div>
+
+                    <div id="storage-fields-gcs" class="storage-optional-fields hidden">
+                        <input type="text" id="storage-gcs-project" placeholder="GCP Project ID"
+                            style="margin-bottom: 5px;">
+                        <input type="text" id="storage-gcs-bucket" placeholder="GCS Bucket Name"
+                            style="margin-bottom: 5px;">
+                        <input type="text" id="storage-gcs-secret" placeholder="Secret Manager Secret Name"
+                            style="margin-bottom: 5px;">
+                    </div>
+                </div>
+
+                <div class="form-group"
+                    style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); margin-top:10px;">
+                    <label>Data Schema Preference</label>
+                    <select id="settings-schema">
+                        <option value="evident">Evident Core Attributes</option>
+                        <option value="ocsf">OCSF Schema Compliance</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel close-modal-btn">Cancel</button>
+                    <button id="btn-save-settings" class="btn-primary">Save Settings</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Audit History Modal -->
-    <div id="modal-history" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h2>Audit History</h2>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body history-layout">
-                <div class="history-list-container">
-                    <ul id="history-list">
-                        <!-- History items populated here -->
-                    </ul>
+    <!-- Data Plugs Configuration Modal -->
+    <div id="modal-data-plugs" class="modal">
+        <div class="modal-content modal-large" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header"
+                style="padding: 20px 28px; background: linear-gradient(135deg, rgba(79,195,247,0.12), rgba(102,187,106,0.06)); border-bottom: 1px solid rgba(79,195,247,0.25);">
+                <div>
+                    <h2 style="margin:0; font-size: 1.2rem;">🔗 Configure Data Plugs</h2>
+                    <p style="margin: 4px 0 0 0; font-size: 0.78rem; color: #9fa8da;">Select a connector to
+                        configure
+                        its API credentials and enable data ingestion.</p>
                 </div>
-                <div class="history-details">
-                    <div id="history-details-content">
-                        <div class="placeholder-text">Select a history item to view details</div>
+                <span class="close-modal" style="font-size: 1.4rem; cursor: pointer; color: #9fa8da;">&times;</span>
+            </div>
+            <div class="modal-body history-layout" style="flex: 1; overflow: hidden; gap: 0; padding: 0;">
+                <div class="history-list-container"
+                    style="flex: 0 0 280px; border-right: 1px solid rgba(255,255,255,0.08); padding: 16px 12px; overflow-y: auto; background: rgba(0,0,0,0.15);">
+                    <p
+                        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #4fc3f7; font-weight: 600; margin: 0 4px 12px 4px;">
+                        Available Connectors</p>
+                    <div style="position: relative; margin-bottom: 12px;">
+                        <input type="text" id="connector-search" placeholder="Search connectors..."
+                            style="width: 100%; padding: 8px 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; font-size: 0.85rem;">
+                    </div>
+                    <div id="connectors-browse-list">
+                        Loading data plugs...
                     </div>
                 </div>
+                <div class="history-details" style="flex: 1; padding: 24px 28px; overflow-y: auto;">
+                    <div id="connector-config-panel">
+                        <div class="placeholder-text"
+                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; opacity: 0.5; text-align: center; gap: 10px;">
+                            <span style="font-size: 2rem;">🔌</span>
+                            <span>Select a data plug from the left panel to configure it.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Viewer Modal -->
+    <div id="modal-logs" class="modal">
+        <div class="modal-content modal-large" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2 id="logs-modal-title">Connector Logs</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body history-layout" style="flex: 1; overflow: hidden; gap: 0; padding: 0;">
+                <div class="history-list-container"
+                    style="flex: 0 0 250px; border-right: 1px solid rgba(255,255,255,0.08); padding: 16px 12px; overflow-y: auto;">
+                    <p
+                        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #4fc3f7; font-weight: 600; margin: 0 4px 12px 4px;">
+                        Recent Log Files</p>
+                    <div id="logs-list">
+                        Loading logs...
+                    </div>
+                </div>
+                <div class="history-details"
+                    style="flex: 1; padding: 0; overflow-y: auto; background: rgba(0,0,0,0.2);">
+                    <div id="log-content-panel">
+                        <div class="placeholder-text"
+                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; opacity: 0.5;">
+                            <span>Select a log file on the left to view contents.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Configuration Modal -->
+    <div id="modal-agent-config" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <div>
+                    <h2 id="agent-config-title">🤖 Configure Agent</h2>
+                    <p id="agent-config-subtitle" style="margin: 4px 0 0 0; font-size: 0.8rem; color: #888;">Adjust
+                        agent behavior and deployment settings.</p>
+                </div>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="config-agent-id">
+
+                <div class="form-group">
+                    <label>Operation Mode</label>
+                    <select id="config-agent-mode">
+                        <option value="interactive">Interactive (Co-Analyst)</option>
+                        <option value="autonomous">Autonomous (Sentinel)</option>
+                    </select>
+                    <p class="field-help" style="margin-top: 4px; font-size: 0.75rem; color: #666;">Autonomous mode runs
+                        on a schedule and sends proactive alerts.</p>
+                </div>
+
+                <div class="form-group" id="group-config-frequency">
+                    <label>Frequency (Minutes)</label>
+                    <input type="number" id="config-agent-frequency" min="1" max="1440" value="60">
+                </div>
+
+                <div class="form-group">
+                    <label>System Instructions (LLM Prompt)</label>
+                    <textarea id="config-agent-prompt" rows="6"
+                        style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; padding: 12px; font-family: monospace; font-size: 0.85rem; resize: vertical;"></textarea>
+                    <p class="field-help" style="margin-top: 4px; font-size: 0.75rem; color: #666;">Define the agent's
+                        persona and core investigative logic.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Notification Method</label>
+                    <select id="config-agent-notify">
+                        <option value="email">Email Notification</option>
+                        <option value="slack" disabled>Slack Webhook (Coming Soon)</option>
+                        <option value="teams" disabled>MS Teams (Coming Soon)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Signal Sources</label>
+                    <div id="config-agent-signals-list"
+                        style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                        <!-- Checkboxes will be injected here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel close-modal-btn">Cancel</button>
+                <button id="btn-save-agent-config" class="btn-primary">Save Configuration</button>
             </div>
         </div>
     </div>

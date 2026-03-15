@@ -1,0 +1,47 @@
+{
+    "id": "aws-config",
+    "name": "AWS Config",
+    "base_url": "boto3",
+    "auth": {
+        "type": "aws_credentials",
+        "param_mapping": {
+            "aws_access_key": "aws_access_key_id",
+            "aws_secret_key": "aws_secret_access_key",
+            "region": "region_name"
+        }
+    },
+    "apis": [
+        {
+            "id": "resources",
+            "signal": "assets",
+            "description": "List discovered AWS resources",
+            "method": "boto3",
+            "service": "config",
+            "operation": "list_discovered_resources",
+            "params": {
+                "resourceTypes": [
+                    "AWS::EC2::Instance",
+                    "AWS::S3::Bucket",
+                    "AWS::RDS::DBInstance"
+                ]
+            },
+            "result_path": "resourceIdentifiers",
+            "pagination": {
+                "type": "nextToken",
+                "param": "NextToken",
+                "next_key": "NextToken"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "cloud_configs": {
+                "resource_id": "resourceId",
+                "resource_type": "resourceType",
+                "cloud_provider": "aws",
+                "setting_name": "configuration",
+                "setting_value": "active"
+            }
+        }
+    }
+}

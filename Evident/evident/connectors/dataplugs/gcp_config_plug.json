@@ -1,0 +1,41 @@
+{
+    "id": "gcp-config",
+    "name": "GCP Asset Inventory",
+    "base_url": "https://cloudasset.googleapis.com",
+    "auth": {
+        "type": "api_key"
+    },
+    "apis": [
+        {
+            "id": "assets",
+            "signal": "assets",
+            "description": "List GCP assets for a project",
+            "method": "GET",
+            "endpoint": "/v1/projects/{project_id}/assets",
+            "params": {
+                "contentType": "RESOURCE",
+                "pageSize": 100
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "assets",
+            "pagination": {
+                "type": "json_token",
+                "param": "pageToken",
+                "next_key": "nextPageToken"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "cloud_configs": {
+                "resource_id": "name",
+                "resource_type": "assetType",
+                "cloud_provider": "gcp",
+                "setting_name": "resource",
+                "setting_value": "active"
+            }
+        }
+    }
+}

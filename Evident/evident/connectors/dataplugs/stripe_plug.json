@@ -1,0 +1,39 @@
+{
+    "id": "stripe",
+    "name": "Stripe",
+    "base_url": "https://api.stripe.com/v1",
+    "auth": {
+        "type": "api_key"
+    },
+    "apis": [
+        {
+            "id": "events",
+            "signal": "signin_logs",
+            "description": "Fetch Stripe events",
+            "method": "GET",
+            "endpoint": "/events",
+            "params": {
+                "limit": 100
+            },
+            "headers": {
+                "Authorization": "Bearer {secret_key}"
+            },
+            "result_path": "data",
+            "pagination": {
+                "type": "cursor_param",
+                "param": "starting_after",
+                "cursor_key": "id"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "logs": {
+                "event_id": "id",
+                "timestamp": "created",
+                "event_type": "type",
+                "source": "Stripe"
+            }
+        }
+    }
+}

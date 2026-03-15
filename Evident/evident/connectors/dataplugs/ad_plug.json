@@ -1,0 +1,85 @@
+{
+    "id": "ad-identity",
+    "name": "Active Directory (Microsoft Graph)",
+    "base_url": "https://graph.microsoft.com/v1.0",
+    "auth": {
+        "type": "oauth2_client_credentials",
+        "token_endpoint": "https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+        "param_mapping": {
+            "client_id": "client_id",
+            "client_secret": "client_secret",
+            "tenant_id": "tenant_id"
+        },
+        "extra_params": {
+            "scope": "https://graph.microsoft.com/.default",
+            "grant_type": "client_credentials"
+        }
+    },
+    "apis": [
+        {
+            "id": "users",
+            "signal": "assets",
+            "description": "List all users from Azure AD",
+            "method": "GET",
+            "endpoint": "/users",
+            "params": {
+                "$top": 100,
+                "$select": "id,displayName,userPrincipalName,jobTitle,department,accountEnabled,createdDateTime,lastSignInDateTime"
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "value",
+            "pagination": {
+                "type": "nextLink",
+                "next_key": "@odata.nextLink"
+            }
+        },
+        {
+            "id": "roles",
+            "signal": "user_roles",
+            "description": "List directory roles and their members",
+            "method": "GET",
+            "endpoint": "/directoryRoles",
+            "params": {},
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "value"
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "assets": {
+                "id": "id",
+                "name": "displayName",
+                "type": "type",
+                "ip_address": "ip_address",
+                "os": "os",
+                "owner": "owner",
+                "department": "department",
+                "criticality": "criticality"
+            },
+            "user_roles": {
+                "assignment_id": "id",
+                "user_id": "id",
+                "username": "userPrincipalName",
+                "role_id": "role_id",
+                "role_name": "role_name"
+            }
+        },
+        "ocsf": {
+            "class_uid": 3001,
+            "class_name": "Account Change",
+            "field_map": {
+                "time": "createdDateTime",
+                "user.uid": "id",
+                "user.name": "displayName",
+                "user.email_addr": "userPrincipalName",
+                "user.org.name": "department",
+                "actor.user.name": "jobTitle",
+                "status_id": "accountEnabled"
+            }
+        }
+    }
+}

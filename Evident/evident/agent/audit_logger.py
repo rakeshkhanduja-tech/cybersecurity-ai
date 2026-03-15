@@ -9,8 +9,14 @@ from evident.config import app_config
 class AuditLogger:
     """Logs agent interactions for audit and explanation"""
     
-    def __init__(self, log_path: str = "./data/audit_history.json"):
-        self.log_path = log_path
+    def __init__(self, log_path: str = None):
+        if log_path is None:
+            # Resolve to Evident/evident/data/livedata/audit/audit_history.json
+            # __file__ is c:\PRODDEV\personal\cybersecurity-ai\Evident\evident\agent\audit_logger.py
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+            self.log_path = os.path.join(base_dir, "Evident", "evident", "data", "livedata", "audit", "audit_history.json")
+        else:
+            self.log_path = log_path
         self._ensure_log_file()
         
     def _ensure_log_file(self):

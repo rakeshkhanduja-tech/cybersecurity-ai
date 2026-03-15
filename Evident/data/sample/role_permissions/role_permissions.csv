@@ -1,0 +1,39 @@
+permission_id,role_id,role_name,resource_type,action,scope,risk_level
+PERM-001,ROLE-001,Developer,code_repository,read,team,low
+PERM-002,ROLE-001,Developer,code_repository,write,team,medium
+PERM-003,ROLE-001,Developer,build_system,execute,team,medium
+PERM-004,ROLE-002,Senior Developer,code_repository,read,global,low
+PERM-005,ROLE-002,Senior Developer,code_repository,write,global,high
+PERM-006,ROLE-002,Senior Developer,code_repository,approve_pr,global,medium
+PERM-007,ROLE-003,DevOps Engineer,infrastructure,read,global,low
+PERM-008,ROLE-003,DevOps Engineer,infrastructure,write,global,high
+PERM-009,ROLE-003,DevOps Engineer,production,deploy,global,critical
+PERM-010,ROLE-004,HR Manager,hr_system,read,department,low
+PERM-011,ROLE-004,HR Manager,hr_system,write,department,medium
+PERM-012,ROLE-004,HR Manager,payroll,read,department,high
+PERM-013,ROLE-005,HR Specialist,hr_system,read,department,low
+PERM-014,ROLE-005,HR Specialist,hr_system,write,personal,low
+PERM-015,ROLE-006,Finance Manager,financial_system,read,department,medium
+PERM-016,ROLE-006,Finance Manager,financial_system,write,department,high
+PERM-017,ROLE-006,Finance Manager,financial_reports,approve,department,high
+PERM-018,ROLE-007,Finance Analyst,financial_system,read,department,medium
+PERM-019,ROLE-007,Finance Analyst,financial_reports,create,department,medium
+PERM-020,ROLE-008,IT Administrator,servers,read,global,low
+PERM-021,ROLE-008,IT Administrator,servers,restart,global,medium
+PERM-022,ROLE-008,IT Administrator,user_accounts,create,global,high
+PERM-023,ROLE-009,System Administrator,all_systems,admin,global,critical
+PERM-024,ROLE-009,System Administrator,security_settings,modify,global,critical
+PERM-025,ROLE-010,Service Account,api,execute,global,medium
+PERM-026,ROLE-011,Code Reviewer,code_repository,approve_pr,team,medium
+PERM-027,ROLE-012,Tech Lead,code_repository,admin,team,high
+PERM-028,ROLE-012,Tech Lead,team_resources,manage,team,medium
+PERM-029,ROLE-013,Security Champion,security_tools,read,global,low
+PERM-030,ROLE-013,Security Champion,vulnerability_reports,create,global,medium
+PERM-031,ROLE-014,Auditor,all_systems,read,global,medium
+PERM-032,ROLE-014,Auditor,audit_logs,export,global,high
+PERM-033,ROLE-015,Security Administrator,firewall,modify,global,critical
+PERM-034,ROLE-015,Security Administrator,security_policies,modify,global,critical
+PERM-035,ROLE-016,Database Administrator,databases,admin,global,critical
+PERM-036,ROLE-016,Database Administrator,database_backups,manage,global,high
+PERM-037,ROLE-017,Network Administrator,network_devices,configure,global,critical
+PERM-038,ROLE-017,Network Administrator,network_monitoring,read,global,low

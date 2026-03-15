@@ -62,7 +62,9 @@ class SecurityNormalizer:
             "medium": Severity.MEDIUM,
             "low": Severity.LOW,
         }
-        severity = severity_map.get(data.get("severity", "").lower(), Severity.MEDIUM)
+        val = data.get("severity", "")
+        raw_sev = str(val).lower() if val is not None and not (isinstance(val, float) and val != val) else ""
+        severity = severity_map.get(raw_sev, Severity.MEDIUM)
         
         # Parse date
         published_date = self._parse_date(data.get("published_date"))
@@ -95,7 +97,7 @@ class SecurityNormalizer:
             os=data.get("os"),
             owner=data.get("owner"),
             department=data.get("department"),
-            criticality=data.get("criticality", "medium").lower(),
+            criticality=str(data.get("criticality", "medium")).lower() if data.get("criticality") is not None and not (isinstance(data.get("criticality"), float) and data.get("criticality") != data.get("criticality")) else "medium",
             last_scan_date=last_scan,
             timestamp=last_scan,
             metadata={"source": "assets"}
@@ -112,7 +114,9 @@ class SecurityNormalizer:
             "low": Severity.LOW,
             "info": Severity.INFO,
         }
-        severity = severity_map.get(data.get("severity", "").lower(), Severity.INFO)
+        val = data.get("severity", "")
+        raw_sev = str(val).lower() if val is not None and not (isinstance(val, float) and val != val) else ""
+        severity = severity_map.get(raw_sev, Severity.INFO)
         
         event_time = self._parse_date(data.get("timestamp"))
         
@@ -144,7 +148,7 @@ class SecurityNormalizer:
             setting_name=data.get("setting_name", ""),
             setting_value=data.get("setting_value", ""),
             compliant=compliant,
-            risk_level=data.get("risk_level", "low").lower(),
+            risk_level=str(data.get("risk_level", "low")).lower() if data.get("risk_level") is not None and not (isinstance(data.get("risk_level"), float) and data.get("risk_level") != data.get("risk_level")) else "low",
             timestamp=datetime.now(),
             metadata={"source": "cloud_configs", "config_id": data.get("config_id")}
         )
@@ -210,7 +214,7 @@ class SecurityNormalizer:
             resource_type=data.get("resource_type", ""),
             action=data.get("action", ""),
             scope=data.get("scope", ""),
-            risk_level=data.get("risk_level", "medium").lower(),
+            risk_level=str(data.get("risk_level", "medium")).lower() if data.get("risk_level") is not None and not (isinstance(data.get("risk_level"), float) and data.get("risk_level") != data.get("risk_level")) else "medium",
             timestamp=datetime.now(),
             metadata={"source": "role_permissions", "role_name": data.get("role_name")}
         )
