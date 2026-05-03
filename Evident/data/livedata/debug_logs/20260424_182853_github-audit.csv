@@ -1,0 +1,9 @@
+Timestamp,Level,Component,Message
+2026-04-24 18:28:53,INFO,Scheduler,Starting scheduled job for github-audit
+2026-04-24 18:28:53,INFO,Connector,Starting run for github-audit with schema ocsf
+2026-04-24 18:28:53,INFO,Auth,Authentication status: Success
+2026-04-24 18:28:53,INFO,API,Fetching data for API: org_events
+2026-04-24 18:28:53,INFO,HTTP,Executing GET https://api.github.com/orgs/dreamwork0/events
+2026-04-24 18:51:08,ERROR,HTTP,"Request failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))"
+2026-04-24 18:51:08,ERROR,Connector,"Run failed: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))"
+2026-04-24 18:51:08,INFO,Scheduler,Task completed successfully: None records generated

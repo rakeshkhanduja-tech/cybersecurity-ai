@@ -1,0 +1,78 @@
+{
+    "id": "crowdstrike",
+    "name": "CrowdStrike Falcon",
+    "base_url": "https://api.crowdstrike.com",
+    "auth": {
+        "type": "oauth2_client_credentials",
+        "token_endpoint": "/oauth2/token",
+        "param_mapping": {
+            "client_id": "client_id",
+            "client_secret": "client_secret"
+        }
+    },
+    "apis": [
+        {
+            "id": "detections",
+            "signal": "cves",
+            "description": "Fetch recent detection IDs",
+            "method": "GET",
+            "endpoint": "/detects/queries/detects/v1",
+            "params": {
+                "limit": 100,
+                "sort": "last_behavior|desc"
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "resources",
+            "pagination": {
+                "type": "offset",
+                "param": "offset",
+                "limit_param": "limit"
+            }
+        },
+        {
+            "id": "detection_details",
+            "signal": "cves",
+            "description": "Fetch detection entity details by IDs from previous call",
+            "method": "POST",
+            "endpoint": "/detects/entities/detects/GET/v1",
+            "headers": {
+                "Authorization": "Bearer {access_token}",
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "ids": "{ids_from:detections}"
+            },
+            "result_path": "resources"
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "cves": {
+                "id": "detection_id",
+                "name": "filename",
+                "cve_id": "cve.id",
+                "severity": "max_severity_displayname",
+                "description": "behaviors[0].description",
+                "affected_asset": "device.hostname",
+                "detected_at": "created_timestamp",
+                "status": "status"
+            }
+        },
+        "ocsf": {
+            "class_uid": 2004,
+            "class_name": "Detection Finding",
+            "field_map": {
+                "activity_id": 1,
+                "time": "created_timestamp",
+                "severity_id": "max_confidence",
+                "finding.uid": "detection_id",
+                "finding.title": "behaviors[0].description",
+                "device.hostname": "device.hostname",
+                "device.os": "device.os_version",
+                "status_id": "status"
+            }
+        }
+    }
+}

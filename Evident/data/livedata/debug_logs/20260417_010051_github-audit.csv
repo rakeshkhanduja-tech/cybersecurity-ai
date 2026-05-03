@@ -1,0 +1,3 @@
+Timestamp,Level,Component,Message
+2026-04-17 01:00:51,INFO,Scheduler,Starting scheduled job for github-audit
+2026-04-17 01:00:51,ERROR,Scheduler,Failed to run task: 'plug_file'

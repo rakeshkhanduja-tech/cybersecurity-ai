@@ -1,0 +1,3 @@
+Timestamp,Level,Component,Message
+2026-04-15 20:36:22,INFO,Scheduler,Starting scheduled job for github-audit
+2026-04-15 20:36:22,ERROR,Scheduler,Failed to run task: module 'src.connectors.db' has no attribute 'get_plug_metadata'

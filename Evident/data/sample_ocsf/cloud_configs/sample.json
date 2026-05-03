@@ -1,0 +1,527 @@
+[
+    {
+        "comment": "=== CLOUD RESOURCE AUDITOR + COMPLIANCE GUARDIAN: Critical Misconfigs ===",
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-001"
+        },
+        "finding": {
+            "uid": "CFG-001",
+            "title": "S3 Bucket Publicly Accessible - Data Exposure Risk",
+            "desc": "prod-data-bucket has Block Public Access disabled. Contains sensitive customer PII.",
+            "types": [
+                "Cloud Misconfiguration"
+            ]
+        },
+        "resource": {
+            "uid": "prod-data-bucket",
+            "name": "prod-data-bucket",
+            "type": "s3_bucket",
+            "cloud": {
+                "provider": "aws",
+                "region": "us-east-1",
+                "account_uid": "123456789012"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-2.0",
+                "NIST-800-53-SC-28",
+                "SOC2-CC6.6"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-002"
+        },
+        "finding": {
+            "uid": "CFG-002",
+            "title": "EC2 Security Group: SSH Open to Internet (0.0.0.0/0)",
+            "desc": "EC2 instance i-0abc123 accepts SSH from any IP. Single point of compromise."
+        },
+        "resource": {
+            "uid": "i-0abc123",
+            "name": "prod-web-server",
+            "type": "ec2_instance",
+            "cloud": {
+                "provider": "aws",
+                "region": "us-east-1"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-5.2",
+                "PCI-DSS-1.2.1"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-003"
+        },
+        "finding": {
+            "uid": "CFG-003",
+            "title": "IAM User 'admin-user' Has No MFA Enabled",
+            "desc": "root-equivalent IAM user has no MFA. If credentials are stolen, full account access is possible."
+        },
+        "resource": {
+            "uid": "admin-user",
+            "type": "iam_user",
+            "cloud": {
+                "provider": "aws"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-1.5",
+                "SOC2-CC6.1",
+                "HIPAA-164.312"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-004"
+        },
+        "finding": {
+            "uid": "CFG-004",
+            "title": "IAM Role ec2-role Assumes Overly Permissive Policy",
+            "desc": "Role allows assume-role to any principal (*). Violates principle of least privilege."
+        },
+        "resource": {
+            "uid": "ec2-role",
+            "type": "iam_role",
+            "cloud": {
+                "provider": "aws"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-1.21",
+                "SOC2-CC6.3"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Azure Security Center",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "CFG-005"
+        },
+        "finding": {
+            "uid": "CFG-005",
+            "title": "Azure NSG Allows RDP (3389) from Internet",
+            "desc": "NSG prod-nsg allows inbound RDP from 0.0.0.0/0 on port 3389. Exposed to brute force risk."
+        },
+        "resource": {
+            "uid": "prod-nsg",
+            "type": "network_security_group",
+            "cloud": {
+                "provider": "azure",
+                "region": "East US",
+                "account_uid": "sub-abc123"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-Azure-6.1",
+                "NIST-800-53-AC-17"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Azure Security Center",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "CFG-006"
+        },
+        "finding": {
+            "uid": "CFG-006",
+            "title": "Azure VM Disk Encryption Disabled on Production VM",
+            "desc": "prod-vm-01 OS and data disks are unencrypted at rest."
+        },
+        "resource": {
+            "uid": "prod-vm-01",
+            "type": "virtual_machine",
+            "cloud": {
+                "provider": "azure"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-Azure-7.2",
+                "GDPR-Art32",
+                "PCI-DSS-3.4"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Azure Security Center",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "CFG-007"
+        },
+        "finding": {
+            "uid": "CFG-007",
+            "title": "Azure Storage Account Allows HTTP (Non-HTTPS) Traffic",
+            "desc": "prodstorageacct permits HTTP requests; data transmitted unencrypted in transit."
+        },
+        "resource": {
+            "uid": "prodstorageacct",
+            "type": "storage_account",
+            "cloud": {
+                "provider": "azure"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-Azure-3.1",
+                "PCI-DSS-4.1"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "GCP Security Command Center",
+                "vendor_name": "Google"
+            },
+            "uid": "CFG-008"
+        },
+        "finding": {
+            "uid": "CFG-008",
+            "title": "GCP Firewall Rule Allows All Ingress Traffic (0.0.0.0/0)",
+            "desc": "allow-all-ingress rule permits unrestricted inbound access to all GCP compute resources."
+        },
+        "resource": {
+            "uid": "allow-all-ingress",
+            "type": "firewall_rule",
+            "cloud": {
+                "provider": "gcp",
+                "project_uid": "corp-prod-project"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-GCP-3.6",
+                "NIST-800-53-SC-7"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "GCP Security Command Center",
+                "vendor_name": "Google"
+            },
+            "uid": "CFG-009"
+        },
+        "finding": {
+            "uid": "CFG-009",
+            "title": "GCP Cloud SQL Doesn't Require SSL Connections",
+            "desc": "prod-cloudsql accepts plaintext connections. Database credentials and data at risk."
+        },
+        "resource": {
+            "uid": "prod-cloudsql",
+            "type": "sql_instance",
+            "cloud": {
+                "provider": "gcp"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-GCP-6.1",
+                "PCI-DSS-4.1"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "GCP Security Command Center",
+                "vendor_name": "Google"
+            },
+            "uid": "CFG-010"
+        },
+        "finding": {
+            "uid": "CFG-010",
+            "title": "GCP OS Login Disabled on Production Instance",
+            "desc": "OS Login disabled. SSH keys managed manually; risk of unauthorized access via stale keys."
+        },
+        "resource": {
+            "uid": "prod-instance-01",
+            "type": "compute_instance",
+            "cloud": {
+                "provider": "gcp"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-GCP-4.1"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-011"
+        },
+        "finding": {
+            "uid": "CFG-011",
+            "title": "AWS CloudTrail Log File Validation Disabled",
+            "desc": "Log file validation is off on organization-trail. Evidence tampering is undetectable."
+        },
+        "resource": {
+            "uid": "organization-trail",
+            "type": "cloudtrail",
+            "cloud": {
+                "provider": "aws"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-3.2",
+                "SOC2-CC7.2"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-012"
+        },
+        "finding": {
+            "uid": "CFG-012",
+            "title": "VPC Flow Logs Not Enabled in Production VPC",
+            "desc": "prod-vpc lacks flow logs. Network traffic cannot be audited for forensic investigation."
+        },
+        "resource": {
+            "uid": "prod-vpc",
+            "type": "vpc",
+            "cloud": {
+                "provider": "aws"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-3.9",
+                "CIS-AWS-3.10",
+                "NIST-800-53-AU-3"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "comment": "=== SHADOW IT: Unapproved SaaS API Gateway usage ===",
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704461200,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Zscaler CASB",
+                "vendor_name": "Zscaler"
+            },
+            "uid": "CFG-013"
+        },
+        "finding": {
+            "uid": "CFG-013",
+            "title": "Unapproved SaaS App Detected: Personal ChatGPT Account Used for Work",
+            "desc": "5 users uploading proprietary source code to OpenAI ChatGPT personal accounts.",
+            "types": [
+                "Shadow IT",
+                "DLP Violation"
+            ]
+        },
+        "resource": {
+            "uid": "openai.com",
+            "type": "saas_application",
+            "cloud": {
+                "provider": "Other"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "SOC2-CC5.2",
+                "GDPR-Art28"
+            ],
+            "status": "Failed"
+        }
+    },
+    {
+        "comment": "=== COMPLIANT RESOURCE (passing check for contrast) ===",
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704268800,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS Security Hub",
+                "vendor_name": "Amazon"
+            },
+            "uid": "CFG-014"
+        },
+        "finding": {
+            "uid": "CFG-014",
+            "title": "RDS Backup Retention Policy Meets Compliance Standards",
+            "desc": "prod-db RDS instance has 7-day backup retention and encryption at rest enabled."
+        },
+        "resource": {
+            "uid": "prod-db",
+            "type": "rds_instance",
+            "cloud": {
+                "provider": "aws"
+            }
+        },
+        "compliance": {
+            "requirements": [
+                "CIS-AWS-2.3",
+                "PCI-DSS-9.5"
+            ],
+            "status": "Passed"
+        }
+    }
+]

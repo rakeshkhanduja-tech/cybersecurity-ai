@@ -1,0 +1,45 @@
+{
+    "id": "azure-config",
+    "name": "Azure Resource Graph",
+    "base_url": "https://management.azure.com",
+    "auth": {
+        "type": "oauth2_client_credentials",
+        "token_endpoint": "https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+        "extra_params": {
+            "scope": "https://management.azure.com/.default"
+        }
+    },
+    "apis": [
+        {
+            "id": "resources",
+            "signal": "assets",
+            "description": "Query resources across subscriptions",
+            "method": "POST",
+            "endpoint": "/providers/Microsoft.ResourceGraph/resources",
+            "params": {
+                "api-version": "2021-03-01"
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "body": {
+                "query": "Resources | project id, name, type, location, properties",
+                "options": {
+                    "$top": 100
+                }
+            },
+            "result_path": "data"
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "cloud_configs": {
+                "resource_id": "id",
+                "resource_type": "type",
+                "cloud_provider": "azure",
+                "setting_name": "provisioningState",
+                "setting_value": "properties.provisioningState"
+            }
+        }
+    }
+}

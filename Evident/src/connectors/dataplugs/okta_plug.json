@@ -1,0 +1,88 @@
+{
+    "id": "okta-identity",
+    "name": "Okta Identity and Logs",
+    "base_url": "{api_url}",
+    "auth": {
+        "type": "oauth2_client_credentials",
+        "auth_format": "json",
+        "token_endpoint": "{token_url}",
+        "param_mapping": {
+            "client_id": "client_id",
+            "client_secret": "client_secret"
+        },
+        "extra_params": {
+            "grant_type": "client_credentials",
+            "scope": "{scope}",
+            "audience": "{audience}"
+        }
+    },
+    "apis": [
+        {
+            "id": "users",
+            "signal": "assets",
+            "description": "List all users in Okta",
+            "method": "GET",
+            "endpoint": "/api/v2/users",
+            "params": {
+                "limit": 100
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "$",
+            "pagination": {
+                "type": "link_header",
+                "rel": "next"
+            }
+        },
+        {
+            "id": "logs",
+            "signal": "signin_logs",
+            "description": "Fetch Okta system logs",
+            "method": "GET",
+            "endpoint": "/api/v2/logs",
+            "params": {
+                "limit": 1000
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "$",
+            "pagination": {
+                "type": "link_header",
+                "rel": "next"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "assets": {
+                "id": "id",
+                "user_id": "id",
+                "username": "profile.login",
+                "email": "profile.email",
+                "status": "status"
+            },
+            "signin_logs": {
+                "event_id": "uuid",
+                "timestamp": "published",
+                "event_type": "eventType",
+                "severity": "severity",
+                "user": "actor.alternateId",
+                "description": "displayMessage"
+            }
+        },
+        "ocsf": {
+            "class_uid": 3001,
+            "class_name": "Account Change",
+            "field_map": {
+                "time": "published",
+                "user.uid": "actor.id",
+                "user.name": "actor.displayName",
+                "user.email_addr": "actor.alternateId",
+                "activity_id": "eventType",
+                "status_id": "outcome.result"
+            }
+        }
+    }
+}

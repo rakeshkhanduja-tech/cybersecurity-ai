@@ -1,0 +1,17 @@
+Timestamp,Level,Component,Message
+2026-04-21 19:12:53,INFO,Scheduler,Starting scheduled job for github-audit
+2026-04-21 19:12:53,INFO,Connector,Starting run for github-audit with schema ocsf
+2026-04-21 19:12:53,INFO,Auth,Authentication status: Success
+2026-04-21 19:12:53,INFO,API,Fetching data for API: org_events
+2026-04-21 19:12:53,INFO,HTTP,Executing GET https://api.github.com/orgs/dreamwork0/events
+2026-04-21 19:12:54,ERROR,HTTP,"HTTP GET failed (401) for https://api.github.com/orgs/dreamwork0/events | Body: {
+  ""message"": ""Bad credentials"",
+  ""documentation_url"": ""https://docs.github.com/rest"",
+  ""status"": ""401""
+}"
+2026-04-21 19:12:54,ERROR,Connector,"Run failed: HTTP GET failed (401) for https://api.github.com/orgs/dreamwork0/events | Body: {
+  ""message"": ""Bad credentials"",
+  ""documentation_url"": ""https://docs.github.com/rest"",
+  ""status"": ""401""
+}"
+2026-04-21 19:12:54,INFO,Scheduler,Task completed successfully: None records generated

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident Setup - Enterprise Security Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: radial-gradient(circle at top right, #1a1f3a 0%, #0a0e27 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .setup-container {
+            width: 95%;
+            max-width: 1450px;
+            background: rgba(20, 27, 61, 0.4);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(79, 195, 247, 0.15);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7);
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .setup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setup-title h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4fc3f7, #66bb6a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .setup-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 6px;
+        }
+
+        .section-headline {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 40px 0 20px 0;
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .section-headline i {
+            color: var(--accent-blue);
+        }
+
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 24px;
+        }
+
+        .infra-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .infra-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(79, 195, 247, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            color: #777;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-badge.success {
+            background: rgba(102, 187, 106, 0.15);
+            color: #66bb6a;
+            border-color: rgba(102, 187, 106, 0.3);
+        }
+
+        .status-badge.error {
+            background: rgba(239, 83, 80, 0.15);
+            color: #ef5350;
+            border-color: rgba(239, 83, 80, 0.3);
+        }
+
+        .card-body {
+            flex: 1;
+        }
+
+        .card-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-test {
+            flex: 1;
+            background: rgba(79, 195, 247, 0.1);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            color: var(--accent-blue);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-test:hover:not(:disabled) {
+            background: rgba(79, 195, 247, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-test:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-save-primary {
+            background: linear-gradient(135deg, #4fc3f7, #0288d1);
+            border: none;
+            color: #fff;
+            padding: 16px 48px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(79, 195, 247, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-save-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(79, 195, 247, 0.4);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Test Spinner */
+        .spinner {
+            animation: rotate 2s linear infinite;
+            width: 14px;
+            height: 14px;
+        }
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-checkmark { color: #66bb6a; animation: scaleIn 0.3s ease-out; }
+        @keyframes scaleIn { from { transform: scale(0); } to { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div class="setup-container">
+        <header class="setup-header">
+            <div class="setup-title">
+                <h1>Evident Setup</h1>
+                <p>Enterprise Security Intelligence Infrastructure</p>
+            </div>
+            <a href="/dashboard" class="btn-home"><i class="fas fa-arrow-left"></i> Core Dashboard</a>
+        </header>
+
+        <!-- Infrastructure Stack -->
+        <div class="infra-grid">
+            <!-- Config Store -->
+            <div class="infra-card" id="card-config_store">
+                <div class="card-header">
+                    <h3><i class="fas fa-database"></i> Application Config Store</h3>
+                    <div class="status-badge" id="badge-config_store">Not Verified</div>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">System configurations and enterprise audit history.</p>
+                    <div class="form-group">
+                        <label>Storage Backend</label>
+                        <div style="display: flex; gap: 12px;">
+                            <label class="radio-pill"><input type="radio" name="store-type" value="sqlite" checked onchange="toggleInfraFields()"><span>SQLite</span></label>
+                            <label class="radio-pill"><input type="radio" name="store-type" value="postgres" onchange="toggleInfraFields()"><span>Postgre</span></label>
+                        </div>
+                    </div>
+                    <div id="fields-sqlite">
+                        <div class="form-group"><label>DB Path</label><input type="text" id="infra-sqlite-path" value="data/connectors.db" readonly></div>
+                    </div>
+                    <div id="fields-postgres" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group"><label>Host</label><input type="text" id="infra-pg-host"></div>
+                            <div class="form-group"><label>Port</label><input type="number" id="infra-pg-port" value="5432"></div>
+                        </div>
+                        <div class="form-group"><label>User</label><input type="text" id="infra-pg-user"></div>
+                        <div class="form-group"><label>Password</label><input type="password" id="infra-pg-pass"></div>
+                    </div>
+                    <div id="error-config_store" class="error-detail" style="display: none; font-size: 0.75rem; color: #ef5350; margin-top: 10px; background: rgba(239, 83, 80, 0.05); padding: 8px; border-radius: 6px; border-left: 2px solid #ef5350;"></div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-test" onclick="tryTest('config_store')"><i class="fas fa-vial"></i> Test Connection</button>
+                    <button class="btn-test" id="btn-schema-config_store" style="background: transparent; flex: 0.8;" onclick="initConfigDB('config_store')"><i class="fas fa-tools"></i> Setup Schema</button>
+                </div>
+            </div>
+
+            <!-- Knowledge Store -->
+            <div class="infra-card" id="card-graph_db">
+                <div class="card-header">
+                    <h3><i class="fas fa-network-wired"></i> Knowledge Graph (Neo4j)</h3>
+                    <div class="status-badge" id="badge-graph_db">Not Verified</div>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">Real-time mapping of enterprise security entities and relationships.</p>
+                    <div class="form-group">
+                        <label>Graph Engine</label>
+                        <div style="display: flex; gap: 12px;">
+                            <label class="radio-pill"><input type="radio" name="graph-type" value="mock" checked onchange="toggleInfraFields()"><span>In-Memory</span></label>
+                            <label class="radio-pill"><input type="radio" name="graph-type" value="neo4j" onchange="toggleInfraFields()"><span>Neo4j</span></label>
+                        </div>
+                    </div>
+                    <div id="fields-neo4j" style="display: none;">
+                        <div class="form-group"><label>Connection URI</label><input type="text" id="infra-neo-uri" placeholder="neo4j://localhost:7687"></div>
+                        <div class="form-group"><label>Database</label><input type="text" id="infra-neo-db" value="neo4j"></div>
+                        <div class="form-row">
+                            <div class="form-group"><label>User</label><input type="text" id="infra-neo-user" value="neo4j"></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="infra-neo-pass"></div>
+                        </div>
+                    </div>
+                    <div id="error-graph_db" class="error-detail" style="display: none; font-size: 0.75rem; color: #ef5350; margin-top: 10px; background: rgba(239, 83, 80, 0.05); padding: 8px; border-radius: 6px; border-left: 2px solid #ef5350;"></div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-test" onclick="tryTest('graph_db')"><i class="fas fa-vial"></i> Test Connection</button>
+                </div>
+            </div>
+
+            <!-- Vector Store -->
+            <div class="infra-card" id="card-vector_db">
+                <div class="card-header">
+                    <h3><i class="fas fa-brain"></i> Vector Memory (Chroma)</h3>
+                    <div class="status-badge" id="badge-vector_db">Not Verified</div>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 0.8rem; color: #777; margin-bottom: 20px;">Differentiable memory store for RAG and semantic search.</p>
+                    <div class="form-group"><label>Storage Path</label><input type="text" id="infra-vector-path" value="C:\PRODDEV\personal\cybersecurity-ai\Evident\data\chroma_db"></div>
+                    <div class="form-group"><label>Collection</label><input type="text" id="infra-vector-collection" value="security_intelligence"></div>
+                    <div class="form-group">
+                        <label>Embedding Engine</label>
+                        <select id="infra-vector-model">
+                            <option value="all-MiniLM-L6-v2">all-MiniLM-L6-v2 (Local)</option>
+                            <option value="models/embedding-001">Google embedding-001</option>
+                        </select>
+                    </div>
+                    <div id="error-vector_db" class="error-detail" style="display: none; font-size: 0.75rem; color: #ef5350; margin-top: 10px; background: rgba(239, 83, 80, 0.05); padding: 8px; border-radius: 6px; border-left: 2px solid #ef5350;"></div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn-test" onclick="tryTest('vector_db')"><i class="fas fa-vial"></i> Test Connection</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 60px; text-align: center; padding: 40px; background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
+            <button id="btn-save-all" class="btn-save-primary" onclick="saveEverything()">
+                <i class="fas fa-shield-halved" style="margin-right: 12px;"></i> Save Configuration
+            </button>
+            <p style="margin-top: 16px; font-size: 0.85rem; color: #666;">Saving will re-initialize the Security Intelligence Agent.</p>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        const statusMap = {
+            config_store: false,
+            graph_db: false,
+            vector_db: false,
+            llm: false
+        };
+
+        function toggleLLMFields() {
+            const provider = document.getElementById('llm-provider').value;
+            const modelInput = document.getElementById('llm-model-id');
+            if (provider === 'gemini') modelInput.value = 'gemini-2.0-flash';
+            else if (provider === 'openai') modelInput.value = 'gpt-4-turbo';
+        }
+
+        function toggleInfraFields() {
+            const storeType = document.querySelector('input[name="store-type"]:checked').value;
+            document.getElementById('fields-sqlite').style.display = storeType === 'sqlite' ? 'block' : 'none';
+            document.getElementById('fields-postgres').style.display = storeType === 'postgres' ? 'block' : 'none';
+
+            const graphType = document.querySelector('input[name="graph-type"]:checked').value;
+            document.getElementById('fields-neo4j').style.display = graphType === 'neo4j' ? 'block' : 'none';
+        }
+
+        async function tryTest(target) {
+            const card = document.getElementById(`card-${target}`);
+            const badge = document.getElementById(`badge-${target}`);
+            const errorDiv = document.getElementById(`error-${target}`);
+            const btn = card.querySelector('.btn-test');
+            const btnText = btn.querySelector('.btn-text') || btn;
+            const originalHtml = btnText.innerHTML;
+
+            // Clear previous errors
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+            }
+
+            btn.disabled = true;
+            btnText.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Testing...';
+            badge.textContent = 'Verifying...';
+            badge.className = 'status-badge';
+
+            // Gather payload based on target
+            let payload = {};
+            if (target === 'llm') {
+                payload = { provider: document.getElementById('llm-provider').value, api_key: document.getElementById('llm-api-key').value };
+            } else if (target === 'config_store') {
+                payload = { 
+                    type: document.querySelector('input[name="store-type"]:checked').value,
+                    sqlite: { path: document.getElementById('infra-sqlite-path').value },
+                    postgres: {
+                        host: document.getElementById('infra-pg-host').value,
+                        port: document.getElementById('infra-pg-port').value,
+                        database: 'evident_db', // Placeholder
+                        user: document.getElementById('infra-pg-user').value,
+                        password: document.getElementById('infra-pg-pass').value
+                    }
+                };
+            } else if (target === 'graph_db') {
+                payload = { 
+                    type: document.querySelector('input[name="graph-type"]:checked').value,
+                    uri: document.getElementById('infra-neo-uri').value, 
+                    user: document.getElementById('infra-neo-user').value, 
+                    password: document.getElementById('infra-neo-pass').value 
+                };
+            } else if (target === 'vector_db') {
+                payload = { path: document.getElementById('infra-vector-path').value };
+            }
+
+            try {
+                console.log(`[DEBUG] Attempting connectivity test for target: ${target}`);
+                const res = await fetch('/api/config/test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target, payload })
+                });
+
+                console.log(`[DEBUG] Response received. Status: ${res.status}`);
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error(`[DEBUG] HTTP Error Response:`, errorText);
+                    throw new Error(`Server returned status ${res.status}: ${errorText}`);
+                }
+
+                const result = await res.json();
+                console.log(`[DEBUG] Parsed result:`, result);
+                
+                if (result.success) {
+                    badge.textContent = 'Connected';
+                    badge.className = 'status-badge success';
+                    btnText.innerHTML = '<i class="fas fa-check success-checkmark"></i> Tested';
+                    btn.disabled = false;
+                    statusMap[target] = true;
+                    showToast(result.message, 'success');
+                } else {
+                    badge.textContent = 'Failed';
+                    badge.className = 'status-badge error';
+                    btnText.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Retry';
+                    btn.disabled = false;
+                    statusMap[target] = false;
+                    
+                    if (errorDiv) {
+                        errorDiv.textContent = result.message || 'Unknown infrastructure error';
+                        errorDiv.style.display = 'block';
+                    }
+                    showToast('Validation failed. See details below.', 'error');
+                }
+            } catch (e) {
+                console.error('[DEBUG] System Catch:', e);
+                badge.textContent = 'Error';
+                badge.className = 'status-badge error';
+                btnText.innerHTML = originalHtml;
+                btn.disabled = false;
+                if (errorDiv) {
+                    errorDiv.textContent = 'System connectivity error: ' + e.message;
+                    errorDiv.style.display = 'block';
+                }
+                showToast('System connectivity error', 'error');
+            }
+        }
+
+
+        async function saveEverything() {
+            // 1. Save Infra Config
+            const infraPayload = {
+                config_store: {
+                    type: document.querySelector('input[name="store-type"]:checked').value,
+                    sqlite: { path: document.getElementById('infra-sqlite-path').value },
+                    postgres: {
+                        host: document.getElementById('infra-pg-host').value,
+                        port: document.getElementById('infra-pg-port').value,
+                        database: 'evident_db',
+                        user: document.getElementById('infra-pg-user').value,
+                        password: document.getElementById('infra-pg-pass').value
+                    }
+                },
+                graph_db: {
+                    type: document.querySelector('input[name="graph-type"]:checked').value,
+                    uri: document.getElementById('infra-neo-uri').value,
+                    database: document.getElementById('infra-neo-db').value,
+                    user: document.getElementById('infra-neo-user').value,
+                    password: document.getElementById('infra-neo-pass').value
+                },
+                vector_db: {
+                    path: document.getElementById('infra-vector-path').value,
+                    collection_name: document.getElementById('infra-vector-collection').value,
+                    embedding_model: document.getElementById('infra-vector-model').value
+                }
+            };
+
+            const btn = document.getElementById('btn-save-all');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Persisting Configurations...';
+
+            try {
+                // Save infra
+                const res = await fetch('/api/config/infra', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(infraPayload)
+                });
+                
+                if (res.ok) {
+                    showToast('Configuration saved successfully!', 'success');
+                    setTimeout(() => window.location.href = '/dashboard', 1500);
+                } else {
+                    showToast('Failed to persist infrastructure settings', 'error');
+                }
+            } catch (e) {
+                showToast('Critical system error during save', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-shield-halved"></i> Save Configuration';
+            }
+        }
+
+        async function initConfigDB(target) {
+            if (!confirm('Initialize Database schema? This may overwrite existing data structures.')) return;
+            
+            const btn = document.getElementById(`btn-schema-${target}`);
+            const errorDiv = document.getElementById(`error-${target}`);
+            const originalHtml = btn.innerHTML;
+
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Initializing...';
+            
+            try {
+                const res = await fetch('/api/config/init-db', { method: 'POST' });
+                const result = await res.json();
+                
+                if (res.ok) {
+                    showToast(result.message, 'success');
+                } else {
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Schema Setup Failed: ' + (result.message || 'Internal Server Error');
+                        errorDiv.style.display = 'block';
+                    }
+                    showToast('Schema initialization failed', 'error');
+                }
+            } catch (e) { 
+                if (errorDiv) {
+                    errorDiv.textContent = 'System error during initialization: ' + e.message;
+                    errorDiv.style.display = 'block';
+                }
+                showToast('Connection error', 'error'); 
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type} show`;
+            toast.innerHTML = `<span class="toast-icon">${type === 'success' ? '✅' : '❌'}</span><div class="toast-message">${message}</div>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        async function loadExisting() {
+            try {
+                // Load base config
+                const baseRes = await fetch('/api/config/infra'); // We can get mostly everything from here now
+                const data = await baseRes.json();
+                
+                // Config Store
+                const cs = data.config_store;
+                document.querySelector(`input[name="store-type"][value="${cs.type}"]`).checked = true;
+                document.getElementById('infra-pg-host').value = cs.postgres.host;
+                document.getElementById('infra-pg-port').value = cs.postgres.port;
+                document.getElementById('infra-pg-user').value = cs.postgres.user;
+                
+                // Graph
+                const gdb = data.graph_db;
+                if (gdb.type) {
+                    document.querySelector(`input[name="graph-type"][value="${gdb.type}"]`).checked = true;
+                }
+                document.getElementById('infra-neo-uri').value = gdb.uri;
+                document.getElementById('infra-neo-db').value = gdb.database;
+                document.getElementById('infra-neo-user').value = gdb.user;
+                
+                // Vector
+                const vdb = data.vector_db;
+                document.getElementById('infra-vector-path').value = vdb.path;
+                document.getElementById('infra-vector-collection').value = vdb.collection_name;
+                document.getElementById('infra-vector-model').value = vdb.embedding_model;
+
+                toggleInfraFields();
+            } catch (e) {}
+        }
+
+        document.addEventListener('DOMContentLoaded', loadExisting);
+    </script>
+</body>
+</html>

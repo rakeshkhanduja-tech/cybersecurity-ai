@@ -1,0 +1,16 @@
+Timestamp,Level,Component,Message
+2026-03-08 13:57:56,INFO,Scheduler,Starting scheduled job for okta-identity
+2026-03-08 13:57:56,INFO,Connector,Starting run for okta-identity with schema evident
+2026-03-08 13:57:56,INFO,Auth,Authentication status: Success
+2026-03-08 13:57:56,INFO,API,Fetching data for API: users
+2026-03-08 13:57:56,INFO,HTTP,Executing GET https://dev-377k502ylcs5p2nq.us.auth0.com/api/v2/users
+2026-03-08 13:57:57,INFO,API,Fetched 1 raw records for users
+2026-03-08 13:57:57,INFO,Mapping,Successfully mapped 1 records to evident
+2026-03-08 13:57:57,INFO,Storage,Stored 1 records
+2026-03-08 13:57:57,INFO,API,Fetching data for API: logs
+2026-03-08 13:57:57,INFO,HTTP,Executing GET https://dev-377k502ylcs5p2nq.us.auth0.com/api/v2/logs
+2026-03-08 13:57:58,INFO,API,Fetched 50 raw records for logs
+2026-03-08 13:57:58,INFO,Mapping,Successfully mapped 50 records to evident
+2026-03-08 13:57:58,INFO,Storage,Stored 50 records
+2026-03-08 13:57:58,INFO,Connector,Run completed. Total records stored: 51
+2026-03-08 13:57:58,INFO,Scheduler,Task completed successfully: 51 records generated

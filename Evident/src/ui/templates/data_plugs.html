@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Plugs</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: transparent;
+            color: #e0e6f0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Toolbar ─────────────────────────── */
+        .toolbar {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.12);
+            background: rgba(255,255,255,0.02);
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #e0e6f0;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input::placeholder { color: rgba(255,255,255,0.3); }
+        .search-input:focus { border-color: rgba(79, 195, 247, 0.5); }
+
+        /* ── Connector Grid ──────────────────── */
+        .grid-wrap {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 20px;
+        }
+
+        .grid-wrap::-webkit-scrollbar { width: 5px; }
+        .grid-wrap::-webkit-scrollbar-track { background: transparent; }
+        .grid-wrap::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.3); border-radius: 3px; }
+
+        .connector-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+            user-select: none;
+        }
+        .connector-card:hover {
+            background: rgba(79, 195, 247, 0.06);
+            border-color: rgba(79, 195, 247, 0.25);
+            transform: translateX(-2px);
+        }
+        .connector-card.active {
+            border-color: rgba(79, 195, 247, 0.4);
+            background: rgba(79, 195, 247, 0.07);
+        }
+
+        .card-icon {
+            font-size: 1.6rem;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(79, 195, 247, 0.08);
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .card-info { flex: 1; min-width: 0; }
+        .card-info h4 {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-info p {
+            font-size: 0.77rem;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 24px;
+            transition: background 0.25s;
+        }
+        .slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            transition: transform 0.25s, background 0.25s;
+        }
+        .switch input:checked + .slider { background: rgba(79, 195, 247, 0.7); }
+        .switch input:checked + .slider::before {
+            transform: translateX(18px);
+            background: #fff;
+        }
+
+        .status-badge {
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .status-badge.online {
+            background: rgba(102, 187, 106, 0.15);
+            color: #66bb6a;
+            border: 1px solid rgba(102, 187, 106, 0.3);
+        }
+        .status-badge.offline {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.35);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ── Category tag ────────────────────── */
+        .category-tag {
+            font-size: 0.68rem;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: rgba(103, 58, 183, 0.2);
+            color: rgba(206,147,216,0.8);
+            border: 1px solid rgba(103, 58, 183, 0.25);
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        /* ── Footer ──────────────────────────── */
+        .footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(79, 195, 247, 0.1);
+            background: rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        .btn-apply {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(79,195,247,0.2), rgba(79,195,247,0.1));
+            border: 1px solid rgba(79, 195, 247, 0.4);
+            border-radius: 10px;
+            color: #4fc3f7;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            letter-spacing: 0.02em;
+        }
+        .btn-apply:hover {
+            background: linear-gradient(135deg, rgba(79,195,247,0.3), rgba(79,195,247,0.15));
+            transform: translateY(-1px);
+        }
+        .btn-apply:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── States ──────────────────────────── */
+        .state-msg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 12px;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 40px;
+        }
+        .state-msg .icon { font-size: 2.5rem; }
+        .state-msg .sub { font-size: 0.78rem; color: rgba(255,255,255,0.2); margin-top: 4px; }
+
+        .spinner {
+            width: 28px; height: 28px;
+            border: 3px solid rgba(79,195,247,0.15);
+            border-top-color: rgba(79,195,247,0.7);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .toast-bar {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(10,14,39,0.95);
+            border: 1px solid rgba(79,195,247,0.3);
+            color: #e0e6f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 9999;
+        }
+        .toast-bar.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Search bar -->
+    <div class="toolbar">
+        <input type="text" id="search" class="search-input" placeholder="🔍  Search connectors — AWS, Okta, CrowdStrike..." oninput="filterCards()">
+    </div>
+
+    <!-- Connector list -->
+    <div class="grid-wrap" id="grid">
+        <div class="state-msg" id="loading-state">
+            <div class="spinner"></div>
+            <span>Loading connectors…</span>
+        </div>
+    </div>
+
+    <!-- Apply button -->
+    <div class="footer">
+        <button class="btn-apply" id="btn-apply" onclick="applyConfig()" disabled>Apply Configuration</button>
+    </div>
+
+    <div class="toast-bar" id="toast"></div>
+
+<script>
+    let allConnectors = [];
+    let activeIds     = new Set();
+    let pendingChanges = {};
+
+    // ── Bootstrap ────────────────────────────────────────────────────────────
+    async function init() {
+        try {
+            const [cRes, aRes] = await Promise.all([
+                fetch('/api/connectors'),
+                fetch('/api/connectors/active')
+            ]);
+            const cData = await cRes.json();
+            const aData = await aRes.json();
+
+            allConnectors = cData.connectors || [];
+            (aData.active || []).forEach(a => activeIds.add(a.connector_id));
+
+            renderAll(allConnectors);
+        } catch (err) {
+            document.getElementById('grid').innerHTML = `
+                <div class="state-msg">
+                    <div class="icon">⚠️</div>
+                    <span>Failed to load connectors</span>
+                    <span class="sub">${err.message}</span>
+                </div>`;
+        }
+    }
+
+    // ── Render ───────────────────────────────────────────────────────────────
+    function renderAll(connectors) {
+        const grid = document.getElementById('grid');
+        if (connectors.length === 0) {
+            grid.innerHTML = `
+                <div class="state-msg">
+                    <div class="icon">🔌</div>
+                    <span>No connectors found</span>
+                    <span class="sub">Add entries to data_plugs.json to get started.</span>
+                </div>`;
+            return;
+        }
+
+        // Group by category
+        const groups = {};
+        connectors.forEach(c => {
+            const cat = c.category || 'Other';
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(c);
+        });
+
+        let html = '';
+        for (const [cat, items] of Object.entries(groups)) {
+            html += `<p style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:rgba(79,195,247,0.6);font-weight:600;margin:0 0 10px 2px;margin-top:${html ? '20px' : '0'}">${cat}</p>`;
+            items.forEach(c => {
+                const isActive = activeIds.has(c.id);
+                html += `
+                <div class="connector-card ${isActive ? 'active' : ''}" id="card-${c.id}" onclick="toggleCard('${c.id}')">
+                    <div class="card-icon">${c.icon || '🔗'}</div>
+                    <div class="card-info">
+                        <h4>${c.name}</h4>
+                        <p>${c.description || ''}</p>
+                    </div>
+                    <div class="card-meta">
+                        <span class="status-badge ${isActive ? 'online' : 'offline'}" id="badge-${c.id}">${isActive ? 'Active' : 'Inactive'}</span>
+                        <label class="switch" onclick="event.stopPropagation()">
+                            <input type="checkbox" id="toggle-${c.id}" ${isActive ? 'checked' : ''} onchange="onToggle('${c.id}', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>`;
+            });
+        }
+
+        grid.innerHTML = html;
+        document.getElementById('btn-apply').disabled = false;
+    }
+
+    // ── Interaction ──────────────────────────────────────────────────────────
+    function toggleCard(id) {
+        const cb = document.getElementById(`toggle-${id}`);
+        cb.checked = !cb.checked;
+        onToggle(id, cb.checked);
+    }
+
+    function onToggle(id, isActive) {
+        const card  = document.getElementById(`card-${id}`);
+        const badge = document.getElementById(`badge-${id}`);
+        if (isActive) {
+            card.classList.add('active');
+            badge.textContent = 'Active';
+            badge.className = 'status-badge online';
+        } else {
+            card.classList.remove('active');
+            badge.textContent = 'Inactive';
+            badge.className = 'status-badge offline';
+        }
+        pendingChanges[id] = isActive;
+    }
+
+    function filterCards() {
+        const term = document.getElementById('search').value.toLowerCase().trim();
+        if (!term) { renderAll(allConnectors); return; }
+        const filtered = allConnectors.filter(c =>
+            c.name.toLowerCase().includes(term) ||
+            (c.description || '').toLowerCase().includes(term) ||
+            (c.category || '').toLowerCase().includes(term)
+        );
+        renderAll(filtered);
+    }
+
+    // ── Apply ────────────────────────────────────────────────────────────────
+    async function applyConfig() {
+        const btn = document.getElementById('btn-apply');
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+
+        // Collect final state of ALL cards
+        const saves = allConnectors.map(c => {
+            const cb = document.getElementById(`toggle-${c.id}`);
+            const isActive = cb ? cb.checked : activeIds.has(c.id);
+            return fetch('/api/connectors/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ connector_id: c.id, config: { is_active: isActive } })
+            });
+        });
+
+        try {
+            await Promise.all(saves);
+            await fetch('/api/rebuild', { method: 'POST' }).catch(() => {});
+            showToast('✓  Configuration saved & intelligence layer rebuilding…');
+            pendingChanges = {};
+            // Notify parent window (dashboard) to refresh sources
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'dataPlugsSaved' }, '*');
+            }
+        } catch (e) {
+            showToast('⚠  Failed to save — please retry');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Apply Configuration';
+        }
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    init();
+</script>
+</body>
+</html>

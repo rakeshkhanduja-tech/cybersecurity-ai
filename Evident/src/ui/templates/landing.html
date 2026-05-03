@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident - Security Intelligence Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='landing.css') }}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+
+<body>
+    <div class="landing-container">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text">Evident</span>
+            </a>
+            <div class="nav-actions">
+                <a href="#login" class="btn btn-outline">Sign In</a>
+                <a id="nav-cta" href="/dashboard" class="btn btn-primary">Launch Dashboard</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero">
+            <span class="hero-tagline">Autonomous Security Intelligence</span>
+            <h1 class="hero-title">Investigate Threats with Agentic Reasoning</h1>
+            <p class="hero-subtitle">
+                The world's first security-native intelligence agent that maps your entire attack surface into a semantic context graph for real-time investigation.
+            </p>
+            <div class="hero-actions">
+                <a id="hero-cta" href="/dashboard" class="btn btn-primary" style="padding: 18px 40px; font-size: 1.1rem;">
+                    Launch Dashboard <span>→</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Signal Sources Section -->
+        <section class="content-section">
+            <h2 class="section-title">Ingested Security Signals</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <span class="card-icon">🦅</span>
+                    <h3 class="card-title">CrowdStrike Falcon</h3>
+                    <p class="card-text">Direct integration with Falcon Query API for real-time process and network event correlation.</p>
+                    <div class="tag-list">
+                        <span class="tag">EDR</span><span class="tag">XDR</span><span class="tag">Real-time</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🆔</span>
+                    <h3 class="card-title">Active Directory</h3>
+                    <p class="card-text">Mapping identity signals, Kerberos tickets, and privilege escalations into the context graph.</p>
+                    <div class="tag-list">
+                        <span class="tag">IAM</span><span class="tag">NTLM</span><span class="tag">Audit</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <span class="card-icon">☁️</span>
+                    <h3 class="card-title">AWS CloudTrail</h3>
+                    <p class="card-text">Comprehensive monitoring of API calls and configuration changes across multi-account environments.</p>
+                    <div class="tag-list">
+                        <span class="tag">Cloud</span><span class="tag">Audit</span><span class="tag">Config</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Semantic Models Section -->
+        <section class="content-section" style="background: rgba(255,255,255,0.01);">
+            <h2 class="section-title">Supported Intelligence Models</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <span class="card-icon">✨</span>
+                    <h3 class="card-title">Google Gemini 2.0</h3>
+                    <p class="card-text">Leveraging long-context windows for deep correlation across massive security datasets.</p>
+                    <div class="tag-list">
+                        <span class="tag">Native</span><span class="tag">2.0 Flash</span><span class="tag">High Speed</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🧠</span>
+                    <h3 class="card-title">OpenAI GPT-4o</h3>
+                    <p class="card-text">State-of-the-art reasoning for complex threat hunting and vulnerability logic interpretation.</p>
+                    <div class="tag-list">
+                        <span class="tag">Reasoning</span><span class="tag">Omni</span><span class="tag">Security</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🏛️</span>
+                    <h3 class="card-title">Anthropic Claude 3.5</h3>
+                    <p class="card-text">High-precision policy analysis and autonomous security response drafting.</p>
+                    <div class="tag-list">
+                        <span class="tag">Sonnet</span><span class="tag">Policy</span><span class="tag">Guardrails</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agentic Investigation Section -->
+        <section class="content-section">
+            <h2 class="section-title">Agentic Investigation Capabilities</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <span class="card-icon">🤖</span>
+                    <h3 class="card-title">Autonomous Threat Hunting</h3>
+                    <p class="card-text">Specialized agents that continuously scan for IOCs and anomalous behaviors across your infrastructure.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🕸️</span>
+                    <h3 class="card-title">Knowledge Graph Context</h3>
+                    <p class="card-text">Automatic mapping of entities—users, hosts, files—into a semantic graph for instant context retrieval.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">⚡</span>
+                    <h3 class="card-title">Automated Remediation</h3>
+                    <p class="card-text">Agents propose and execute containment strategies, from disabling accounts to isolating endpoints.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login" class="content-section">
+            <div class="auth-section">
+                <h2 class="hero-title" style="font-size: 3rem; margin-bottom: 20px;">Enterprise Sign In</h2>
+                <p class="hero-subtitle">Secure access for enterprise security teams via OAuth 2.0 / OIDC.</p>
+                <div class="login-options">
+                    <a href="#" class="login-btn google">
+                        <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20" alt="Google">
+                        Sign in with Google
+                    </a>
+                    <a href="#" class="login-btn okta">
+                        <img src="https://www.okta.com/sites/default/files/favicon.ico" width="20" alt="Okta">
+                        Sign in with Okta
+                    </a>
+                    <a href="#" class="login-btn azure">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" width="20" alt="Azure">
+                        Sign in with Microsoft
+                    </a>
+                </div>
+                <p style="margin-top: 30px; font-size: 0.8rem; color: #555;">
+                    Authentication providers can be configured in System Settings.
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="padding: 60px; text-align: center; border-top: 1px solid var(--border-color); color: #444;">
+            <p>&copy; 2026 Evident Security Intelligence. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Check configuration status on load
+        async function checkConfig() {
+            try {
+                const response = await fetch('/api/config/check');
+                const data = await response.json();
+                
+                const ctaBtn = document.getElementById('hero-cta');
+                const navCta = document.getElementById('nav-cta');
+                
+                if (!data.is_configured) {
+                    ctaBtn.innerHTML = 'Begin Setup <span>→</span>';
+                    ctaBtn.href = '/setup';
+                    navCta.innerHTML = 'Begin Setup';
+                    navCta.href = '/setup';
+                }
+            } catch (error) {
+                console.error('Failed to check config:', error);
+            }
+        }
+        
+        checkConfig();
+    </script>
+</body>
+</html>

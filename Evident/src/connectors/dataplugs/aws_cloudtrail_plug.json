@@ -1,0 +1,73 @@
+{
+    "id": "aws-cloudtrail",
+    "name": "AWS CloudTrail",
+    "base_url": "boto3",
+    "auth": {
+        "type": "aws_credentials",
+        "param_mapping": {
+            "aws_access_key": "aws_access_key_id",
+            "aws_secret_key": "aws_secret_access_key",
+            "region": "region_name"
+        }
+    },
+    "apis": [
+        {
+            "id": "events",
+            "signal": "signin_logs",
+            "description": "Lookup management events from CloudTrail",
+            "method": "boto3",
+            "service": "cloudtrail",
+            "operation": "lookup_events",
+            "params": {
+                "MaxResults": 50,
+                "LookupAttributes": [
+                    {
+                        "AttributeKey": "EventCategory",
+                        "AttributeValue": "Management"
+                    }
+                ]
+            },
+            "result_path": "Events",
+            "pagination": {
+                "type": "nextToken",
+                "param": "NextToken",
+                "next_key": "NextToken"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "signin_logs": {
+                "event_id": "EventId",
+                "name": "EventName",
+                "source": "EventSource",
+                "user": "Username",
+                "timestamp": "EventTime"
+            },
+            "assets": {
+                "id": "Resources[0].ResourceName",
+                "name": "Resources[0].ResourceName",
+                "type": "Resources[0].ResourceType",
+                "region": "AwsRegion",
+                "last_seen": "EventTime",
+                "managed_by": "Username"
+            }
+        },
+        "ocsf": {
+            "class_uid": 3002,
+            "class_name": "Cloud Audit Activity",
+            "field_map": {
+                "time": "EventTime",
+                "activity_id": 1,
+                "actor.user.name": "Username",
+                "api.operation": "EventName",
+                "api.service.name": "EventSource",
+                "cloud.region": "AwsRegion",
+                "cloud.provider": "AWS",
+                "resource.uid": "Resources[0].ResourceName",
+                "resource.type": "Resources[0].ResourceType",
+                "status_id": "ReadOnly"
+            }
+        }
+    }
+}

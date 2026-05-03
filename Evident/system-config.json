@@ -1,0 +1,33 @@
+{
+    "vector_db": {
+        "path": "./chroma_db",
+        "collection_name": "evident_security",
+        "embedding_model": "all-MiniLM-L6-v2"
+    },
+    "graph_db": {
+        "type": "mock",
+        "uri": "bolt://localhost:7687",
+        "database": "neo4j",
+        "user": "neo4j",
+        "password": "your_neo4j_password_here"
+    },
+    "config_store": {
+        "type": "sqlite",
+        "sqlite": {
+            "path": "data/connectors.db"
+        },
+        "postgres": {
+            "host": "localhost",
+            "port": 5432,
+            "database": "evident_db",
+            "user": "postgres",
+            "password": ""
+        }
+    },
+    "agent": {
+        "max_context_length": 8000,
+        "retrieval_top_k": 5,
+        "graph_traversal_depth": 3,
+        "enable_reasoning_trace": true
+    }
+}

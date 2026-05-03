@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident Settings - Enterprise Security Intelligence</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: radial-gradient(circle at top right, #1a1f3a 0%, #0a0e27 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .setup-container {
+            width: 95%;
+            max-width: 1400px;
+            background: rgba(20, 27, 61, 0.4);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(79, 195, 247, 0.15);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7);
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .setup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setup-title h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4fc3f7, #66bb6a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .setup-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 6px;
+        }
+
+        .btn-home {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .settings-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .settings-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(79, 195, 247, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-title i { color: #4fc3f7; }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .form-group select, .form-group input, .form-group button {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.1);
+        }
+
+        .model-select-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .model-select-wrapper select { flex: 1; }
+        .model-select-wrapper button {
+            width: auto;
+            white-space: nowrap;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            padding: 0 15px;
+        }
+
+        .btn-submit-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4fc3f7, #0288d1);
+            border: none;
+            color: #fff;
+            padding: 16px 60px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(79, 195, 247, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(79, 195, 247, 0.4);
+        }
+
+        .hidden { display: none !important; }
+
+        #setup-progress {
+            margin-top: 20px;
+            padding: 40px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            border: 1px solid #4fc3f7;
+            text-align: center;
+        }
+
+        #setup-progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        #setup-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4fc3f7, #66bb6a);
+            transition: width 0.3s ease;
+        }
+
+        .log-box {
+            font-family: 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            color: #aaa;
+            text-align: left;
+            margin-top: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .error-actions {
+            margin-top: 24px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="setup-container">
+    <header class="setup-header">
+        <div class="setup-title">
+            <h1>Evident Settings</h1>
+            <p>Intelligence Infrastructure & Agentic Core Configuration</p>
+        </div>
+        <a href="/dashboard" class="btn-home"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </header>
+
+    <div id="setup-form">
+        <div class="settings-grid">
+            <!-- Card 1: Core Intelligence -->
+            <div class="settings-card">
+                <h2 class="card-title"><i class="fas fa-brain"></i> Core Intelligence</h2>
+                
+                <div class="form-group">
+                    <label>Semantic Security Model</label>
+                    <select id="setup-schema">
+                        <option value="evident">Evident Core Attributes (Default)</option>
+                        <option value="ocsf">OCSF Schema Compliance</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Security Signals Source</label>
+                    <select id="setup-source-mode" onchange="toggleStorageSections()">
+                        <option value="sample">Sample Security Signals (Demonstration)</option>
+                        <option value="livedata">Live Security Signals</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Card 2: AI Engine -->
+            <div class="settings-card">
+                <h2 class="card-title"><i class="fas fa-microchip"></i> AI Engine</h2>
+                <div class="form-group">
+                    <label>LLM Provider</label>
+                    <select id="setup-provider" onchange="resetModelSelect()">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="claude">Anthropic Claude</option>
+                        <option value="openai">OpenAI GPT</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>API Key</label>
+                    <input type="password" id="setup-api-key" placeholder="Enter API Key">
+                </div>
+                <div class="form-group">
+                    <label>Provider Model</label>
+                    <div class="model-select-wrapper">
+                        <select id="setup-model" disabled>
+                            <option value="gemini-2.0-flash">gemini-2.0-flash (Default)</option>
+                        </select>
+                        <button type="button" id="btn-fetch-models" onclick="fetchModels()">Refresh</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Storage Configuration -->
+            <div class="settings-card" id="storage-section-container">
+                <h2 class="card-title"><i class="fas fa-hdd"></i> Infrastructure & Storage</h2>
+                
+                <div id="storage-empty-state" style="text-align: center; padding: 20px; color: #666; font-size: 0.9rem;">
+                    Local Demonstration mode active. Storage settings are locked to internal sample data.
+                </div>
+
+                <div id="storage-section" class="hidden">
+                    <div class="form-group">
+                        <label>Storage Medium</label>
+                        <select id="setup-storage-type" onchange="toggleStorageFields()">
+                            <option value="local">Local Directory</option>
+                            <option value="aws_s3">Cloud Storage - AWS S3</option>
+                            <option value="azure">Cloud Storage - Azure</option>
+                            <option value="gcs">Cloud Storage - GCP</option>
+                        </select>
+                    </div>
+
+                    <div id="storage-fields-local">
+                        <div class="form-group">
+                            <label>Local Directory Path</label>
+                            <input type="text" id="storage-local-path" placeholder="e.g. C:\Data\evidentsignals">
+                        </div>
+                    </div>
+
+                    <div id="storage-fields-aws" class="hidden">
+                        <div class="form-group"><label>AWS S3 Bucket</label><input type="text" id="storage-aws-bucket"></div>
+                        <div class="form-group"><label>AWS Region</label><input type="text" id="storage-aws-region" placeholder="e.g. us-east-1"></div>
+                        <div class="form-group"><label>Secret Manager Path</label><input type="text" id="storage-aws-secret"></div>
+                    </div>
+
+                    <div id="storage-fields-azure" class="hidden">
+                        <div class="form-group"><label>Azure Account</label><input type="text" id="storage-azure-account"></div>
+                        <div class="form-group"><label>Vault URL</label><input type="text" id="storage-azure-vault"></div>
+                    </div>
+
+                    <div id="storage-fields-gcs" class="hidden">
+                        <div class="form-group"><label>GCP Project</label><input type="text" id="storage-gcs-project"></div>
+                        <div class="form-group"><label>GCS Bucket</label><input type="text" id="storage-gcs-bucket"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-submit-container">
+            <button id="btn-submit-setup" class="btn-primary" onclick="submitSetup()">
+                <i class="fas fa-save" style="margin-right: 12px;"></i> Save Configuration
+            </button>
+            <p style="margin-top: 16px; font-size: 0.85rem; color: #666;">Saving these settings will trigger a re-initialization of the Security Intelligence Agent.</p>
+        </div>
+    </div>
+
+    <div id="setup-progress" class="hidden">
+        <h3 id="progress-title" style="color:#4fc3f7; margin-bottom: 10px; font-size: 1.5rem;">Initializing Environment</h3>
+        <p id="progress-message" style="color:#888; font-size:1rem; min-height:24px;"></p>
+        <div id="setup-progress-bar-container">
+            <div id="setup-progress-bar"></div>
+        </div>
+        <div class="log-box" id="progress-log"></div>
+        <div class="error-actions hidden" id="error-actions">
+            <button class="btn-home" onclick="goBackToSetup()">← Edit Settings</button>
+            <button class="btn-primary" style="padding: 10px 24px; font-size: 0.9rem;" onclick="retryInit()">↺ Retry Initialization</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadExistingConfig() {
+        try {
+            const res = await fetch('/api/config');
+            if (!res.ok) return;
+            const config = await res.json();
+
+            if (config.schema_preference) document.getElementById('setup-schema').value = config.schema_preference;
+            if (config.source_mode) {
+                document.getElementById('setup-source-mode').value = config.source_mode;
+                toggleStorageSections();
+            }
+            if (config.provider) document.getElementById('setup-provider').value = config.provider;
+            if (config.api_key) document.getElementById('setup-api-key').value = config.api_key;
+            if (config.model_id) {
+                const modelSelect = document.getElementById('setup-model');
+                modelSelect.innerHTML = `<option value="${config.model_id}">${config.model_id}</option>`;
+                modelSelect.disabled = false;
+            }
+
+            if (config.storage_config) {
+                const sc = config.storage_config;
+                if (sc.storage_type) {
+                    document.getElementById('setup-storage-type').value = sc.storage_type;
+                    toggleStorageFields();
+                    if (sc.storage_type === 'local' && config.data_path) document.getElementById('storage-local-path').value = config.data_path;
+                    if (sc.storage_type === 'azure') {
+                        document.getElementById('storage-azure-account').value = sc.azure_account_name || '';
+                        document.getElementById('storage-azure-vault').value = sc.azure_keyvault_url || '';
+                    } else if (sc.storage_type === 'aws_s3') {
+                        document.getElementById('storage-aws-bucket').value = sc.aws_s3_bucket || '';
+                        document.getElementById('storage-aws-region').value = sc.aws_region || '';
+                        document.getElementById('storage-aws-secret').value = sc.aws_secret_name || '';
+                    } else if (sc.storage_type === 'gcs') {
+                        document.getElementById('storage-gcs-project').value = sc.gcp_project || '';
+                        document.getElementById('storage-gcs-bucket').value = sc.gcs_bucket || '';
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load existing config:', e);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadExistingConfig);
+
+    function toggleStorageSections() {
+        const mode = document.getElementById('setup-source-mode').value;
+        const storageSection = document.getElementById('storage-section');
+        const emptyState = document.getElementById('storage-empty-state');
+        if (mode === 'livedata') {
+            storageSection.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+        } else {
+            storageSection.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+        }
+    }
+
+    function toggleStorageFields() {
+        const type = document.getElementById('setup-storage-type').value;
+        document.getElementById('storage-fields-local').classList.add('hidden');
+        document.getElementById('storage-fields-aws').classList.add('hidden');
+        document.getElementById('storage-fields-azure').classList.add('hidden');
+        document.getElementById('storage-fields-gcs').classList.add('hidden');
+
+        if (type === 'local') document.getElementById('storage-fields-local').classList.remove('hidden');
+        if (type === 'aws_s3') document.getElementById('storage-fields-aws').classList.remove('hidden');
+        if (type === 'azure') document.getElementById('storage-fields-azure').classList.remove('hidden');
+        if (type === 'gcs') document.getElementById('storage-fields-gcs').classList.remove('hidden');
+    }
+
+    function resetModelSelect() {
+        const select = document.getElementById('setup-model');
+        select.innerHTML = '<option>Click Refresh to load models</option>';
+        select.disabled = true;
+    }
+
+    async function fetchModels() {
+        const provider = document.getElementById('setup-provider').value;
+        const apiKey = document.getElementById('setup-api-key').value;
+        const select = document.getElementById('setup-model');
+        const btn = document.getElementById('btn-fetch-models');
+        btn.innerText = "Loading...";
+        btn.disabled = true;
+        try {
+            const response = await fetch('/api/models', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ provider, api_key: apiKey })
+            });
+            const data = await response.json();
+            if (data.models && data.models.length > 0) {
+                select.innerHTML = data.models.map(m => `<option value="${m}">${m}</option>`).join('');
+                select.disabled = false;
+            } else {
+                select.innerHTML = '<option value="">No models available</option>';
+            }
+        } catch (e) {
+            select.innerHTML = '<option value="">Error fetching models</option>';
+        } finally {
+            btn.innerText = "Refresh";
+            btn.disabled = false;
+        }
+    }
+
+    async function submitSetup() {
+        const provider = document.getElementById('setup-provider').value;
+        let apiKey = document.getElementById('setup-api-key').value;
+        let modelId = document.getElementById('setup-model').value;
+        const schemaId = document.getElementById('setup-schema').value;
+        const sourceMode = document.getElementById('setup-source-mode').value;
+        const storageType = document.getElementById('setup-storage-type').value;
+
+        const payload = { schema_preference: schemaId, source_mode: sourceMode, provider: provider };
+        if (apiKey) payload.api_key = apiKey;
+        if (modelId && !modelId.includes('Click')) payload.model_id = modelId;
+
+        if (sourceMode === 'livedata') {
+            payload.storage_config = { storage_type: storageType };
+            if (storageType === 'local') payload.data_path = document.getElementById('storage-local-path').value;
+            else if (storageType === 'azure') {
+                payload.storage_config.azure_account_name = document.getElementById('storage-azure-account').value;
+                payload.storage_config.azure_keyvault_url = document.getElementById('storage-azure-vault').value;
+            } else if (storageType === 'aws_s3') {
+                payload.storage_config.aws_s3_bucket = document.getElementById('storage-aws-bucket').value;
+                payload.storage_config.aws_region = document.getElementById('storage-aws-region').value;
+                payload.storage_config.aws_secret_name = document.getElementById('storage-aws-secret').value;
+            } else if (storageType === 'gcs') {
+                payload.storage_config.gcp_project = document.getElementById('storage-gcs-project').value;
+                payload.storage_config.gcs_bucket = document.getElementById('storage-gcs-bucket').value;
+            }
+        }
+
+        document.getElementById('setup-form').classList.add('hidden');
+        document.getElementById('setup-progress').classList.remove('hidden');
+        document.getElementById('progress-message').innerText = "Submitting configuration...";
+
+        try {
+            await fetch('/api/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            pollStatus();
+        } catch (e) {
+            alert('Failed to submit configuration.');
+        }
+    }
+
+    async function pollStatus() {
+        const pInterval = setInterval(async () => {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                if (data.details || data.step) document.getElementById('progress-message').innerText = data.details || data.step;
+                const logBox = document.getElementById('progress-log');
+                if (data.log && data.log.length > 0) {
+                    logBox.textContent = data.log.join('\n');
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+                if (data.progress) document.getElementById('setup-progress-bar').style.width = data.progress + '%';
+                if (data.ready) {
+                    clearInterval(pInterval);
+                    document.getElementById('setup-progress-bar').style.width = '100%';
+                    document.getElementById('progress-message').innerText = 'Initialization complete! Redirecting...';
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 1000);
+                } else if (data.status === 'error') {
+                    clearInterval(pInterval);
+                    document.getElementById('setup-progress-bar').style.width = '100%';
+                    document.getElementById('progress-title').innerText = 'Initialization Failed';
+                    document.getElementById('progress-message').innerText = data.details || 'Error occurred.';
+                    document.getElementById('error-actions').classList.remove('hidden');
+                }
+            } catch (e) {}
+        }, 1200);
+    }
+
+    function goBackToSetup() {
+        document.getElementById('setup-form').classList.remove('hidden');
+        document.getElementById('setup-progress').classList.add('hidden');
+        document.getElementById('error-actions').classList.add('hidden');
+    }
+
+    async function retryInit() {
+        document.getElementById('error-actions').classList.add('hidden');
+        try {
+            await fetch('/api/rebuild', { method: 'POST' });
+            pollStatus();
+        } catch (e) {}
+    }
+</script>
+</body>
+</html>

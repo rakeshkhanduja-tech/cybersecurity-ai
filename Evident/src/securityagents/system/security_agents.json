@@ -1,0 +1,195 @@
+[
+    {
+        "id": "compromised-account-hunter",
+        "name": "Compromised Account Hunter",
+        "description": "Detects patterns of account takeover by correlating failed logins with successful ones from new locations.",
+        "icon": "🕵️‍♂️",
+        "category": "Identity",
+        "profile": {
+            "system_prompt": "You are a specialized identity security agent. Analyze sign-in logs specifically looking for brute force followed by success, impossible travel, and MFA fatigue patterns.",
+            "mode": "interactive",
+            "frequency_minutes": 30
+        },
+        "supported_signals": [
+            "signin_logs",
+            "user_roles"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "cloud-resource-auditor",
+        "name": "Cloud Resource Auditor",
+        "description": "Identifies misconfigured cloud resources like public buckets or wide-open security groups.",
+        "icon": "☁️",
+        "category": "Infrastructure",
+        "profile": {
+            "system_prompt": "You are a cloud infrastructure auditor. Scan cloud configurations for security best practices (CIS benchmarks) and flag any high-risk exposures.",
+            "mode": "autonomous",
+            "frequency_minutes": 60
+        },
+        "supported_signals": [
+            "cloud_configs",
+            "assets"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "privilege-escalation-monitor",
+        "name": "Privilege Escalation Monitor",
+        "description": "Monitors for unusual role assignments or administrative permission changes across systems.",
+        "icon": "🪜",
+        "category": "Identity",
+        "profile": {
+            "system_prompt": "You are a privilege escalation detective. Look for unauthorized 'Admin' role assignments, especially those granted by non-standard admins.",
+            "mode": "autonomous",
+            "frequency_minutes": 15
+        },
+        "supported_signals": [
+            "user_roles",
+            "role_permissions",
+            "logs"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "vulnerability-prioritizer",
+        "name": "Vulnerability Prioritizer",
+        "description": "Correlates critical CVEs with your active assets to surface the most urgent risks.",
+        "icon": "🎯",
+        "category": "Vulnerability",
+        "profile": {
+            "system_prompt": "You are a vulnerability analyst. Compare CVE data with asset inventory to identify internet-facing systems with known exploitable vulnerabilities.",
+            "mode": "interactive",
+            "frequency_minutes": 1440
+        },
+        "supported_signals": [
+            "cves",
+            "assets"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "data-exfiltration-sentinel",
+        "name": "Data Exfiltration Sentinel",
+        "description": "Monitors for large data movements or unusual download patterns from sensitive storage.",
+        "icon": "📤",
+        "category": "Data",
+        "profile": {
+            "system_prompt": "You are a data protection sentinel. Monitor logs for high-volume data transfers to unknown IP addresses or external domains.",
+            "mode": "autonomous",
+            "frequency_minutes": 10
+        },
+        "supported_signals": [
+            "logs",
+            "assets"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "insider-threat-detective",
+        "name": "Insider Threat Detective",
+        "description": "Analyzes user behavior for significant anomalies in access times, locations, or resource types.",
+        "icon": "🎭",
+        "category": "Behavioral",
+        "profile": {
+            "system_prompt": "You are a behavioral analyst. Baseline normal user activity and flag significant deviations, such as late-night access to HR or Finance data.",
+            "mode": "interactive",
+            "frequency_minutes": 120
+        },
+        "supported_signals": [
+            "logs",
+            "user_roles",
+            "signin_logs"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "compliance-guardian",
+        "name": "Compliance Guardian",
+        "description": "Checks configurations and activity against frameworks like CIS, SOC2, or HIPAA.",
+        "icon": "⚖️",
+        "category": "Compliance",
+        "profile": {
+            "system_prompt": "You are a compliance auditor. Verify that all security signals align with mapped SOC2 controls and CIS hardening guides.",
+            "mode": "autonomous",
+            "frequency_minutes": 720
+        },
+        "supported_signals": [
+            "cloud_configs",
+            "assets",
+            "user_roles"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "malware-outbreak-responder",
+        "name": "Malware Outbreak Responder",
+        "description": "Tracks signals of infection across multiple hosts using endpoint security logs.",
+        "icon": "🦠",
+        "category": "Endpoint",
+        "profile": {
+            "system_prompt": "You are an incident responder. Correlate EDR logs to detect lateral movement or multi-host infections within the same subnet.",
+            "mode": "autonomous",
+            "frequency_minutes": 5
+        },
+        "supported_signals": [
+            "logs",
+            "assets"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "phishing-impact-analyzer",
+        "name": "Phishing Impact Analyzer",
+        "description": "Correlates email logs with sign-in activity to detect successful phishing outcomes.",
+        "icon": "🎣",
+        "category": "Identity",
+        "profile": {
+            "system_prompt": "You are a phishing investigator. Correlate reports of phishing emails with subsequent sign-in activity from unusual browser agents or IPs.",
+            "mode": "interactive",
+            "frequency_minutes": 60
+        },
+        "supported_signals": [
+            "logs",
+            "signin_logs"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    },
+    {
+        "id": "shadow-it-scanner",
+        "name": "Shadow IT Scanner",
+        "description": "Detects use of unauthorized cloud applications or external API keys within the environment.",
+        "icon": "🌑",
+        "category": "Infrastructure",
+        "profile": {
+            "system_prompt": "You are a shadow IT scanner. Look for API activity or authentication events originating from unapproved third-party SaaS providers.",
+            "mode": "autonomous",
+            "frequency_minutes": 1440
+        },
+        "supported_signals": [
+            "logs",
+            "cloud_configs"
+        ],
+        "default_config": {
+            "use_global_llm": true
+        }
+    }
+]

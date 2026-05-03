@@ -1,0 +1,427 @@
+[
+    {
+        "comment": "=== PRIVILEGE ESCALATION MONITOR: Overprivileged roles for investigation ===",
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-001"
+        },
+        "finding": {
+            "uid": "PERM-001",
+            "title": "System Administrator Has Unrestricted Admin Access to All Systems",
+            "types": [
+                "Overprivileged Role",
+                "Privilege Risk"
+            ],
+            "desc": "ROLE-009 (System Administrator) assigned to admin, temp_admin has ADMIN on ALL systems globally. Blast radius: complete org compromise."
+        },
+        "actor": {
+            "user": {
+                "name": "admin",
+                "uid": "USR-009"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-009",
+            "name": "System Administrator",
+            "resources": [
+                {
+                    "type": "all_systems",
+                    "action": "admin",
+                    "scope": "global"
+                },
+                {
+                    "type": "security_settings",
+                    "action": "modify",
+                    "scope": "global"
+                }
+            ],
+            "assignees": [
+                "admin (USR-009)",
+                "temp_admin (USR-010)"
+            ],
+            "risk_level": "critical"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-002"
+        },
+        "finding": {
+            "uid": "PERM-002",
+            "title": "DevOps Engineer Can Deploy to Production Without Approval Gate",
+            "types": [
+                "Overprivileged Role",
+                "Segregation of Duties Violation"
+            ],
+            "desc": "ROLE-003 allows global production deploy without change management approval. mike.johnson can push untested code to prod."
+        },
+        "actor": {
+            "user": {
+                "name": "mike.johnson",
+                "uid": "USR-003"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-003",
+            "name": "DevOps Engineer",
+            "resources": [
+                {
+                    "type": "production",
+                    "action": "deploy",
+                    "scope": "global"
+                }
+            ],
+            "risk_level": "critical"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-003"
+        },
+        "finding": {
+            "uid": "PERM-003",
+            "title": "Database Administrator Has Full Admin on All Databases",
+            "types": [
+                "Overprivileged Role",
+                "Data Exposure Risk"
+            ],
+            "desc": "db_admin (ROLE-016) has unrestricted admin access across all databases including production PII stores."
+        },
+        "actor": {
+            "user": {
+                "name": "db_admin",
+                "uid": "USR-014"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-016",
+            "name": "Database Administrator",
+            "resources": [
+                {
+                    "type": "databases",
+                    "action": "admin",
+                    "scope": "global"
+                },
+                {
+                    "type": "database_backups",
+                    "action": "manage",
+                    "scope": "global"
+                }
+            ],
+            "risk_level": "critical"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-004"
+        },
+        "finding": {
+            "uid": "PERM-004",
+            "title": "Security Administrator Can Modify Firewall Rules Without Second Approval",
+            "types": [
+                "High Privilege Action",
+                "Segregation of Duties Violation"
+            ]
+        },
+        "actor": {
+            "user": {
+                "name": "sarah.williams",
+                "uid": "USR-008"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-015",
+            "name": "Security Administrator",
+            "resources": [
+                {
+                    "type": "firewall",
+                    "action": "modify",
+                    "scope": "global"
+                },
+                {
+                    "type": "security_policies",
+                    "action": "modify",
+                    "scope": "global"
+                }
+            ],
+            "risk_level": "critical"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-005"
+        },
+        "finding": {
+            "uid": "PERM-005",
+            "title": "Secret HR Auditor Role: Finance Manager Can Approve Financial Reports",
+            "types": [
+                "Segregation of Duties",
+                "Financial Control Violation"
+            ],
+            "desc": "lisa.anderson (Finance Manager) can both write and approve financial reports, violating 4-eyes principle."
+        },
+        "actor": {
+            "user": {
+                "name": "lisa.anderson",
+                "uid": "USR-006"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-006",
+            "name": "Finance Manager",
+            "resources": [
+                {
+                    "type": "financial_system",
+                    "action": "write",
+                    "scope": "department"
+                },
+                {
+                    "type": "financial_reports",
+                    "action": "approve",
+                    "scope": "department"
+                }
+            ],
+            "risk_level": "high"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-006"
+        },
+        "finding": {
+            "uid": "PERM-006",
+            "title": "Senior Developer Has Global Write to All Code Repositories",
+            "types": [
+                "Broad Write Access",
+                "Source Code Risk"
+            ]
+        },
+        "actor": {
+            "user": {
+                "name": "jane.smith",
+                "uid": "USR-002"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-002",
+            "name": "Senior Developer",
+            "resources": [
+                {
+                    "type": "code_repository",
+                    "action": "write",
+                    "scope": "global"
+                },
+                {
+                    "type": "code_repository",
+                    "action": "approve_pr",
+                    "scope": "global"
+                }
+            ],
+            "risk_level": "high"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-007"
+        },
+        "finding": {
+            "uid": "PERM-007",
+            "title": "Service Account Has Perpetual Global API Execute - No Rotation",
+            "types": [
+                "Persistent Service Account Risk",
+                "Credential Management"
+            ]
+        },
+        "actor": {
+            "user": {
+                "name": "service_account",
+                "uid": "USR-012"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-010",
+            "name": "Service Account",
+            "resources": [
+                {
+                    "type": "api",
+                    "action": "execute",
+                    "scope": "global"
+                }
+            ],
+            "credential_last_rotated": "2023-10-01",
+            "days_since_rotation": 97,
+            "risk_level": "medium"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-008"
+        },
+        "finding": {
+            "uid": "PERM-008",
+            "title": "HR Role Has Read Access to Payroll - Audit Required",
+            "types": [
+                "Sensitive Data Access",
+                "Compliance Check"
+            ]
+        },
+        "actor": {
+            "user": {
+                "name": "emily.davis",
+                "uid": "USR-004"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-004",
+            "name": "HR Manager",
+            "resources": [
+                {
+                    "type": "payroll",
+                    "action": "read",
+                    "scope": "department"
+                },
+                {
+                    "type": "hr_system",
+                    "action": "write",
+                    "scope": "department"
+                }
+            ],
+            "risk_level": "high"
+        }
+    },
+    {
+        "class_uid": 6003,
+        "class_name": "Compliance Finding",
+        "activity_id": 2,
+        "activity_name": "Evaluate",
+        "time": 1704240000,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident IAM Analyzer",
+                "vendor_name": "Evident"
+            },
+            "uid": "PERM-009"
+        },
+        "finding": {
+            "uid": "PERM-009",
+            "title": "Network Administrator Can Configure Critical Network Devices Without Review",
+            "desc": "network_admin has configure rights on routers, switches, and firewalls with no MFA-required RBAC gate."
+        },
+        "actor": {
+            "user": {
+                "name": "network_admin",
+                "uid": "USR-015"
+            }
+        },
+        "policy": {
+            "uid": "ROLE-017",
+            "name": "Network Administrator",
+            "resources": [
+                {
+                    "type": "network_devices",
+                    "action": "configure",
+                    "scope": "global"
+                }
+            ],
+            "risk_level": "critical"
+        }
+    }
+]

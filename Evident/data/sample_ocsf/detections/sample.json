@@ -1,0 +1,25 @@
+[
+    {
+        "class_name": "Detection Finding",
+        "class_uid": 2004,
+        "activity_id": 1,
+        "time": "2023-11-15T10:00:00Z",
+        "severity": "High",
+        "finding": {
+            "title": "Suspicious PowerShell Execution",
+            "uid": "det-101"
+        },
+        "device": {
+            "hostname": "test-workspace-01",
+            "os": "Windows 11",
+            "ip": "10.0.0.10"
+        },
+        "actor": {
+            "user": {
+                "uid": "user-admin",
+                "name": "Admin User",
+                "email_addr": "admin@evident.ai"
+            }
+        }
+    }
+]

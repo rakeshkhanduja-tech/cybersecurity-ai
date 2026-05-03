@@ -1,0 +1,389 @@
+[
+    {
+        "comment": "=== VULNERABILITY PRIORITIZER + DATA EXFILTRATION SENTINEL: Asset Inventory ===",
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-001"
+        },
+        "device": {
+            "uid": "AST-001",
+            "hostname": "srv-web-01",
+            "ip": "10.0.1.10",
+            "type": "Server",
+            "type_id": 1,
+            "os": {
+                "name": "Ubuntu 22.04 LTS",
+                "type_id": 100,
+                "type": "Linux"
+            },
+            "owner": {
+                "name": "john.doe",
+                "email_addr": "john.doe@corp.com",
+                "type_id": 1
+            },
+            "criticality": "critical",
+            "department": "Engineering",
+            "internet_facing": true,
+            "last_patch_date": "2024-01-03"
+        },
+        "installed_sw": [
+            {
+                "name": "Apache Log4j",
+                "version": "2.14.0",
+                "vendor": "Apache",
+                "cve_risk": "CVE-2021-44228"
+            },
+            {
+                "name": "nginx",
+                "version": "1.24.0",
+                "vendor": "nginx"
+            }
+        ]
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-003"
+        },
+        "device": {
+            "uid": "AST-003",
+            "hostname": "srv-db-01",
+            "ip": "10.0.2.10",
+            "type": "Server",
+            "type_id": 1,
+            "os": {
+                "name": "RedHat Enterprise Linux 8",
+                "type_id": 100,
+                "type": "Linux"
+            },
+            "owner": {
+                "name": "jane.smith",
+                "type_id": 1
+            },
+            "criticality": "critical",
+            "department": "Engineering",
+            "internet_facing": false,
+            "last_patch_date": "2024-01-02",
+            "contains_pii": true,
+            "data_classification": "Confidential"
+        },
+        "installed_sw": [
+            {
+                "name": "PostgreSQL",
+                "version": "15.1",
+                "vendor": "PostgreSQL Global Development Group"
+            },
+            {
+                "name": "xz-utils",
+                "version": "5.6.0",
+                "vendor": "XZ Utils",
+                "cve_risk": "CVE-2024-3094"
+            }
+        ]
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-005"
+        },
+        "device": {
+            "uid": "AST-005",
+            "hostname": "srv-app-01",
+            "ip": "10.0.3.10",
+            "type": "Server",
+            "type_id": 1,
+            "os": {
+                "name": "Windows Server 2022",
+                "type_id": 200,
+                "type": "Windows"
+            },
+            "owner": {
+                "name": "mike.johnson",
+                "type_id": 1
+            },
+            "criticality": "high",
+            "department": "Engineering",
+            "internet_facing": true,
+            "last_patch_date": "2024-01-03"
+        },
+        "installed_sw": [
+            {
+                "name": "MSMQ",
+                "version": "10.0.20348",
+                "vendor": "Microsoft",
+                "cve_risk": "CVE-2023-21554"
+            },
+            {
+                "name": "Apache Log4j",
+                "version": "2.13.0",
+                "vendor": "Apache",
+                "cve_risk": "CVE-2021-44228"
+            }
+        ]
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-009"
+        },
+        "device": {
+            "uid": "AST-009",
+            "hostname": "fw-perimeter-01",
+            "ip": "10.0.0.1",
+            "type": "Network Device",
+            "type_id": 6,
+            "os": {
+                "name": "Cisco ASA 9.18.2",
+                "type_id": 99,
+                "type": "Other"
+            },
+            "owner": {
+                "name": "admin",
+                "type_id": 1
+            },
+            "criticality": "critical",
+            "department": "IT",
+            "internet_facing": true,
+            "last_patch_date": "2023-09-01"
+        },
+        "installed_sw": [
+            {
+                "name": "Cisco ASA",
+                "version": "9.18.2",
+                "vendor": "Cisco",
+                "cve_risk": "CVE-2023-20269"
+            }
+        ]
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-013"
+        },
+        "device": {
+            "uid": "AST-013",
+            "hostname": "ws-dev-001",
+            "ip": "10.1.1.50",
+            "type": "Desktop",
+            "type_id": 2,
+            "os": {
+                "name": "Windows 11 Pro",
+                "type_id": 200,
+                "type": "Windows"
+            },
+            "owner": {
+                "name": "john.doe",
+                "email_addr": "john.doe@corp.com",
+                "type_id": 1
+            },
+            "criticality": "medium",
+            "department": "Engineering",
+            "internet_facing": false
+        }
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-018"
+        },
+        "device": {
+            "uid": "AST-018",
+            "hostname": "ws-finance-001",
+            "ip": "10.1.3.10",
+            "type": "Desktop",
+            "type_id": 2,
+            "os": {
+                "name": "Windows 11 Pro",
+                "type_id": 200,
+                "type": "Windows"
+            },
+            "owner": {
+                "name": "lisa.anderson",
+                "email_addr": "lisa.anderson@corp.com",
+                "type_id": 1
+            },
+            "criticality": "medium",
+            "department": "Finance",
+            "internet_facing": false,
+            "contains_pii": true,
+            "data_classification": "Restricted"
+        }
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-020"
+        },
+        "device": {
+            "uid": "AST-020",
+            "hostname": "db-prod-mysql",
+            "ip": "10.0.2.20",
+            "type": "Other",
+            "type_id": 99,
+            "os": {
+                "name": "MySQL 8.0",
+                "type_id": 99,
+                "type": "Other"
+            },
+            "owner": {
+                "name": "jane.smith",
+                "type_id": 1
+            },
+            "criticality": "critical",
+            "department": "Engineering",
+            "internet_facing": false,
+            "contains_pii": true,
+            "data_classification": "Confidential"
+        }
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-027"
+        },
+        "device": {
+            "uid": "AST-027",
+            "hostname": "srv-k8s-master-01",
+            "ip": "10.0.8.10",
+            "type": "Server",
+            "type_id": 1,
+            "os": {
+                "name": "Ubuntu 22.04 LTS + Kubernetes 1.29",
+                "type_id": 100,
+                "type": "Linux"
+            },
+            "owner": {
+                "name": "mike.johnson",
+                "type_id": 1
+            },
+            "criticality": "critical",
+            "department": "Engineering",
+            "internet_facing": false
+        }
+    },
+    {
+        "class_uid": 5001,
+        "class_name": "Device Inventory Info",
+        "activity_id": 1,
+        "activity_name": "Collect",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evident Asset Scanner",
+                "vendor_name": "Evident"
+            },
+            "uid": "AST-030"
+        },
+        "device": {
+            "uid": "AST-030",
+            "hostname": "srv-vpn-01",
+            "ip": "10.0.9.10",
+            "type": "Network Device",
+            "type_id": 6,
+            "os": {
+                "name": "SonicWall SMA 100 Firmware 10.2.1",
+                "type_id": 99,
+                "type": "Other"
+            },
+            "owner": {
+                "name": "admin",
+                "type_id": 1
+            },
+            "criticality": "critical",
+            "department": "IT",
+            "internet_facing": true,
+            "last_patch_date": "2023-06-01"
+        }
+    }
+]

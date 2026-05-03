@@ -1,0 +1,43 @@
+{
+    "llms": [
+        {
+            "name": "Google Gemini",
+            "provider": "gemini",
+            "model_id": "gemini-2.0-flash",
+            "cost_per_token": 1e-07,
+            "capabilities": [
+                "general",
+                "security"
+            ],
+            "api_key": "",
+            "endpoint": null
+        }
+    ],
+    "ingestion": {
+        "source_mode": "sample",
+        "data_path": "C:\\PRODDEV\\personal\\cybersecurity-ai\\Evident\\data\\sample_ocsf",
+        "sources": [
+            "cves",
+            "assets",
+            "logs",
+            "cloud_configs",
+            "signin_logs",
+            "user_roles",
+            "role_permissions"
+        ],
+        "schema_preference": "ocsf",
+        "storage_config": {
+            "storage_type": "local",
+            "azure_account_name": null,
+            "azure_container": null,
+            "azure_keyvault_url": null,
+            "azure_secret_name": null,
+            "aws_s3_bucket": null,
+            "aws_region": null,
+            "aws_secret_name": null,
+            "gcp_project": null,
+            "gcs_bucket": null,
+            "gcp_secret_name": null
+        }
+    }
+}

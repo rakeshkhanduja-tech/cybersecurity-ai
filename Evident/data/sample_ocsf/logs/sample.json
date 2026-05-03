@@ -1,0 +1,643 @@
+[
+    {
+        "comment": "=== DATA EXFILTRATION SENTINEL: Unusually large outbound transfer ===",
+        "class_uid": 4001,
+        "class_name": "Network Activity",
+        "activity_id": 5,
+        "activity_name": "Traffic",
+        "time": 1704395000,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Palo Alto NGFW",
+                "vendor_name": "Palo Alto"
+            },
+            "uid": "LOG-001"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-006",
+                "name": "lisa.anderson"
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.1.3.10",
+            "hostname": "ws-finance-001",
+            "uid": "AST-018"
+        },
+        "dst_endpoint": {
+            "ip": "185.234.219.50",
+            "port": 443,
+            "domain": "mega-transfer.io"
+        },
+        "traffic": {
+            "bytes_out": 5368709120,
+            "bytes_in": 1024,
+            "protocol": "HTTPS"
+        },
+        "finding": {
+            "uid": "LOG-001",
+            "title": "Massive Data Upload to Untrusted External IP",
+            "types": [
+                "Data Exfiltration"
+            ]
+        },
+        "raw_data": "SRC: 10.1.3.10 DST: 185.234.219.50 BYTES_OUT: 5GB PROTO: HTTPS ACTION: ALLOW"
+    },
+    {
+        "comment": "=== DATA EXFILTRATION: USB Mass storage ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704454800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Microsoft Purview DLP",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "LOG-002"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-007",
+                "name": "david.wilson"
+            }
+        },
+        "src_endpoint": {
+            "hostname": "ws-finance-002",
+            "uid": "AST-019"
+        },
+        "finding": {
+            "uid": "LOG-002",
+            "title": "Bulk File Copy to USB Storage Device",
+            "types": [
+                "Data Exfiltration",
+                "Insider Threat"
+            ],
+            "desc": "150 sensitive financial documents copied to removable USB drive."
+        },
+        "file": {
+            "name": "Payroll_Q4_2023.xlsx, Budget_2024.xlsx (150 files)",
+            "type_id": 28
+        },
+        "device": {
+            "type": "USB Mass Storage",
+            "uid": "USB-0987"
+        }
+    },
+    {
+        "comment": "=== MALWARE OUTBREAK RESPONDER: Malware detected ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704376522,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "CrowdStrike Falcon",
+                "vendor_name": "CrowdStrike"
+            },
+            "uid": "LOG-003"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-006",
+                "name": "lisa.anderson"
+            }
+        },
+        "src_endpoint": {
+            "hostname": "ws-finance-001",
+            "ip": "10.1.3.10",
+            "uid": "AST-018"
+        },
+        "finding": {
+            "uid": "LOG-003",
+            "title": "Ransomware Beacon Detected - LockBit",
+            "types": [
+                "Malware",
+                "Ransomware"
+            ],
+            "desc": "invoice.pdf.exe executing encrypted writes across documents folder."
+        },
+        "malware": [
+            {
+                "name": "LockBit.Ransom.Gen",
+                "path": "C:\\Users\\lisa.anderson\\Downloads\\invoice.pdf.exe",
+                "classifications": [
+                    "Ransomware"
+                ]
+            }
+        ]
+    },
+    {
+        "comment": "=== MALWARE LATERAL MOVEMENT: C2 beacon ===",
+        "class_uid": 4001,
+        "class_name": "Network Activity",
+        "activity_id": 5,
+        "activity_name": "Traffic",
+        "time": 1704376700,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Palo Alto NGFW",
+                "vendor_name": "Palo Alto"
+            },
+            "uid": "LOG-004"
+        },
+        "src_endpoint": {
+            "ip": "10.1.3.10",
+            "hostname": "ws-finance-001",
+            "uid": "AST-018"
+        },
+        "dst_endpoint": {
+            "ip": "91.92.241.45",
+            "port": 4444,
+            "domain": "c2-panel.darknet.tk"
+        },
+        "traffic": {
+            "bytes_out": 2048,
+            "protocol": "TCP",
+            "interval_seconds": 60
+        },
+        "finding": {
+            "uid": "LOG-004",
+            "title": "C2 Beacon Heartbeat to Known Malicious Domain",
+            "types": [
+                "Command and Control"
+            ]
+        }
+    },
+    {
+        "comment": "=== LATERAL MOVEMENT: Pass-the-Hash to another host ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704377200,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Microsoft Defender for Endpoint",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "LOG-005"
+        },
+        "actor": {
+            "process": {
+                "name": "mimikatz.exe",
+                "uid": "PROC-001"
+            }
+        },
+        "src_endpoint": {
+            "hostname": "ws-finance-001",
+            "ip": "10.1.3.10",
+            "uid": "AST-018"
+        },
+        "dst_endpoint": {
+            "hostname": "srv-db-01",
+            "ip": "10.0.2.10",
+            "uid": "AST-003"
+        },
+        "finding": {
+            "uid": "LOG-005",
+            "title": "Pass-the-Hash Lateral Movement to Database Server",
+            "types": [
+                "Lateral Movement",
+                "Credential Theft"
+            ]
+        },
+        "process": {
+            "name": "mimikatz.exe",
+            "cmd_line": "sekurlsa::pth /user:jane.smith /ntlm:<hash>"
+        }
+    },
+    {
+        "comment": "=== PRIVILEGE ESCALATION: Suspicious PowerShell ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704375933,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Windows Defender",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "LOG-006"
+        },
+        "actor": {
+            "user": {
+                "name": "system"
+            }
+        },
+        "src_endpoint": {
+            "hostname": "srv-app-01",
+            "uid": "AST-005"
+        },
+        "finding": {
+            "uid": "LOG-006",
+            "title": "Suspicious Encoded PowerShell Execution",
+            "types": [
+                "Malware",
+                "Command and Scripting Interpreter",
+                "Defense Evasion"
+            ]
+        },
+        "process": {
+            "name": "powershell.exe",
+            "cmd_line": "powershell.exe -EncodedCommand SQBuAHYAbwBrAGUALQBFAHgAcAByAGUAcwBzAGkAbwBuACAAKA==",
+            "parent_process": {
+                "name": "cmd.exe"
+            }
+        }
+    },
+    {
+        "comment": "=== PRIVILEGE ESCALATION LOG: New admin account created ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704371122,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Active Directory",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "LOG-007"
+        },
+        "actor": {
+            "user": {
+                "name": "admin",
+                "uid": "USR-009"
+            }
+        },
+        "dst_endpoint": {
+            "hostname": "srv-mail-01",
+            "uid": "AST-007"
+        },
+        "finding": {
+            "uid": "LOG-007",
+            "title": "User Added to Domain Admins Group",
+            "types": [
+                "Privilege Escalation",
+                "Account Management"
+            ]
+        },
+        "user": {
+            "name": "temp_admin",
+            "uid": "USR-010",
+            "groups": [
+                {
+                    "name": "Domain Admins"
+                }
+            ]
+        },
+        "raw_data": "User: temp_admin added to Domain Admins by admin"
+    },
+    {
+        "comment": "=== PHISHING IMPACT: Suspicious email click + login ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704460200,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Microsoft Defender for O365",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "LOG-008"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-004",
+                "name": "emily.davis"
+            }
+        },
+        "finding": {
+            "uid": "LOG-008",
+            "title": "User Clicked Phishing Link in Email",
+            "types": [
+                "Phishing",
+                "Initial Access"
+            ],
+            "desc": "emily.davis clicked a malicious link from spoofed vendor email. Credential harvesting page detected."
+        },
+        "email": {
+            "from": "invoice@trusted-corp.malicious.ru",
+            "subject": "Invoice Payment Required - Immediate Action",
+            "to": "emily.davis@corp.com"
+        },
+        "url": {
+            "value": "https://corp-login.malicious.ru/harvest",
+            "category": "Phishing"
+        }
+    },
+    {
+        "comment": "=== SHADOW IT: Access to personal cloud storage ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704444600,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Zscaler",
+                "vendor_name": "Zscaler"
+            },
+            "uid": "LOG-009"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-007",
+                "name": "david.wilson"
+            }
+        },
+        "src_endpoint": {
+            "hostname": "ws-finance-002",
+            "uid": "AST-019"
+        },
+        "finding": {
+            "uid": "LOG-009",
+            "title": "Corporate Data Uploaded to Personal Dropbox",
+            "types": [
+                "Shadow IT",
+                "Data Exfiltration"
+            ]
+        },
+        "url": {
+            "value": "https://www.dropbox.com/upload",
+            "category": "File Sharing - Unapproved"
+        },
+        "traffic": {
+            "bytes_out": 52428800,
+            "protocol": "HTTPS"
+        }
+    },
+    {
+        "comment": "=== INSIDER THREAT: Finance data access by HR user ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704413700,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Microsoft Purview",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "LOG-010"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-005",
+                "name": "robert.brown",
+                "department": "HR"
+            }
+        },
+        "finding": {
+            "uid": "LOG-010",
+            "title": "HR User Accessing Finance Payroll Files at 2AM",
+            "types": [
+                "Insider Threat",
+                "Unauthorized Access"
+            ],
+            "desc": "robert.brown (HR) accessed payroll and financial records outside normal business hours."
+        },
+        "file": {
+            "name": "Payroll_Q4_2023.xlsx",
+            "path": "\\\\srv-file-01\\Finance\\Payroll\\"
+        },
+        "time_anomaly": {
+            "access_time": "02:15:00",
+            "normal_hours": "09:00-18:00",
+            "is_offhours": true
+        }
+    },
+    {
+        "comment": "=== VULNERABILITY: Network port scan ===",
+        "class_uid": 4001,
+        "class_name": "Network Activity",
+        "activity_id": 5,
+        "activity_name": "Traffic",
+        "time": 1704360200,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Firewall",
+                "vendor_name": "Cisco"
+            },
+            "uid": "LOG-011"
+        },
+        "src_endpoint": {
+            "ip": "185.220.101.45"
+        },
+        "dst_endpoint": {
+            "ip": "10.0.0.0",
+            "port_range": "1-65535"
+        },
+        "finding": {
+            "uid": "LOG-011",
+            "title": "Full Port Scan from External Threat Actor",
+            "types": [
+                "Reconnaissance",
+                "Network Scan"
+            ]
+        },
+        "raw_data": "SRC: 185.220.101.45 DST: 10.0.0.0/16 PROTO: TCP PORTS: 1-65535 ACTION: DENY"
+    },
+    {
+        "comment": "=== SQL INJECTION ATTEMPT ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704360045,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS WAF",
+                "vendor_name": "Amazon"
+            },
+            "uid": "LOG-012"
+        },
+        "src_endpoint": {
+            "ip": "10.5.5.5"
+        },
+        "dst_endpoint": {
+            "hostname": "srv-web-01",
+            "uid": "AST-001",
+            "url_string": "/login?id=1' OR '1'='1"
+        },
+        "finding": {
+            "uid": "LOG-012",
+            "title": "SQL Injection Attempt Detected on Login Endpoint",
+            "types": [
+                "Web Application Attack",
+                "Injection Attempt"
+            ]
+        },
+        "http_request": {
+            "method": "POST",
+            "url_string": "/login?id=1' OR '1'='1",
+            "http_status": 403
+        }
+    },
+    {
+        "comment": "=== DATABASE PRIVILEGE ESCALATION ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704362122,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "MySQL Audit Plugin",
+                "vendor_name": "Oracle"
+            },
+            "uid": "LOG-013"
+        },
+        "actor": {
+            "user": {
+                "name": "mike.johnson",
+                "uid": "USR-003"
+            }
+        },
+        "dst_endpoint": {
+            "hostname": "db-prod-mysql",
+            "uid": "AST-020"
+        },
+        "finding": {
+            "uid": "LOG-013",
+            "title": "Privilege Escalation via GRANT ALL on MySQL",
+            "types": [
+                "Privilege Escalation",
+                "Database Threat"
+            ]
+        },
+        "query": {
+            "sql": "GRANT ALL PRIVILEGES ON *.* TO 'user'@'%'",
+            "db_name": "prod_db"
+        }
+    },
+    {
+        "comment": "=== VULNERABILITY SCAN RESULT ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704254400,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "LOG-014"
+        },
+        "src_endpoint": {
+            "hostname": "nessus-scanner",
+            "ip": "10.0.0.5"
+        },
+        "dst_endpoint": {
+            "hostname": "srv-web-01",
+            "uid": "AST-001"
+        },
+        "finding": {
+            "uid": "LOG-014",
+            "title": "Critical Vulnerabilities Found: Apache Log4Shell, OpenSSL Heartbleed",
+            "types": [
+                "Vulnerability Discovery"
+            ]
+        },
+        "vulnerabilities": [
+            {
+                "uid": "CVE-2021-44228",
+                "title": "Log4Shell",
+                "severity": "Critical",
+                "cvss_score": 10.0
+            },
+            {
+                "uid": "CVE-2014-0160",
+                "title": "Heartbleed",
+                "severity": "High",
+                "cvss_score": 7.5
+            }
+        ]
+    },
+    {
+        "comment": "=== BACKUP/PATCH ANOMALY (Compliance) ===",
+        "class_uid": 9002,
+        "class_name": "Security Finding",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704254400,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Evidently Compliance",
+                "vendor_name": "Evident"
+            },
+            "uid": "LOG-015"
+        },
+        "dst_endpoint": {
+            "hostname": "srv-db-02",
+            "uid": "AST-004"
+        },
+        "finding": {
+            "uid": "LOG-015",
+            "title": "Security Patch Missing on Critical Database Server",
+            "types": [
+                "Compliance Violation",
+                "Vulnerability"
+            ]
+        },
+        "patch_info": {
+            "applied_date": null,
+            "missing_patches": [
+                "MS-KB5034441",
+                "RHSA-2024:0001"
+            ],
+            "days_overdue": 45
+        }
+    }
+]

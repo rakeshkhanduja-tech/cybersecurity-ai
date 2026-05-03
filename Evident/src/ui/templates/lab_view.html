@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident - Security Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .lab-layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            background: var(--primary-bg);
+        }
+
+        .lab-sidebar {
+            width: 320px;
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            flex-shrink: 0;
+        }
+
+        .lab-progress {
+            list-style: none;
+            padding: 0;
+            margin: 40px 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .step-item.active {
+            background: rgba(79, 195, 247, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+        }
+
+        .step-item.completed {
+            color: var(--accent-green);
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .step-info h3 {
+            font-size: 0.95rem;
+            margin: 0 0 4px 0;
+        }
+
+        .step-info p {
+            font-size: 0.75rem;
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .lab-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .lab-content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .lab-step-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .lab-step-content.active {
+            display: block;
+        }
+
+        .lab-header {
+            margin-bottom: 40px;
+        }
+
+        .lab-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+
+        .lab-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .lab-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Exercise Styles */
+        .code-editor {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
+            color: #c9d1d9;
+            margin: 15px 0;
+            min-height: 150px;
+            border: 1px solid #30363d;
+        }
+
+        .validation-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .validation-message.success {
+            background: rgba(102, 187, 106, 0.1);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .validation-message.error {
+            background: rgba(239, 83, 80, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="lab-layout">
+        <aside class="lab-sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🛡️</div>
+                <h1>Lab Navigator</h1>
+            </div>
+
+            <ul id="lab-steps-nav" class="lab-progress">
+                <!-- Steps injected by JS -->
+            </ul>
+
+            <div class="sidebar-footer">
+                <button id="btn-reset-lab"
+                    style="background: none; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                    <i>🔄</i> Reset Progress
+                </button>
+            </div>
+        </aside>
+
+        <main class="lab-main">
+            <div class="lab-content-container">
+                <div id="lab-step-display">
+                    <!-- Step content injected here -->
+                </div>
+
+                <div class="lab-footer">
+                    <button id="btn-back" class="btn-secondary" style="display: none;">Back</button>
+                    <button id="btn-next" class="btn-primary">Next Step</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Templates for Steps -->
+    <template id="template-step">
+        <div class="lab-step-content active">
+            <div class="lab-header">
+                <span id="step-id-badge"
+                    style="background: rgba(79, 195, 247, 0.1); color: var(--accent-blue); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Step
+                    1</span>
+                <h1 id="step-title">LLM Intelligence Setup</h1>
+                <p id="step-description" class="subtitle">Configure the core intelligence engine.</p>
+            </div>
+
+            <div class="lab-card">
+                <h2 style="margin-bottom: 20px; font-size: 1.1rem;">Objective</h2>
+                <p id="step-instructions" style="color: var(--text-secondary); line-height: 1.6;"></p>
+
+                <div id="step-interactive-area" style="margin-top: 30px;">
+                    <!-- Contextual inputs go here -->
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="{{ url_for('static', filename='lab_view.js') }}"></script>
+</body>
+
+</html>

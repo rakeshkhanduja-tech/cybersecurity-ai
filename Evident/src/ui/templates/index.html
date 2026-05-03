@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evident - Security Intelligence Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <style>
+        /* Data Plugs View Styles - Embedded for reliability */
+        .connector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 20px 0;
+        }
+
+        .connector-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 45px 24px 35px; /* Increased bottom padding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px; /* Slightly reduced gap */
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-height: 220px; /* Ensure a consistent minimum height */
+            justify-content: center;
+        }
+
+        .connector-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(0, 229, 255, 0.05), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .connector-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #00e5ff;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .connector-card:hover::before { opacity: 1; }
+
+        .connector-card.active {
+            border-color: rgba(0, 229, 255, 0.4);
+            background: rgba(0, 229, 255, 0.03);
+            box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.02);
+        }
+
+        .connector-icon {
+            font-size: 3rem;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+            transition: transform 0.3s;
+        }
+
+        .connector-card:hover .connector-icon {
+            transform: scale(1.1);
+        }
+
+        .connector-info h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .connector-info p {
+            margin: 8px 0 0 0;
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Allowed 3 lines for longer descriptions */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 0.65rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: rgba(255, 255, 255, 0.05);
+            color: #555;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .connector-card.active .status-badge {
+            background: rgba(0, 229, 255, 0.1);
+            color: #00e5ff;
+            border-color: rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Loading Overlay (shown until agent is ready) -->
+    <div id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-shield">🛡️</div>
+            <h1 class="loading-title">Evident</h1>
+            <p class="loading-subtitle">Your Security Co-Analyst</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar-fill" id="loading-bar"></div>
+            </div>
+            <p class="loading-message" id="loading-message">Initializing agent...</p>
+            <div class="loading-steps" id="loading-steps"></div>
+        </div>
+    </div>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🛡️</div>
+                <h1>Evident</h1>
+            </div>
+
+            <nav class="nav-menu">
+                <button id="btn-chat" class="nav-item" title="Ask Evident AI">
+                    <i>💬</i> <span>Ask Evident</span>
+                </button>
+                <button id="btn-signals" class="nav-item active" title="Active Signals Main View">
+                    <i>🛡️</i> <span>Active Signals</span>
+                </button>
+                <button id="btn-data-plugs" class="nav-item" title="Configure Connectors">
+                    <i>🔗</i> <span>Data Plugs</span>
+                </button>
+                <button id="btn-active-plugs" class="nav-item" title="View Active Connector Stats">
+                    <i>🔌</i> <span>Active Plugs</span>
+                </button>
+                <button id="btn-active-agents" class="nav-item" title="Active Security Agents">
+                    <i>🤖</i> <span>Active Security Agents</span>
+                </button>
+                <button id="btn-agents" class="nav-item" title="Security Agents Builder">
+                    <i>🏗️</i> <span>Security Agents</span>
+                </button>
+                <button id="btn-history" class="nav-item" title="Audit History">
+                    <i>📜</i> <span>Audit History</span>
+                </button>
+                <div style="margin: 10px 15px; border-top: 1px solid rgba(255,255,255,0.05);"></div>
+            </nav>
+
+
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Status : Running</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+
+        <div class="main-view">
+            <header class="view-header">
+                <div class="view-title" id="current-view-title">
+                    <i id="view-icon">🛡️</i> <span id="view-name">Active Signals</span>
+                </div>
+                <div class="view-actions" style="display: flex; gap: 12px; align-items: center;">
+                    <button id="btn-config-newtab" class="btn-icon" title="System Configuration (New Tab)"
+                        onclick="window.open('/configure', '_blank')"
+                        style="background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 6px; padding: 6px 12px; color: #00e5ff; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i>🔧</i> <span>Configure</span>
+                    </button>
+                    <button id="btn-settings" class="btn-icon" title="Settings"
+                        onclick="window.open('/configure', '_blank')"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 6px 12px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i>⚙️</i> <span>Settings</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="view-viewport">
+                <!-- View: Active Signals (Default) -->
+                <div id="view-signals" class="view-container" style="padding: 24px;">
+                    <div class="enterprise-dashboard">
+                        <!-- Left Pane: Active Signals (Master List) -->
+                        <aside class="sources-panel">
+                            <div
+                                style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+                                <div>
+                                    <h2 style="margin: 0; font-size: 1.1rem; font-weight: 600;">Active Signals</h2>
+                                    <span id="active-source-badge"
+                                        style="font-size: 0.65rem; color: #00e5ff; letter-spacing: 0.04em; background: rgba(0, 229, 255, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(0, 229, 255, 0.2); margin-top: 6px; display: inline-block;">SAMPLE
+                                        DATA</span>
+                                </div>
+                                <button id="btn-refresh-graph" class="btn-icon" title="Refresh Knowledge Graph"
+                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-size: 1rem; padding: 6px 10px; cursor: pointer; transition: background 0.2s;">🔄</button>
+                            </div>
+
+                            <!-- Search / Filter could go here in the future -->
+
+                            <div id="sources-list" class="sources-list">
+                                <div class="loading" style="padding: 20px; text-align: center; color: #888;">Loading
+                                    sources...</div>
+                            </div>
+
+                            <div class="stats-section">
+                                <h3
+                                    style="font-size: 0.8rem; color: #888; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">
+                                    Intelligence Context</h3>
+                                <div id="stats-content" class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-blue);">👥</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-entities">-</span>
+                                            <span class="stat-label">Entities</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-green);">📄</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-vectors">-</span>
+                                            <span class="stat-label">Vectors</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-purple);">🕸️</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-nodes">-</span>
+                                            <span class="stat-label">Nodes</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: var(--accent-orange);">🔗</div>
+                                        <div class="stat-data">
+                                            <span class="stat-value" id="stat-edges">-</span>
+                                            <span class="stat-label">Edges</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- Right Pane: Details & Knowledge Graph Tabs -->
+                        <div class="right-pane">
+                            <div class="visualization-panel" id="viz-panel">
+                                <div class="viz-header">
+                                    <div class="viz-tabs">
+                                        <button class="viz-tab active" data-view="table">
+                                            <i style="margin-right: 6px; font-style: normal;">📋</i> Data Explorer
+                                        </button>
+                                        <button class="viz-tab" data-view="graph">
+                                            <i style="margin-right: 6px; font-style: normal;">🕸️</i> Knowledge Graph
+                                        </button>
+                                    </div>
+                                    <div class="viz-controls">
+                                        <span id="viz-status">Select a source to view data...</span>
+                                    </div>
+                                </div>
+                                <div class="viz-content">
+                                    <div id="view-table" class="viz-view active">
+                                        <div class="table-container">
+                                            <table id="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Select an active signal from the left menu to begin
+                                                            analysis.</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="view-graph" class="viz-view">
+                                        <div id="cy-graph" style="width: 100%; height: 100%;"></div>
+                                        <div id="graph-node-info" class="graph-node-info hidden">
+                                            <div class="node-info-header">
+                                                <span id="node-info-title"></span>
+                                                <button
+                                                    onclick="document.getElementById('graph-node-info').classList.add('hidden')">✕</button>
+                                            </div>
+                                            <div id="node-info-body" class="node-info-body"></div>
+                                        </div>
+                                        <div id="graph-empty" class="graph-empty">Select a signal source to explore the
+                                            Knowledge Graph</div>
+                                        <div id="graph-controls">
+                                            <button id="btn-layout" class="btn-secondary"
+                                                style="font-size: 0.8rem; padding: 4px 10px;">Re-layout</button>
+                                            <button id="btn-center" class="btn-secondary"
+                                                style="font-size: 0.8rem; padding: 4px 10px;">Center</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Active Plugs -->
+                <div id="view-active-plugs" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="padding: 0; gap: 0;">
+                        <!-- Stats Strip -->
+                        <div id="view-active-plugs-stats"
+                            style="display: flex; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">🔌</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-total">-</span>
+                                    <span class="stat-label">Active Plugs</span>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">📥</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-records">-</span>
+                                    <span class="stat-label">Total Records</span>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">✅</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-running">-</span>
+                                    <span class="stat-label">Running</span>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="flex: 1;">
+                                <div class="stat-icon">⏸️</div>
+                                <div class="stat-data">
+                                    <span class="stat-value" id="ap-stat-paused">-</span>
+                                    <span class="stat-label">Paused</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Plug Cards List (scrollable) -->
+                        <div id="view-active-plugs-list" style="flex: 1; overflow-y: auto; padding: 20px 24px;">
+                            <div class="loading">Loading active connections...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Active Security Agents -->
+                <div id="view-active-agents" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="display: flex; flex-direction: column; padding: 0;">
+                        <div
+                            style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Active Security Agents</h2>
+                                <p style="margin: 5px 0 0; color: #888; font-size: 0.85rem;">Currently running
+                                    autonomous and interactive agents.</p>
+                            </div>
+                            <button id="btn-refresh-active-agents" class="btn-secondary">🔄 Refresh</button>
+                        </div>
+                        <div id="active-agents-list" class="agent-grid"
+                            style="flex: 1; overflow-y: auto; padding: 24px;">
+                            <div class="loading">Loading active agents...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Data Plugs -->
+                <div id="view-data-plugs" class="view-container hidden-view">
+                    <div class="full-screen-content" style="display: flex; flex-direction: column; padding: 0;">
+                        <div
+                            style="padding: 24px 32px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1);">
+                            <div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Manage Data Plugs</h2>
+                                <p style="margin: 5px 0 0; color: #888; font-size: 0.85rem;">Configure active security data connectors and signal ingestion.</p>
+                            </div>
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <button id="btn-refresh-plugs" class="btn-secondary" onclick="loadDataPlugsView()">🔄 Refresh</button>
+                            </div>
+                        </div>
+
+                        <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.01);">
+                            <div class="search-box">
+                                <input type="text" id="plug-search" placeholder="Search connectors (e.g. AWS, Okta, CrowdStrike)..."
+                                       style="width: 100%; padding: 10px 14px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; font-size: 0.9rem; outline: none;">
+                            </div>
+                        </div>
+
+                        <div id="plugs-list" class="connector-grid" style="flex: 1; overflow-y: auto; padding: 24px;">
+                            <div class="loading">Loading connector specifications...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Intelligence Infrastructure -->
+                <div id="view-infra" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="display: flex; flex-direction: column; padding: 0;">
+                        <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Intelligence Infrastructure</h2>
+                                <p style="margin: 5px 0 0; color: #888; font-size: 0.85rem;">Configure the backbone of your security intelligence: Config Store, Knowledge Store, and Vector Store.</p>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="btn-save-infra" class="btn-primary">💾 Save All Settings</button>
+                            </div>
+                        </div>
+                        
+                        <div style="flex: 1; overflow-y: auto; padding: 30px;">
+                            <div class="infra-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+                                
+                                <!-- 1. Config Store (Postgres / SQLite) -->
+                                <div class="infra-card" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                                        <div>
+                                            <h3 style="margin: 0; font-size: 1.1rem; color: var(--accent-blue);">🗄️ Application Config Store</h3>
+                                            <p style="margin: 4px 0 0; font-size: 0.8rem; color: #777;">System settings, agent configurations, and audit activity.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #aaa;">Storage Backend</label>
+                                        <div style="display: flex; gap: 12px;">
+                                            <label class="radio-pill">
+                                                <input type="radio" name="store-type" value="sqlite" checked onchange="toggleInfraSections()">
+                                                <span>SQLite (Local)</span>
+                                            </label>
+                                            <label class="radio-pill">
+                                                <input type="radio" name="store-type" value="postgres" onchange="toggleInfraSections()">
+                                                <span>PostgreSQL (Remote)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- SQLite Fields -->
+                                    <div id="infra-sqlite-fields">
+                                        <div class="form-group">
+                                            <label style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #aaa;">Database File Path</label>
+                                            <input type="text" id="infra-sqlite-path" value="data/connectors.db" readonly style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: #888; padding: 10px; border-radius: 6px;">
+                                            <p id="infra-sqlite-abs-path" style="margin-top: 8px; font-size: 0.75rem; color: #00e5ff; font-family: monospace; word-break: break-all;"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Postgres Fields -->
+                                    <div id="infra-postgres-fields" style="display: none;">
+                                        <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px; margin-bottom: 12px;">
+                                            <div class="form-group">
+                                                <label>Host</label>
+                                                <input type="text" id="infra-pg-host" placeholder="localhost">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Port</label>
+                                                <input type="number" id="infra-pg-port" value="5432">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 12px;">
+                                            <label>Database Name</label>
+                                            <input type="text" id="infra-pg-db" placeholder="evident_db">
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                            <div class="form-group">
+                                                <label>User</label>
+                                                <input type="text" id="infra-pg-user" placeholder="postgres">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input type="password" id="infra-pg-pass" placeholder="••••••••">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+                                        <button id="btn-init-db" class="btn-secondary" style="width: 100%; color: var(--accent-blue); border-color: rgba(0,229,255,0.3);">🛠️ Initialize Database Schema</button>
+                                        <p style="margin: 8px 0 0; font-size: 0.7rem; color: #666; text-align: center;">Required after switching backends or for first-time setup.</p>
+                                    </div>
+                                </div>
+
+                                <!-- 2. Knowledge Store (Neo4j) -->
+                                <div class="infra-card" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px;">
+                                    <h3 style="margin: 0; font-size: 1.1rem; color: #9c27b0;">🕸️ Knowledge Store (Neo4j)</h3>
+                                    <p style="margin: 4px 0 20px; font-size: 0.8rem; color: #777;">Semantic entity relationships and context graph.</p>
+
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label>Connection URI</label>
+                                        <input type="text" id="infra-neo-uri" placeholder="bolt://localhost:7687">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label>Database</label>
+                                        <input type="text" id="infra-neo-db" placeholder="neo4j">
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div class="form-group">
+                                            <label>User</label>
+                                            <input type="text" id="infra-neo-user" placeholder="neo4j">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input type="password" id="infra-neo-pass" placeholder="••••••••">
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                                        <span class="status-badge" style="background: rgba(76, 175, 80, 0.1); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;">Connected</span>
+                                    </div>
+                                </div>
+
+                                <!-- 3. Vector Store -->
+                                <div class="infra-card" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px;">
+                                    <h3 style="margin: 0; font-size: 1.1rem; color: #4caf50;">📄 Intelligence Vector Store</h3>
+                                    <p style="margin: 4px 0 20px; font-size: 0.8rem; color: #777;">Similarity search and RAG long-term memory.</p>
+
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label>ChromaDB Path</label>
+                                        <input type="text" id="infra-vector-path" placeholder="./chroma_db">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 12px;">
+                                        <label>Collection Name</label>
+                                        <input type="text" id="infra-vector-collection" placeholder="evident_security">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Embedding Model</label>
+                                        <select id="infra-vector-model" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: #fff; padding: 10px; border-radius: 6px;">
+                                            <option value="all-MiniLM-L6-v2">all-MiniLM-L6-v2 (Local)</option>
+                                            <option value="text-embedding-3-small">OpenAI text-embedding-3-small</option>
+                                            <option value="models/embedding-001">Google embedding-001</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                                        <button id="btn-reindex-vector" class="btn-secondary" style="font-size: 0.75rem;">Clear & Re-index Store</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Security Agent Builder (Pre-built agents) -->
+                <div id="view-agents" class="view-container hidden-view" style="padding: 24px;">
+                    <div class="full-screen-content" style="display: flex; flex-direction: column; padding: 0;">
+                        <div
+                            style="padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2 style="margin: 0; font-size: 1.25rem;">Security Agents</h2>
+                                <p style="margin: 5px 0 0; color: #888; font-size: 0.85rem;">Select from pre-built
+                                    specialist agents or create your own.</p>
+                            </div>
+                            <button id="btn-create-custom-agent" class="btn-primary" disabled title="Coming Soon">🏗️
+                                Create Custom Agent</button>
+                        </div>
+                        <div id="all-agents-grid" class="agent-grid" style="flex: 1; overflow-y: auto; padding: 24px;">
+                            <div class="loading">Loading available security agents...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Audit History -->
+                <div id="view-history" class="view-container hidden-view">
+                    <div class="full-screen-content history-layout"
+                        style="margin: 0; border: none; background: transparent;">
+                        <div class="history-list-container"
+                            style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px;">
+                            <ul id="view-history-list">
+                                <!-- History items populated here -->
+                            </ul>
+                        </div>
+                        <div class="history-details"
+                            style="background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 12px;">
+                            <div id="view-history-details-content">
+                                <div class="placeholder-text">Select a history item to view details</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View: Ask Evident (Chat) -->
+                <div id="view-chat" class="view-container hidden-view">
+                    <div class="full-screen-content chat-view"
+                        style="display: flex; flex-direction: column; padding: 0; border: none; border-radius: 0; background: transparent;">
+                        <div id="chat-messages" class="chat-messages" style="flex: 1; overflow-y: auto; padding: 30px;">
+                            <div class="message agent-message">
+                                <div class="message-icon">🤖</div>
+                                <div class="message-content">
+                                    <p><strong>Evident:</strong> Hello! I am your Security Co-Analyst. How can I help
+                                        you investigate your data today?</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Example queries area -->
+                        <div class="chat-example-queries"
+                            style="padding: 0 30px; display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button class="example-query"
+                                onclick="askQuestion('Which assets are affected by critical CVEs?')">Critical
+                                CVEs</button>
+                            <button class="example-query"
+                                onclick="askQuestion('What permissions does user john.doe have?')">User
+                                Permissions</button>
+                            <button class="example-query" onclick="askQuestion('Show me failed login attempts')">Failed
+                                Logins</button>
+                            <button class="example-query"
+                                onclick="askQuestion('Which cloud resources have security misconfigurations?')">Cloud
+                                Misconfigs</button>
+                            <button class="example-query"
+                                onclick="askQuestion('Which users have admin privileges?')">Admin Users</button>
+                        </div>
+                        <div class="chat-input-area"
+                            style="padding: 24px 30px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color);">
+                            <div class="chat-input-wrapper"
+                                style="position: relative; display: flex; gap: 12px; align-items: flex-end; margin: 0 auto; width: 100%;">
+                                <textarea id="question-input"
+                                    placeholder="Ask about your security logs, threats, or configurations..."
+                                    style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 18px; color: #fff; resize: none; min-height: 52px; max-height: 200px; font-family: inherit; font-size: 0.95rem; line-height: 1.5; outline: none; transition: border-color 0.2s;"
+                                    onkeydown="handleKeyPress(event)"></textarea>
+                                <button id="send-button" class="btn-primary" onclick="sendQuestion()"
+                                    style="width: 52px; height: 52px; border-radius: 13px; display: flex; align-items: center; justify-content: center; padding: 0; font-size: 1.25rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0, 229, 255, 0.2);">
+                                    ▲
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Logs Viewer Modal -->
+    <div id="modal-logs" class="modal">
+        <div class="modal-content modal-large" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2 id="logs-modal-title">Connector Logs</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body history-layout" style="flex: 1; overflow: hidden; gap: 0; padding: 0;">
+                <div class="history-list-container"
+                    style="flex: 0 0 250px; border-right: 1px solid rgba(255,255,255,0.08); padding: 16px 12px; overflow-y: auto;">
+                    <p
+                        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #4fc3f7; font-weight: 600; margin: 0 4px 12px 4px;">
+                        Recent Log Files</p>
+                    <div id="logs-list">
+                        Loading logs...
+                    </div>
+                </div>
+                <div class="history-details"
+                    style="flex: 1; padding: 0; overflow-y: auto; background: rgba(0,0,0,0.2);">
+                    <div id="log-content-panel">
+                        <div class="placeholder-text"
+                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; opacity: 0.5;">
+                            <span>Select a log file on the left to view contents.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent Configuration Modal -->
+    <div id="modal-agent-config" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <div>
+                    <h2 id="agent-config-title">🤖 Configure Agent</h2>
+                    <p id="agent-config-subtitle" style="margin: 4px 0 0 0; font-size: 0.8rem; color: #888;">Adjust
+                        agent behavior and deployment settings.</p>
+                </div>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="config-agent-id">
+
+                <div class="form-group">
+                    <label>Operation Mode</label>
+                    <select id="config-agent-mode">
+                        <option value="interactive">Interactive (Co-Analyst)</option>
+                        <option value="autonomous">Autonomous (Sentinel)</option>
+                    </select>
+                    <p class="field-help" style="margin-top: 4px; font-size: 0.75rem; color: #666;">Autonomous mode runs
+                        on a schedule and sends proactive alerts.</p>
+                </div>
+
+                <div class="form-group" id="group-config-frequency">
+                    <label>Frequency (Minutes)</label>
+                    <input type="number" id="config-agent-frequency" min="1" max="1440" value="60">
+                </div>
+
+                <div class="form-group">
+                    <label>System Instructions (LLM Prompt)</label>
+                    <textarea id="config-agent-prompt" rows="6"
+                        style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; padding: 12px; font-family: monospace; font-size: 0.85rem; resize: vertical;"></textarea>
+                    <p class="field-help" style="margin-top: 4px; font-size: 0.75rem; color: #666;">Define the agent's
+                        persona and core investigative logic.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Notification Method</label>
+                    <select id="config-agent-notify">
+                        <option value="email">Email Notification</option>
+                        <option value="slack" disabled>Slack Webhook (Coming Soon)</option>
+                        <option value="teams" disabled>MS Teams (Coming Soon)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Signal Sources</label>
+                    <div id="config-agent-signals-list"
+                        style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                        <!-- Checkboxes will be injected here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel close-modal-btn">Cancel</button>
+                <button id="btn-save-agent-config" class="btn-primary">Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connector Configuration Modal -->
+    <div id="modal-connector-config" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="modal-header">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div id="connector-config-icon" style="font-size: 2rem;">🔌</div>
+                    <div>
+                        <h2 id="connector-config-name">Configure Connector</h2>
+                        <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #888;">Complete authentication and parameter setup.</p>
+                    </div>
+                </div>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+                    <div>
+                        <span style="font-weight: 600; font-size: 0.95rem;">Connector Status</span>
+                        <p id="connector-status-help" style="margin: 2px 0 0 0; font-size: 0.75rem; color: #888;">Enable or disable this signal source.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="connector-config-active">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div id="connector-config-fields" class="dynamic-config-area" style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- JS Injected Fields -->
+                </div>
+
+                <input type="hidden" id="connector-config-id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel close-modal-btn">Cancel</button>
+                <button id="btn-save-connector-config" class="btn-primary">💾 Save Configuration</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>

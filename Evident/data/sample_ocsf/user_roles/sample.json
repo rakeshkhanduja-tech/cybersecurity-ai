@@ -1,0 +1,347 @@
+[
+    {
+        "comment": "=== PRIVILEGE ESCALATION MONITOR + COMPLIANCE GUARDIAN ===",
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704355245,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Active Directory",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "ROLE-001"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-009",
+                "name": "admin",
+                "type": "System Administrator"
+            }
+        },
+        "user": {
+            "uid": "USR-010",
+            "name": "temp_admin",
+            "email_addr": "temp_admin@corp.com",
+            "type": "User",
+            "type_id": 1,
+            "groups": [
+                {
+                    "uid": "ROLE-009",
+                    "name": "System Administrator",
+                    "assigned_date": "2024-01-04",
+                    "expiry_date": "2024-01-11"
+                }
+            ]
+        },
+        "finding": {
+            "title": "Temporary Admin Elevated to System Administrator - Short Term",
+            "types": [
+                "Privilege Escalation Risk"
+            ]
+        }
+    },
+    {
+        "comment": "Unusual assignment - non-admin granting admin access (red flag)",
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704376000,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Active Directory",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "ROLE-002"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-003",
+                "name": "mike.johnson",
+                "type": "DevOps Engineer"
+            }
+        },
+        "user": {
+            "uid": "USR-011",
+            "name": "contractor01",
+            "type": "Contractor",
+            "type_id": 1,
+            "groups": [
+                {
+                    "uid": "ROLE-009",
+                    "name": "System Administrator",
+                    "assigned_date": "2024-01-04"
+                }
+            ]
+        },
+        "finding": {
+            "title": "Non-Admin User Granted System Administrator Role to Contractor",
+            "types": [
+                "Privilege Escalation",
+                "Unauthorized Action"
+            ]
+        }
+    },
+    {
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 1,
+        "activity_name": "Create",
+        "time": 1704371118,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Active Directory",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "ROLE-003"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-009",
+                "name": "admin",
+                "type": "Administrator"
+            }
+        },
+        "user": {
+            "uid": "USR-016",
+            "name": "backdoor_user",
+            "email_addr": "backdoor_user@corp.com",
+            "type": "User",
+            "type_id": 1,
+            "groups": [
+                {
+                    "uid": "ROLE-009",
+                    "name": "System Administrator",
+                    "assigned_date": "2024-01-04"
+                }
+            ]
+        },
+        "finding": {
+            "title": "New Admin Account Created - Potential Persistence Mechanism",
+            "types": [
+                "Persistence",
+                "Privilege Escalation"
+            ]
+        }
+    },
+    {
+        "comment": "=== STANDARD ROLE ASSIGNMENT (normal baseline) ===",
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "HR System",
+                "vendor_name": "Evident"
+            },
+            "uid": "ROLE-004"
+        },
+        "actor": {
+            "user": {
+                "uid": "admin",
+                "name": "admin",
+                "type": "HR Administrator"
+            }
+        },
+        "user": {
+            "uid": "USR-001",
+            "name": "john.doe",
+            "email_addr": "john.doe@corp.com",
+            "type": "User",
+            "type_id": 1,
+            "groups": [
+                {
+                    "uid": "ROLE-001",
+                    "name": "Developer",
+                    "assigned_date": "2023-06-01"
+                },
+                {
+                    "uid": "ROLE-011",
+                    "name": "Code Reviewer",
+                    "assigned_date": "2023-09-15"
+                }
+            ],
+            "department": "Engineering",
+            "manager": "jane.smith"
+        }
+    },
+    {
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "HR System",
+                "vendor_name": "Evident"
+            },
+            "uid": "ROLE-005"
+        },
+        "actor": {
+            "user": {
+                "uid": "admin",
+                "name": "admin"
+            }
+        },
+        "user": {
+            "uid": "USR-002",
+            "name": "jane.smith",
+            "email_addr": "jane.smith@corp.com",
+            "type": "User",
+            "type_id": 1,
+            "groups": [
+                {
+                    "uid": "ROLE-002",
+                    "name": "Senior Developer",
+                    "assigned_date": "2023-06-01"
+                },
+                {
+                    "uid": "ROLE-012",
+                    "name": "Tech Lead",
+                    "assigned_date": "2023-10-01"
+                }
+            ],
+            "department": "Engineering"
+        }
+    },
+    {
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704240000,
+        "severity_id": 2,
+        "severity": "Low",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "HR System",
+                "vendor_name": "Evident"
+            },
+            "uid": "ROLE-006"
+        },
+        "actor": {
+            "user": {
+                "uid": "admin",
+                "name": "admin"
+            }
+        },
+        "user": {
+            "uid": "USR-009",
+            "name": "admin",
+            "type": "Administrator",
+            "type_id": 2,
+            "groups": [
+                {
+                    "uid": "ROLE-009",
+                    "name": "System Administrator",
+                    "assigned_date": "2023-01-01"
+                }
+            ],
+            "department": "IT",
+            "manager": "sarah.williams"
+        }
+    },
+    {
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704240000,
+        "severity_id": 1,
+        "severity": "Informational",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "HR System",
+                "vendor_name": "Evident"
+            },
+            "uid": "ROLE-007"
+        },
+        "actor": {
+            "user": {
+                "uid": "system",
+                "name": "system"
+            }
+        },
+        "user": {
+            "uid": "USR-012",
+            "name": "service_account",
+            "type": "Service Account",
+            "type_id": 3,
+            "groups": [
+                {
+                    "uid": "ROLE-010",
+                    "name": "Service Account",
+                    "assigned_date": "2023-10-01"
+                }
+            ],
+            "department": "Engineering"
+        }
+    },
+    {
+        "comment": "=== INSIDER THREAT: Sensitive role with off-hours logins ===",
+        "class_uid": 3005,
+        "class_name": "Account Change",
+        "activity_id": 3,
+        "activity_name": "Assign Privileges",
+        "time": 1704240000,
+        "severity_id": 2,
+        "severity": "Low",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "HR System",
+                "vendor_name": "Evident"
+            },
+            "uid": "ROLE-008"
+        },
+        "actor": {
+            "user": {
+                "uid": "admin",
+                "name": "admin"
+            }
+        },
+        "user": {
+            "uid": "USR-005",
+            "name": "robert.brown",
+            "email_addr": "robert.brown@corp.com",
+            "type": "User",
+            "type_id": 1,
+            "groups": [
+                {
+                    "uid": "ROLE-005",
+                    "name": "HR Specialist",
+                    "assigned_date": "2023-08-01"
+                },
+                {
+                    "uid": "ROLE-014",
+                    "name": "Auditor",
+                    "assigned_date": "2023-11-01"
+                }
+            ],
+            "department": "HR",
+            "manager": "emily.davis"
+        }
+    }
+]

@@ -1,0 +1,76 @@
+{
+    "id": "google-workspace",
+    "name": "Google Workspace",
+    "base_url": "https://admin.googleapis.com",
+    "auth": {
+        "type": "api_key"
+    },
+    "apis": [
+        {
+            "id": "users",
+            "signal": "assets",
+            "description": "List all users in the domain",
+            "method": "GET",
+            "endpoint": "/admin/directory/v1/users",
+            "params": {
+                "customer": "{customer_id}",
+                "maxResults": 100
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}",
+                "Accept": "application/json"
+            },
+            "result_path": "users",
+            "pagination": {
+                "type": "json_token",
+                "param": "pageToken",
+                "next_key": "nextPageToken"
+            }
+        },
+        {
+            "id": "admin_audit",
+            "signal": "signin_logs",
+            "description": "Fetch administrative activities",
+            "method": "GET",
+            "endpoint": "/admin/reports/v1/activity/users/all/applications/admin",
+            "params": {
+                "maxResults": 100
+            },
+            "headers": {
+                "Authorization": "Bearer {access_token}",
+                "Accept": "application/json"
+            },
+            "result_path": "items",
+            "pagination": {
+                "type": "json_token",
+                "param": "pageToken",
+                "next_key": "nextPageToken"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "assets": {
+                "id": "id",
+                "name": "name.fullName",
+                "username": "primaryEmail",
+                "type": "user"
+            },
+            "signin_logs": {
+                "event_id": "id.uniqueQualifier",
+                "timestamp": "id.time",
+                "event_type": "events[0].name",
+                "user": "actor.email"
+            }
+        },
+        "ocsf": {
+            "class_uid": 3001,
+            "class_name": "Account Change",
+            "field_map": {
+                "time": "id.time",
+                "user.name": "actor.email",
+                "activity_id": "events[0].name"
+            }
+        }
+    }
+}

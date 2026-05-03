@@ -1,0 +1,62 @@
+{
+    "id": "ms-graph",
+    "name": "Microsoft Graph",
+    "base_url": "https://graph.microsoft.com/v1.0",
+    "auth": {
+        "type": "oauth2_client_credentials",
+        "token_endpoint": "https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token",
+        "extra_params": {
+            "scope": "https://graph.microsoft.com/.default"
+        }
+    },
+    "apis": [
+        {
+            "id": "users",
+            "signal": "assets",
+            "description": "List Azure AD users",
+            "method": "GET",
+            "endpoint": "/users",
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "value",
+            "pagination": {
+                "type": "nextLink",
+                "next_key": "@odata.nextLink"
+            }
+        },
+        {
+            "id": "sign_ins",
+            "signal": "signin_logs",
+            "description": "Fetch user sign-in logs",
+            "method": "GET",
+            "endpoint": "/auditLogs/signIns",
+            "headers": {
+                "Authorization": "Bearer {access_token}"
+            },
+            "result_path": "value",
+            "pagination": {
+                "type": "nextLink"
+            }
+        }
+    ],
+    "source_mapping": {
+        "evident": {
+            "assets": {
+                "id": "id",
+                "name": "displayName",
+                "type": "user",
+                "username": "userPrincipalName"
+            },
+            "signin_logs": {
+                "log_id": "id",
+                "timestamp": "createdDateTime",
+                "user_id": "userId",
+                "username": "userPrincipalName",
+                "source_ip": "ipAddress",
+                "location": "location.city",
+                "status": "status.errorCode"
+            }
+        }
+    }
+}

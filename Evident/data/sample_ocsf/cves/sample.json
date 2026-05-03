@@ -1,0 +1,351 @@
+[
+    {
+        "comment": "=== VULNERABILITY PRIORITIZER: Critical CVEs with affected assets ===",
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Tenable Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "CVE-OCSF-001"
+        },
+        "finding": {
+            "uid": "CVE-2021-44228",
+            "title": "Log4Shell - Apache Log4j2 Remote Code Execution",
+            "desc": "JNDI injection in Log4j2 allows unauthenticated remote code execution. CVSS 10.0",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2021-44228",
+            "title": "Log4Shell",
+            "severity": "Critical",
+            "cvss_score": 10.0,
+            "exploit_available": true,
+            "patch_available": true,
+            "patch_version": "Log4j 2.15.0+",
+            "affected_products": [
+                "Apache Log4j2 2.0-beta9 to 2.14.1"
+            ],
+            "published_date": "2021-12-10"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-001",
+                "hostname": "srv-web-01",
+                "ip": "10.0.1.10",
+                "internet_facing": true
+            },
+            {
+                "uid": "AST-005",
+                "hostname": "srv-app-01",
+                "ip": "10.0.3.10",
+                "internet_facing": true
+            },
+            {
+                "uid": "AST-024",
+                "hostname": "srv-jenkins-01",
+                "ip": "10.0.6.10",
+                "internet_facing": false
+            }
+        ]
+    },
+    {
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Tenable Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "CVE-OCSF-002"
+        },
+        "finding": {
+            "uid": "CVE-2024-3094",
+            "title": "XZ Utils Backdoor - Supply Chain Compromise",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2024-3094",
+            "title": "XZ Utils Backdoor",
+            "severity": "Critical",
+            "cvss_score": 10.0,
+            "exploit_available": true,
+            "patch_available": true,
+            "patch_version": "xz 5.4.x",
+            "affected_products": [
+                "XZ Utils 5.6.0, 5.6.1"
+            ],
+            "published_date": "2024-03-29"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-003",
+                "hostname": "srv-db-01",
+                "ip": "10.0.2.10",
+                "os": "RedHat Enterprise Linux 8",
+                "internet_facing": false
+            },
+            {
+                "uid": "AST-026",
+                "hostname": "srv-docker-01",
+                "ip": "10.0.7.10",
+                "internet_facing": false
+            }
+        ]
+    },
+    {
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Tenable Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "CVE-OCSF-003"
+        },
+        "finding": {
+            "uid": "CVE-2023-44487",
+            "title": "HTTP/2 Rapid Reset Attack - DDoS Amplification",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2023-44487",
+            "title": "HTTP/2 Rapid Reset",
+            "severity": "High",
+            "cvss_score": 7.5,
+            "exploit_available": true,
+            "patch_available": true,
+            "affected_products": [
+                "nginx < 1.25.3",
+                "Apache httpd < 2.4.58"
+            ],
+            "published_date": "2023-10-10"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-001",
+                "hostname": "srv-web-01",
+                "internet_facing": true
+            },
+            {
+                "uid": "AST-002",
+                "hostname": "srv-web-02",
+                "internet_facing": true
+            }
+        ]
+    },
+    {
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Tenable Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "CVE-OCSF-004"
+        },
+        "finding": {
+            "uid": "CVE-2023-4966",
+            "title": "Citrix Bleed - NetScaler Auth Bypass",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2023-4966",
+            "title": "Citrix Bleed",
+            "severity": "Critical",
+            "cvss_score": 9.4,
+            "exploit_available": true,
+            "patch_available": true,
+            "affected_products": [
+                "Citrix NetScaler ADC < 13.1-49.13"
+            ],
+            "published_date": "2023-10-10"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-030",
+                "hostname": "srv-vpn-01",
+                "internet_facing": true,
+                "criticality": "critical"
+            }
+        ]
+    },
+    {
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 4,
+        "severity": "High",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Qualys VMDR",
+                "vendor_name": "Qualys"
+            },
+            "uid": "CVE-OCSF-005"
+        },
+        "finding": {
+            "uid": "CVE-2023-20269",
+            "title": "Cisco ASA Zero-Day VPN Tunnel Unauthenticated Access",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2023-20269",
+            "title": "Cisco ASA Zero-Day",
+            "severity": "High",
+            "cvss_score": 9.1,
+            "exploit_available": true,
+            "patch_available": false,
+            "affected_products": [
+                "Cisco ASA Software 9.18.x before 9.18.4.x"
+            ],
+            "published_date": "2023-09-07"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-009",
+                "hostname": "fw-perimeter-01",
+                "ip": "10.0.0.1",
+                "internet_facing": true,
+                "criticality": "critical"
+            }
+        ]
+    },
+    {
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Tenable Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "CVE-OCSF-006"
+        },
+        "finding": {
+            "uid": "CVE-2023-27997",
+            "title": "FortiOS/FortiProxy SSL-VPN Heap Buffer Overflow",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2023-27997",
+            "title": "Fortigate SSL-VPN RCE",
+            "severity": "Critical",
+            "cvss_score": 9.8,
+            "exploit_available": true,
+            "patch_available": true,
+            "affected_products": [
+                "FortiOS < 7.2.5",
+                "FortiProxy < 7.0.11"
+            ],
+            "published_date": "2023-06-12"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-010",
+                "hostname": "fw-internal-01",
+                "internet_facing": false
+            }
+        ]
+    },
+    {
+        "class_uid": 2002,
+        "class_name": "Vulnerability Finding",
+        "activity_id": 2,
+        "activity_name": "Update",
+        "time": 1704268800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Tenable Nessus",
+                "vendor_name": "Tenable"
+            },
+            "uid": "CVE-OCSF-007"
+        },
+        "finding": {
+            "uid": "CVE-2023-21554",
+            "title": "Microsoft Message Queuing RCE (QueueJumper)",
+            "types": [
+                "Vulnerability"
+            ]
+        },
+        "vulnerability": {
+            "uid": "CVE-2023-21554",
+            "title": "QueueJumper MSMQ RCE",
+            "severity": "Critical",
+            "cvss_score": 9.8,
+            "exploit_available": false,
+            "patch_available": true,
+            "affected_products": [
+                "Windows Server 2016, 2019, 2022 with MSMQ enabled"
+            ],
+            "published_date": "2023-04-11"
+        },
+        "affected_resources": [
+            {
+                "uid": "AST-005",
+                "hostname": "srv-app-01",
+                "os": "Windows Server 2022",
+                "internet_facing": true
+            },
+            {
+                "uid": "AST-006",
+                "hostname": "srv-app-02",
+                "os": "Windows Server 2022",
+                "internet_facing": true
+            },
+            {
+                "uid": "AST-007",
+                "hostname": "srv-mail-01",
+                "os": "Exchange Server 2019",
+                "internet_facing": true
+            }
+        ]
+    }
+]

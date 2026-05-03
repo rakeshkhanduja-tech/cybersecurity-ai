@@ -1,0 +1,724 @@
+[
+    {
+        "comment": "=== NORMAL BASELINE LOGINS ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704355512,
+        "severity_id": 1,
+        "severity": "Informational",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-001"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-001",
+                "name": "john.doe",
+                "email_addr": "john.doe@corp.com",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.1.1.50",
+            "name": "ws-dev-001"
+        },
+        "auth_protocol": "Kerberos",
+        "is_mfa": true,
+        "risk_score": 0.1,
+        "location": {
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "USA"
+        },
+        "device": {
+            "hostname": "ws-dev-001",
+            "type": "Desktop",
+            "uid": "AST-013"
+        },
+        "user_agent": {
+            "name": "Chrome/120",
+            "type": "Browser"
+        }
+    },
+    {
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704356100,
+        "severity_id": 1,
+        "severity": "Informational",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-002"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-002",
+                "name": "jane.smith",
+                "email_addr": "jane.smith@corp.com",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.1.1.51",
+            "name": "ws-dev-002"
+        },
+        "auth_protocol": "SAML",
+        "is_mfa": true,
+        "risk_score": 0.1,
+        "location": {
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "USA"
+        },
+        "device": {
+            "hostname": "ws-dev-002",
+            "type": "Laptop",
+            "uid": "AST-014"
+        }
+    },
+    {
+        "comment": "=== BRUTE FORCE PATTERN (Compromised Account Hunter) ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 2,
+        "activity_name": "Logon",
+        "time": 1704381600,
+        "severity_id": 4,
+        "severity": "High",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-003"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-001",
+                "name": "john.doe",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "45.142.212.61",
+            "name": "Unknown"
+        },
+        "auth_protocol": "NTLM",
+        "is_mfa": false,
+        "risk_score": 9.1,
+        "location": {
+            "city": "Moscow",
+            "region": "MO",
+            "country": "Russia"
+        },
+        "failure_reason": "InvalidCredentials"
+    },
+    {
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 2,
+        "activity_name": "Logon",
+        "time": 1704381630,
+        "severity_id": 4,
+        "severity": "High",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-004"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-001",
+                "name": "john.doe",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "45.142.212.61"
+        },
+        "auth_protocol": "NTLM",
+        "is_mfa": false,
+        "risk_score": 9.5,
+        "location": {
+            "city": "Moscow",
+            "country": "Russia"
+        },
+        "failure_reason": "InvalidCredentials"
+    },
+    {
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 2,
+        "activity_name": "Logon",
+        "time": 1704381660,
+        "severity_id": 5,
+        "severity": "Critical",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-005"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-001",
+                "name": "john.doe",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "45.142.212.61"
+        },
+        "auth_protocol": "NTLM",
+        "is_mfa": false,
+        "risk_score": 10.0,
+        "location": {
+            "city": "Moscow",
+            "country": "Russia"
+        },
+        "failure_reason": "InvalidCredentials",
+        "consecutive_failures": 3
+    },
+    {
+        "comment": "Brute force SUCCEEDED - account takeover start",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704381720,
+        "severity_id": 5,
+        "severity": "Critical",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-006"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-001",
+                "name": "john.doe",
+                "email_addr": "john.doe@corp.com",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "45.142.212.61"
+        },
+        "auth_protocol": "NTLM",
+        "is_mfa": false,
+        "risk_score": 10.0,
+        "location": {
+            "city": "Moscow",
+            "country": "Russia"
+        },
+        "user_agent": {
+            "name": "python-requests/2.31.0",
+            "type": "Script"
+        }
+    },
+    {
+        "comment": "=== IMPOSSIBLE TRAVEL (Compromised Account Hunter) - 2 hours after Moscow login ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704388920,
+        "severity_id": 5,
+        "severity": "Critical",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-007"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-001",
+                "name": "john.doe",
+                "email_addr": "john.doe@corp.com",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.1.1.50",
+            "name": "ws-dev-001"
+        },
+        "auth_protocol": "Kerberos",
+        "is_mfa": true,
+        "risk_score": 9.8,
+        "location": {
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "USA"
+        },
+        "travel_anomaly": {
+            "prev_location": "Moscow, Russia",
+            "time_diff_minutes": 120,
+            "distance_km": 9400,
+            "possible": false
+        }
+    },
+    {
+        "comment": "=== MFA FATIGUE ATTACK ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 6,
+        "activity_name": "MFA Verification",
+        "time": 1704430800,
+        "severity_id": 4,
+        "severity": "High",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-008"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-006",
+                "name": "lisa.anderson",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "185.234.219.50"
+        },
+        "auth_protocol": "TOTP",
+        "is_mfa": true,
+        "risk_score": 8.0,
+        "location": {
+            "city": "Lagos",
+            "country": "Nigeria"
+        },
+        "failure_reason": "MFADeniedByUser",
+        "mfa_push_count": 1
+    },
+    {
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 6,
+        "activity_name": "MFA Verification",
+        "time": 1704430860,
+        "severity_id": 4,
+        "severity": "High",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-009"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-006",
+                "name": "lisa.anderson",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "185.234.219.50"
+        },
+        "auth_protocol": "TOTP",
+        "is_mfa": true,
+        "risk_score": 8.5,
+        "location": {
+            "city": "Lagos",
+            "country": "Nigeria"
+        },
+        "failure_reason": "MFADeniedByUser",
+        "mfa_push_count": 2
+    },
+    {
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 6,
+        "activity_name": "MFA Verification",
+        "time": 1704430920,
+        "severity_id": 5,
+        "severity": "Critical",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-010"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-006",
+                "name": "lisa.anderson",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "185.234.219.50"
+        },
+        "auth_protocol": "TOTP",
+        "is_mfa": true,
+        "risk_score": 9.5,
+        "location": {
+            "city": "Lagos",
+            "country": "Nigeria"
+        },
+        "mfa_push_count": 3,
+        "mfa_fatigue_indicator": true
+    },
+    {
+        "comment": "=== PHISHING SUCCESS (Phishing Impact Analyzer) ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704460800,
+        "severity_id": 5,
+        "severity": "Critical",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Microsoft 365",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "SIGNIN-011"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-004",
+                "name": "emily.davis",
+                "email_addr": "emily.davis@corp.com",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "203.0.113.45",
+            "name": "Unknown"
+        },
+        "auth_protocol": "OAuth2",
+        "is_mfa": false,
+        "risk_score": 9.2,
+        "location": {
+            "city": "Bucharest",
+            "country": "Romania"
+        },
+        "user_agent": {
+            "name": "Mozilla/5.0 (compatible; PhishKit/1.0)",
+            "type": "Browser"
+        },
+        "phishing_indicator": {
+            "click_time": "2024-01-05T11:50:00Z",
+            "link_domain": "corp-login.malicious.ru"
+        }
+    },
+    {
+        "comment": "=== INSIDER THREAT: Off-hours access ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704409200,
+        "severity_id": 3,
+        "severity": "Medium",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-012"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-005",
+                "name": "robert.brown",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.1.2.11",
+            "name": "ws-hr-002"
+        },
+        "auth_protocol": "Kerberos",
+        "is_mfa": true,
+        "risk_score": 4.0,
+        "location": {
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "USA"
+        },
+        "time_anomaly": {
+            "normal_hours": "08:00-18:00",
+            "actual_hour": 2,
+            "day": "Sunday",
+            "is_offhours": true
+        }
+    },
+    {
+        "comment": "=== SHADOW IT: Login from unapproved SaaS (Shadow IT Scanner) ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704442800,
+        "severity_id": 3,
+        "severity": "Medium",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Slack",
+                "vendor_name": "Salesforce"
+            },
+            "uid": "SIGNIN-013"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-007",
+                "name": "david.wilson",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.1.3.11",
+            "name": "ws-finance-002"
+        },
+        "auth_protocol": "SAML",
+        "is_mfa": false,
+        "risk_score": 3.5,
+        "app": {
+            "name": "Slack (Personal)",
+            "vendor": "Salesforce",
+            "uid": "shadow-slack-01",
+            "approved": false
+        },
+        "location": {
+            "city": "San Francisco",
+            "country": "USA"
+        }
+    },
+    {
+        "comment": "=== EXTERNAL CONTRACTOR: Unusual failed attempts ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 2,
+        "activity_name": "Logon",
+        "time": 1704394215,
+        "severity_id": 4,
+        "severity": "High",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Okta",
+                "vendor_name": "Okta"
+            },
+            "uid": "SIGNIN-014"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-011",
+                "name": "contractor01",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "185.220.101.45"
+        },
+        "auth_protocol": "SSH",
+        "is_mfa": false,
+        "risk_score": 9.5,
+        "location": {
+            "city": "Unknown",
+            "country": "Unknown"
+        },
+        "failure_reason": "InvalidCredentials",
+        "tor_exit_node": true
+    },
+    {
+        "comment": "=== SERVICE ACCOUNT UNUSUAL LOGIN ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704354813,
+        "severity_id": 2,
+        "severity": "Low",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "AWS IAM",
+                "vendor_name": "Amazon"
+            },
+            "uid": "SIGNIN-015"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-012",
+                "name": "service_account",
+                "type": "Service Account",
+                "type_id": 3
+            }
+        },
+        "src_endpoint": {
+            "ip": "10.0.8.10",
+            "name": "srv-k8s-master-01"
+        },
+        "auth_protocol": "Certificate",
+        "is_mfa": false,
+        "risk_score": 0.5,
+        "location": {
+            "city": "San Francisco",
+            "region": "CA",
+            "country": "USA"
+        }
+    },
+    {
+        "comment": "=== VPN FROM HIGH-RISK COUNTRY ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 1,
+        "activity_name": "Logon",
+        "time": 1704375610,
+        "severity_id": 3,
+        "severity": "Medium",
+        "status": "Success",
+        "status_id": 1,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Cisco AnyConnect",
+                "vendor_name": "Cisco"
+            },
+            "uid": "SIGNIN-016"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-003",
+                "name": "mike.johnson",
+                "type": "User",
+                "type_id": 1
+            }
+        },
+        "src_endpoint": {
+            "ip": "198.51.100.50"
+        },
+        "auth_protocol": "VPN-TOTP",
+        "is_mfa": true,
+        "risk_score": 3.5,
+        "location": {
+            "city": "Seattle",
+            "region": "WA",
+            "country": "USA"
+        },
+        "vpn_session": {
+            "duration_minutes": 120,
+            "bytes_transferred": 524288000
+        }
+    },
+    {
+        "comment": "=== ADMIN ACCOUNT TARGETED ===",
+        "class_uid": 3002,
+        "class_name": "Authentication",
+        "activity_id": 2,
+        "activity_name": "Logon",
+        "time": 1704315000,
+        "severity_id": 4,
+        "severity": "High",
+        "status": "Failure",
+        "status_id": 2,
+        "metadata": {
+            "version": "1.1.0",
+            "product": {
+                "name": "Active Directory",
+                "vendor_name": "Microsoft"
+            },
+            "uid": "SIGNIN-017"
+        },
+        "actor": {
+            "user": {
+                "uid": "USR-009",
+                "name": "admin",
+                "type": "Administrator",
+                "type_id": 2
+            }
+        },
+        "src_endpoint": {
+            "ip": "93.184.216.34"
+        },
+        "auth_protocol": "NTLM",
+        "is_mfa": false,
+        "risk_score": 8.5,
+        "location": {
+            "city": "Unknown",
+            "country": "Unknown"
+        },
+        "failure_reason": "InvalidCredentials"
+    }
+]

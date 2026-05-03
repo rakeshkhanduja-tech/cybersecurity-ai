@@ -1,0 +1,3 @@
+Timestamp,Level,Component,Message
+2026-04-17 12:55:35,INFO,Scheduler,Starting scheduled job for mock_api
+2026-04-17 12:55:35,ERROR,Scheduler,No plug metadata found for mock_api
