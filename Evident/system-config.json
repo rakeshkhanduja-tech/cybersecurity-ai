@@ -9,7 +9,7 @@
         "uri": "bolt://localhost:7687",
         "database": "neo4j",
         "user": "neo4j",
-        "password": "your_neo4j_password_here"
+        "password": ""
     },
     "config_store": {
         "type": "sqlite",

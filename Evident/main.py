@@ -10,7 +10,7 @@ import sys
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from evident.agent import EvidentAgent
+from src.agent import EvidentAgent
 
 
 def run_cli():
@@ -71,7 +71,7 @@ def run_cli():
 
 def run_web():
     """Run web UI mode"""
-    from evident.ui.app import app
+    from src.ui.app import app
     
     port = int(os.getenv('FLASK_PORT', 5000))
     debug = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
